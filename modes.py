@@ -1,0 +1,15 @@
+from collections.abc import ABC
+
+
+class GameMode(ABC):
+	pass
+
+class EndlessMode(GameMode):
+	pass
+
+class CampaignMode(GameMode):
+	pass
+
+class GameOverCondition(ABC):
+	# different conditions sa campaign mode
+	pass

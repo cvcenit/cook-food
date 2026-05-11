@@ -1,5 +1,6 @@
 from collections.abc import ABC
 
+# entity types lang laman neto
 
 class Enemy(ABC):
 	def __init__(self):
