@@ -13,3 +13,7 @@ class CampaignMode(GameMode):
 class GameOverCondition(ABC):
 	# different conditions sa campaign mode
 	pass
+
+class Level(ABC):
+	# consists of a grid, with a path (?)
+	pass
