@@ -12,18 +12,8 @@ class GameController:
     def update(self):
         if self._model._is_game_over:
             pyxel.quit()
-        
-        self.check_all_enemies_gone()
-        self.check_game_over()
-        self._model.update()
-    
-    def check_all_enemies_gone(self):
-        if self._model.number_of_enemies <= 0:
-            self._model._is_game_over = True
 
-    def check_game_over(self):
-        if self._model.lives <= 0:
-            self._model._is_game_over = True
+        self._model.update()
 
     def draw(self):
         self._view.reset_screen()
@@ -34,3 +24,4 @@ class GameController:
         pyxel.init(self._view._width, self._view._height)
         pyxel.mouse(visible=True) 
         pyxel.run(self.update, self.draw)
+    
