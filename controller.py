@@ -25,10 +25,12 @@ class GameController:
         if self._model.lives <= 0:
             self._model._is_game_over = True
 
-    def start_game(self):
-        self._view.start_game(self, self)
-
     def draw(self):
         self._view.reset_screen()
         # disable this kung ayaw m nung gumagalaw
         self._view.draw_enemies(self._model.enemies)
+
+    def run(self):
+        pyxel.init(self._view._width, self._view._height)
+        pyxel.mouse(visible=True) 
+        pyxel.run(self.update, self.draw)

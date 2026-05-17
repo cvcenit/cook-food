@@ -10,11 +10,6 @@ class GameView:
         self._left_margin: float = self._width / 10
         self._top_margin: float = self._height / 4
 
-    def start_game(self, update_handler: UpdateHandler, draw_handler: DrawHandler) -> None:
-        pyxel.init(self._width, self._height)
-        pyxel.mouse(visible=True) 
-        pyxel.run(update_handler.update, draw_handler.draw)
-
     def draw_enemies(self, enemies) -> None:
         for enemy in enemies:
             x,y = enemy.position
