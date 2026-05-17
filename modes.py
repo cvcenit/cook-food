@@ -1,13 +1,8 @@
-from collections.abc import ABC, abstractmethod
+from abc import ABC, abstractmethod
 
 
 class GameMode(ABC):
 	pass
-
-
-class Player(ABC):
-	pass
-
 
 class EndlessMode(GameMode):
 	pass
