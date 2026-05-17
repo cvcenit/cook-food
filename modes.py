@@ -1,8 +1,18 @@
-from collections.abc import ABC
+from collections.abc import ABC, abstractmethod
 
 
 class GameMode(ABC):
-	pass
+	@abstractmethod
+	def end_condition(self):
+		pass
+
+
+class Player(ABC):
+	@abstractmethod
+	@property
+	def lives(self):
+		pass
+
 
 class EndlessMode(GameMode):
 	pass
