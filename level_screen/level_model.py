@@ -1,10 +1,12 @@
 from __future__ import annotations
-from entities import Chef, Ube
+from entities.enemies import Ube
+from entities.chefs import Chef
 from modes import GameOverCondition, RoundOverCondition
 from graphics import TextButton
 
 class GameModel:
     def __init__(self, data: dict, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
+        # LOGIC NG GAME MISMO
         self.lives = data["remaining_lives"]
         self.number_of_enemies = data["remaining_enemies"]
         self.rounds = 12
@@ -14,8 +16,10 @@ class GameModel:
         self._current_tick = 1
         self._game_over_condition = game_over_condition
         self._round_over_condition = round_over_condition
-        #self.player = player
+        self._player = 1 # this will make sense after I create that chef class
         #self.path = levelpath
+
+        # UI STUFF
         self._buttons = [
         TextButton(48, 192, "Back", 1),
         ]
@@ -30,6 +34,10 @@ class GameModel:
     @property
     def buttons(self):
         return self._buttons
+
+    @property
+    def player(self):
+        return self._player
 
     @property
     def is_current_screen(self):
