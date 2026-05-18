@@ -34,7 +34,7 @@ class Game:
         self._screens[self._state].draw()
 
     def run(self):
-        pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT)
+        pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, fps=FPS)
         pyxel.mouse(visible=True) 
         pyxel.run(self.update, self.draw)
 
