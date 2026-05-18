@@ -25,7 +25,7 @@ class Game:
     def switch_screen(self, state):
         if state in self._screens:
             self._state = state
-        self._screens[self._state].start_screen()
+            self._screens[self._state].start_screen()
 
     def update(self):
         self._screens[self._state].update()

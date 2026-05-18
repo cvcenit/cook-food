@@ -1,12 +1,15 @@
 from graphics import TextButton
+from constants import HEADER_FONT_SIZE
 
 class StartMenuModel:
     def __init__(self):
         self._buttons = [
-        TextButton(48, 48, "Play", 1),
-        TextButton(48, 96, "Settings", 1)
+        TextButton(48, HEADER_FONT_SIZE, "Play", 1),
+        TextButton(48, 2 * HEADER_FONT_SIZE, "Leaderboard", 1),
+        TextButton(48, 3 * HEADER_FONT_SIZE, "Settings", 1),
+        TextButton(48, 4 * HEADER_FONT_SIZE, "Quit", 1)
         ]
-        self._states = ["play", "settings"]
+        self._states = ["play", "leaderboard", "settings"]
         self._current_tick = 1
         self._is_current_screen = True
         self._state = self.base_state
