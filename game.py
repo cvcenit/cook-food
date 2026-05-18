@@ -1,20 +1,15 @@
 from __future__ import annotations
-from entities import Chef
-from model import GameModel
-from view import GameView
-from controller import GameScreen
-from modes import SimpleGameOverCondition, SimpleRoundOverCondition
-from graphics import MainMenuScreen
+
+from level_screen.level_controller import GameScreen
+from start_menu.start_screen import StartMenuScreen
 from constants import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
 
 import pyxel
 
-#game.run()
-
 class Game:
     def __init__(self):
         self._screens = {
-        "main": MainMenuScreen(self),
+        "main": StartMenuScreen(self),
         "play": GameScreen(self),
         }
         self._state = "main"
@@ -23,9 +18,14 @@ class Game:
     def screens(self):
         return self._screens
 
+    @property
+    def state(self):
+        return self._state
+
     def switch_screen(self, state):
         if state in self._screens:
             self._state = state
+        self._screens[self._state].start_screen()
 
     def update(self):
         self._screens[self._state].update()
@@ -39,4 +39,5 @@ class Game:
         pyxel.run(self.update, self.draw)
 
 g = Game()
-g.run()
+if __name__ == "__main__":
+    g.run()

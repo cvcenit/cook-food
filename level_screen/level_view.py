@@ -15,5 +15,14 @@ class GameView:
             x,y = enemy.position
             pyxel.circ(x, y, 25, enemy.sprite)
 
+    def draw_buttons(self, buttons):
+        for button in buttons:
+            button.draw_button()
+
+    def get_clicked_button(self, buttons) -> None | int:
+        for i, button in enumerate(buttons):
+            if button.is_clicked():
+                return i
+
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)

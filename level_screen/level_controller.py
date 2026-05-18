@@ -1,6 +1,6 @@
 from __future__ import annotations
-from model import GameModel
-from view import GameView
+from .level_model import GameModel
+from .level_view import GameView
 from constants import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
 from modes import SimpleGameOverCondition, SimpleRoundOverCondition
 
@@ -13,29 +13,35 @@ class GameController:
         self._app = app
 
     def update(self):
-        if self._model._is_game_over:
-            pyxel.quit()
+        if not self._model.is_current_screen:
+            state = self._model.state
+            if state in self._app.screens and state != self._model.base_state:
+                self.switch_screen(self._model.state)
+            else:
+                self._model.start_screen()
+        else:
+            if self._model.is_game_over:
+                pyxel.quit()
 
-        self._model.update()
+            clicked_btn = self._view.get_clicked_button(self._model.buttons)
+            self._model.update(clicked_btn)
 
     def draw(self):
         self._view.reset_screen()
-        # disable this kung ayaw m nung gumagalaw
         self._view.draw_enemies(self._model.enemies)
+        self._view.draw_buttons(self._model.buttons)
 
     def switch_screen(self, state):
         self._app.switch_screen(state)
-
-    def run(self):
-        pyxel.init(self._view._width, self._view._height)
-        pyxel.mouse(visible=True) 
-        pyxel.run(self.update, self.draw)
 
 class GameScreen:
     def __init__(self, app):
         self._model = GameModel(DATA, SimpleGameOverCondition(), SimpleRoundOverCondition())
         self._view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
         self._controller = GameController(self._model, self._view, app)
+
+    def start_screen(self):
+        self._model.start_screen()
 
     def update(self):
         self._controller.update()
