@@ -19,10 +19,17 @@ class GameView:
         for button in buttons:
             button.draw_button()
 
+    def draw_player(self, player):
+        player.draw()
+
     def get_clicked_button(self, buttons) -> None | int:
         for i, button in enumerate(buttons):
             if button.is_clicked():
                 return i
+
+    def get_hitted_enemy(self, enemies, bullets) -> None | int:
+        for i, bullet in enumerate(bullets):
+            if bullet.is_hit()
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)

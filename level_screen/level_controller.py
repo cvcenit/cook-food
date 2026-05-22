@@ -24,6 +24,7 @@ class GameController:
                 pyxel.quit()
 
             clicked_btn = self._view.get_clicked_button(self._model.buttons)
+            enemy_hit = self._view.get_hitted_enemy(self._model.enemies, self._model.active_bullets)
             self._model.update(clicked_btn)
 
     def draw(self):

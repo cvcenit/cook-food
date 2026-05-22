@@ -55,6 +55,12 @@ class GameModel:
     def base_state(self):
         return "play"
 
+    @property
+    def active_bullets(self):
+        # bullets will be objects as well, will put it in the entities tomorrow
+        ...
+    
+
     def update(self, clicked_idx):
         if not self._is_game_over:
             self._current_tick += 1
