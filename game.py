@@ -11,6 +11,7 @@ class Game:
         self._screens = {
         "main": StartMenuScreen(self),
         "play": GameScreen(self),
+        "quit": 1
         }
         self._state = "main"
 
@@ -23,6 +24,9 @@ class Game:
         return self._state
 
     def switch_screen(self, state):
+        if state == "quit":
+            pyxel.quit()
+
         if state in self._screens:
             self._state = state
             self._screens[self._state].start_screen()

@@ -4,21 +4,20 @@ from entities.towers import Chef, Tower
 from modes import GameOverCondition, RoundOverCondition
 from graphics import TextButton
 
-# TODO: Separate UI Logic and Game Logic in an elegant manner
 
 NORMAL_MODE_BUTTONS = [TextButton(48, 192, "Pause", 1),]
 
+# part ni jowee
 # TODO: Load level
 # TODO: Load player
 # TODO: Load grid
+
+# part ko pa
+# TODO: Separate UI Logic and Game Logic in an elegant manner
 # TODO: Add collision
-# TODO: Add bullets
 class GameLogic:
     def __init__(self, data: dict, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
-        # LOGIC NG GAME MISMO
-        # data ay sa level na mismo
-
-        # level data
+        # level data, put data arg in the level itself
         self.number_of_enemies = data["remaining_enemies"]
         self.rounds = 12
         self.enemies = [Ube(1) for _ in range(self.number_of_enemies)]

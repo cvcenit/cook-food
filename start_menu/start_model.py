@@ -9,7 +9,7 @@ class StartMenuModel:
         TextButton(48, 3 * HEADER_FONT_SIZE, "Settings", 1),
         TextButton(48, 4 * HEADER_FONT_SIZE, "Quit", 1)
         ]
-        self._states = ["play", "leaderboard", "settings"]
+        self._states = ["play", "leaderboard", "settings", "quit"]
         self._current_tick = 1
         self._is_current_screen = True
         self._state = self.base_state
