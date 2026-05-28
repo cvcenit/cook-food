@@ -18,4 +18,6 @@ class MenuState(StrEnum):
 
 
 def has_collided(rect_one, rect_two) -> bool:
-    ...
+    x1, y1, w1, h1 = rect_one
+    x2, y2, w2, h2 = rect_two
+    # x and y positions are top left corner

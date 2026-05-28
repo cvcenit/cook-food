@@ -6,8 +6,9 @@ from graphics import TextButton
 
 # TODO: Separate UI Logic and Game Logic in an elegant manner
 
-NORMAL_MODE_BUTTONS = [TextButton(48, 192, "Back", 1),]
+NORMAL_MODE_BUTTONS = [TextButton(48, 192, "Pause", 1),]
 
+# TODO: Add button for pause menu, and add the popup menu as well
 class UILogic:
     def __init__(self):
         self._buttons = NORMAL_MODE_BUTTONS
@@ -41,7 +42,11 @@ class UILogic:
         self._current_tick = 1
         self._state = "play"
 
-
+# TODO: Load level
+# TODO: Load player
+# TODO: Load grid
+# TODO: Add collision
+# TODO: Add bullets
 class GameLogic:
     def __init__(self, data: dict, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
         # LOGIC NG GAME MISMO
