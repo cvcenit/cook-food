@@ -10,6 +10,7 @@ class GameView:
         self._left_margin: float = self._width / 10
         self._top_margin: float = self._height / 4
 
+    # OUTPUT METHODS
     def draw_enemies(self, enemies) -> None:
         for enemy in enemies:
             x,y = enemy.position
@@ -22,6 +23,11 @@ class GameView:
     def draw_player(self, player):
         player.draw()
 
+    def reset_screen(self) -> None:
+        pyxel.cls(self._bg_color)
+
+    # ---------------------------------------
+    # "INPUT" METHODS
     def get_clicked_button(self, buttons) -> None | int:
         for i, button in enumerate(buttons):
             if button.is_clicked():
@@ -29,7 +35,5 @@ class GameView:
 
     def get_hitted_enemy(self, enemies, bullets) -> None | int:
         for i, bullet in enumerate(bullets):
-            if bullet.is_hit()
-
-    def reset_screen(self) -> None:
-        pyxel.cls(self._bg_color)
+            if bullet.is_hit():
+                ...

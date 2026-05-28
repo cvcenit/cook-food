@@ -1,6 +1,6 @@
 from __future__ import annotations
-from .level_model import GameModel
-from .level_view import GameView
+from .model_normal import GameModel
+from .view_normal import GameView
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
 from modes import SimpleGameOverCondition, SimpleRoundOverCondition
 
@@ -24,7 +24,7 @@ class GameController:
                 pyxel.quit()
 
             clicked_btn = self._view.get_clicked_button(self._model.buttons)
-            enemy_hit = self._view.get_hitted_enemy(self._model.enemies, self._model.active_bullets)
+            # enemy_hit = self._view.get_hitted_enemy(self._model.enemies, self._model.active_bullets)
             self._model.update(clicked_btn)
 
     def draw(self):

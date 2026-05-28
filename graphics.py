@@ -21,7 +21,7 @@ class TextButton(Button):
     def is_clicked(self) -> bool:
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
             if self.is_hovered():
-            	return True
+                return True
         return False
 
     def is_hovered(self):
@@ -37,7 +37,7 @@ class SpriteButton(Button):
 class Screen(ABC):
     @abstractmethod
     def update(self):
-        ...    
+        ...
 
     @abstractmethod
     def draw(self):

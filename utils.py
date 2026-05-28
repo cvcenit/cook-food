@@ -15,3 +15,7 @@ class MenuState(StrEnum):
     MAIN_MENU = "main"
     MAIN_SETTINGS = "main_settings"
     PLAY_MENU = "play"
+
+
+def has_collided(rect_one, rect_two) -> bool:
+    ...
