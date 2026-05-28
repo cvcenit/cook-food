@@ -1,5 +1,5 @@
 from graphics import TextButton
-from constants import HEADER_FONT_SIZE
+from utils import HEADER_FONT_SIZE
 
 class StartMenuModel:
     def __init__(self):

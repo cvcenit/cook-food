@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from constants import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT_SIZE, HEADER_FONT
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT_SIZE, HEADER_FONT
 
 import pyxel
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from .level_model import GameModel
 from .level_view import GameView
-from constants import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
 from modes import SimpleGameOverCondition, SimpleRoundOverCondition
 
 import pyxel

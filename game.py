@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from level_screen.level_controller import GameScreen
 from start_menu.start_screen import StartMenuScreen
-from constants import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
 
 import pyxel
 

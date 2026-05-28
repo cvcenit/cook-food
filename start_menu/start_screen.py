@@ -1,6 +1,6 @@
 from .start_model import StartMenuModel
 from .start_view import StartMenuView
-from constants import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT_SIZE, HEADER_FONT
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT_SIZE, HEADER_FONT
 from graphics import Screen
 
 import pyxel
