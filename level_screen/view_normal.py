@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+from utils import TILE_SIDE_LENGTH
 import pyxel
 
 class GameView:
@@ -12,16 +12,30 @@ class GameView:
 
     # OUTPUT METHODS
     def draw_enemies(self, enemies) -> None:
+        # put the draw in the enemy class
         for enemy in enemies:
             x,y = enemy.position
             pyxel.circ(x, y, 25, enemy.sprite)
+
+    def draw_towers(self, towers) -> None:
+        for tower in towers:
+            tower.draw_tower()
+
+    def draw_bullets(self, bullets) -> None:
+        for bullet in bullets:
+            bullet.draw_bullet()
 
     def draw_buttons(self, buttons):
         for button in buttons:
             button.draw_button()
 
     def draw_player(self, player):
-        player.draw()
+        player.draw_tower()
+
+    def draw_grid(self):
+        for i in range(10):
+            for j in range(10):
+                pyxel.rectb(j * TILE_SIDE_LENGTH, i * TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)

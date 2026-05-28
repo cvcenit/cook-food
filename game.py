@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from level_screen.level_controller import GameScreen
+from level_screen.controller_normal import GameScreen
 from start_menu.start_screen import StartMenuScreen
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
 
