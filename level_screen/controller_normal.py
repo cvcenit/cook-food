@@ -1,9 +1,9 @@
 from __future__ import annotations
 from .model_normal import GameModel
 from .view_normal import GameView
-from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI
 from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
-from math import asin, acos
+from math import atan
 
 import pyxel
 
@@ -27,14 +27,18 @@ class GameController:
             clicked_btn = self._view.get_clicked_button(self._model.buttons)
             clicked = self._view.get_clicked()
             mouse_x, mouse_y = self._view.get_mouse_position()
-            cardinal_x, cardinal_y = (mouse_x - (SCREEN_WIDTH / 2)), (mouse_y - (SCREEN_HEIGHT / 2))
-            hyp = ((cardinal_x * cardinal_x) + (cardinal_y * cardinal_y)) ** (1 / 2)
-            direction = - asin(cardinal_y / hyp)
+            cardinal_x, cardinal_y = (mouse_x - (SCREEN_WIDTH / 2)), -(mouse_y - (SCREEN_HEIGHT / 2))
+            if cardinal_x == 0:
+                direction = (cardinal_y * (1 / abs(cardinal_y))) * (PI / 2)
+            else:
+                direction = atan(cardinal_y / cardinal_x)
+
+            if cardinal_x < 0:
+                direction = (direction) + PI * (-1 + 2 * (cardinal_y > 0))
 
             self._model._game_logic.player_change_direction(direction)
             if clicked:
                 self._model._game_logic.player_shoot(direction)
-
 
             # enemy_hit = self._view.get_hitted_enemy(self._model.enemies, self._model.active_bullets)
             self._model.update(clicked_btn)
