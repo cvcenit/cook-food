@@ -129,6 +129,7 @@ class Bullet(BulletInfo):
 # (eg., bullets have a hit state, active state, inactive state) 
 # (towers ay may active, inactive state, depende sa current tick kung nagreload na ba)
 # enemies, nasa kabilang file, meron ding hit state, active state, at inactive state
+# TODO: Refactor ung time left, included siya sa pag end tick
 class Tower(TowerInfo):
     def __init__(self, color, grid_position):
         self._grid_position = grid_position

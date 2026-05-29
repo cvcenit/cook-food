@@ -7,17 +7,21 @@ with open("settings.json", "r") as f:
     DATA = json.load(f)
 
 FPS = 30
-SCREEN_WIDTH = 720
+SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 HEADER_FONT_SIZE = 48
 HEADER_FONT = pyxel.Font("./resources/eater.ttf", font_size=HEADER_FONT_SIZE)
 
 # TO ADD: "Gameplay screen dimensions", parang square tas nasa gilid/taas ung buttons and other stuff
+GAMEPLAY_WIDTH = 800
+GAMEPLAY_HEIGHT = 576
+GAMEPLAY_X_OFFSET = 280 + 72
+GAMEPLAY_Y_OFFSET = 72
 BULLET_RADIUS = 15 # pixels
-BULLET_VELOCITY_MAGNITUDE = (720 * (2 ** (1 / 2)) / 5) / FPS # pixels per second, 720sqrt(2)/5seconds, diagonal length in 5 seconds
+BULLET_VELOCITY_MAGNITUDE = ((((GAMEPLAY_WIDTH ** 2) + (GAMEPLAY_HEIGHT ** 2)) ** (1 / 2)) / 5) / FPS # pixels per second, diagonal length in 5 seconds
 PI = pi
 
-TILE_SIDE_LENGTH = 72 # Pixels, will change
+TILE_SIDE_LENGTH = GAMEPLAY_HEIGHT / 10 # Pixels, will change
 
 class MenuState(StrEnum):
     MAIN_MENU = "main"

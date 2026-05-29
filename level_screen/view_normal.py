@@ -1,5 +1,5 @@
 from __future__ import annotations
-from utils import TILE_SIDE_LENGTH
+from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
 import pyxel
 
 class GameView:
@@ -34,8 +34,8 @@ class GameView:
 
     def draw_grid(self):
         for i in range(10):
-            for j in range(10):
-                pyxel.rectb(j * TILE_SIDE_LENGTH, i * TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
+            for j in range(20):
+                pyxel.rectb(GAMEPLAY_X_OFFSET + (j * TILE_SIDE_LENGTH), GAMEPLAY_Y_OFFSET + (i * TILE_SIDE_LENGTH), TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)
