@@ -54,12 +54,12 @@ class Enemy(EnemyInfo):
 
 class Ube(Enemy):
     def __init__(self, path):
+        super().__init__()
         self._hit_points = self.base_hit_points
         self._current_speed = self.base_speed
         self._x_position = self.base_position[0]
         self._y_position = self.base_position[1]
         self._path = path
-        super().__init__()
 
     @property
     def base_hit_points(self) -> int:

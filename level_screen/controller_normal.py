@@ -2,7 +2,7 @@ from __future__ import annotations
 from .model_normal import GameModel
 from .view_normal import GameView
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
-from modes import CampaignModeGameOverCondition, NoEnemiesRoundOverCondition
+from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
 
 import pyxel
 
@@ -24,6 +24,10 @@ class GameController:
                 pyxel.quit()
 
             clicked_btn = self._view.get_clicked_button(self._model.buttons)
+
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+                    self._model._game_logic.player_shoot()
+                    
             # enemy_hit = self._view.get_hitted_enemy(self._model.enemies, self._model.active_bullets)
             self._model.update(clicked_btn)
 
@@ -40,8 +44,14 @@ class GameController:
         self._app.switch_screen(state)
 
 class GameScreen:
-    def __init__(self, app):
-        self._model = GameModel(DATA, CampaignModeGameOverCondition(), NoEnemiesRoundOverCondition())
+    def __init__(self, app, mode="campaign"):
+        if mode == "campaign":
+            level = CampaignMode(DATA)
+            game_over = CampaignModeGameOverCondition()
+        else:
+            level = EndlessMode(DATA)
+            game_over = EndlessModeGameOverCondition()
+        self._model = GameModel(level, game_over, NoEnemiesRoundOverCondition())
         self._view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
         self._controller = GameController(self._model, self._view, app)
 

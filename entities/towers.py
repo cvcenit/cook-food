@@ -153,7 +153,7 @@ class Tower(TowerInfo):
 
     @property
     def fire_rate(self):
-        return self.fire_rate
+        return self._fire_rate
 
     @property
     def grid_position(self):
@@ -232,8 +232,6 @@ class Chef(Tower):
         pyxel.circ(x, y, TILE_SIDE_LENGTH / 2, self.color)
 
     def end_tick(self):
-        if self.can_shoot:
-            self.shoot(self.current_direction)
         self.decrement_reload_time()
         self.remove_inactive_bullets()
 
