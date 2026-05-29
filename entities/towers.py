@@ -125,6 +125,10 @@ class Bullet(BulletInfo):
         if self.is_out_of_screen():
             self.deactivate()
 
+# TODO: Refactor, dapat maganda ung end_tick, i believe merong state kagaya ng moles 
+# (eg., bullets have a hit state, active state, inactive state) 
+# (towers ay may active, inactive state, depende sa current tick kung nagreload na ba)
+# enemies, nasa kabilang file, meron ding hit state, active state, at inactive state
 class Tower(TowerInfo):
     def __init__(self, color, grid_position):
         self._grid_position = grid_position
