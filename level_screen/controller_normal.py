@@ -3,7 +3,7 @@ from .model_normal import GameModel
 from .view_normal import GameView
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI
 from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
-from math import atan
+from math import atan2
 
 import pyxel
 
@@ -28,13 +28,7 @@ class GameController:
             clicked = self._view.get_clicked()
             mouse_x, mouse_y = self._view.get_mouse_position()
             cardinal_x, cardinal_y = (mouse_x - (SCREEN_WIDTH / 2)), -(mouse_y - (SCREEN_HEIGHT / 2))
-            if cardinal_x == 0:
-                direction = (cardinal_y * (1 / abs(cardinal_y))) * (PI / 2)
-            else:
-                direction = atan(cardinal_y / cardinal_x)
-
-            if cardinal_x < 0:
-                direction = (direction) + PI * (-1 + 2 * (cardinal_y > 0))
+            direction = atan2(cardinal_y, cardinal_x)
 
             self._model._game_logic.player_change_direction(direction)
             if clicked:
