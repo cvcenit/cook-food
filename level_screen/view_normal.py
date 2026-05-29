@@ -47,7 +47,8 @@ class GameView:
             if button.is_clicked():
                 return i
 
-    def get_hitted_enemy(self, enemies, bullets) -> None | int:
-        for i, bullet in enumerate(bullets):
-            if bullet.is_hit():
-                ...
+    def get_mouse_position(self) -> tuple[float, float]:
+        return pyxel.mouse_x, pyxel.mouse_y
+
+    def get_clicked(self) -> bool:
+        return pyxel.btnp((pyxel.MOUSE_BUTTON_LEFT))

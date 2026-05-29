@@ -97,8 +97,11 @@ class GameLogic:
     def lose_life(self) -> None:
         self._lives -= 1
 
-    def player_shoot(self):
-        self._player.shoot(self._player.current_direction)
+    def player_change_direction(self, direction):
+        self._player.change_direction(direction)
+
+    def player_shoot(self, direction):
+        self._player.shoot(direction)
 
     def advance_round(self) -> None:
         self._round_index += 1
@@ -117,6 +120,8 @@ class GameLogic:
 
         for enemy in self._enemies:
             enemy.end_tick()
+
+        self._player.end_tick()
 
         for bullet in self.bullets:
             for enemy in self._active_enemies:

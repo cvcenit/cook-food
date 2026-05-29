@@ -111,7 +111,6 @@ class Bullet(BulletInfo):
     def draw_bullet(self):
         (x, y), r = self.current_position, self.radius
         pyxel.circ(x, y, r, self.color)
-        print(x, y)
 
     def initialize_bullet(self):
         self._is_active = True
@@ -212,6 +211,14 @@ class Chef(Tower):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9 # bullets per second
 
+    def screen_position(self) -> tuple[float, float]:
+        i, j = self.grid_position
+        x_screen_offset = 0 # will change kapag finalized na
+        y_screen_offset = 0 # will change kapag finalized na
+        x = (j * TILE_SIDE_LENGTH) + x_screen_offset - (TILE_SIDE_LENGTH / 2)
+        y = (i * TILE_SIDE_LENGTH) + y_screen_offset - (TILE_SIDE_LENGTH / 2)
+        return SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
+
     def change_direction(self, direction) -> None:
         self._current_direction = direction
 
@@ -219,10 +226,11 @@ class Chef(Tower):
         self._color = color
 
     def shoot(self, direction):
-        bullet = Bullet(self.color, BULLET_RADIUS, self.screen_position(), self.bullet_velocity(direction))
-        bullet.initialize_bullet()
-        self._bullets.append(bullet)
-        self._remaining_seconds_to_shoot = self._fire_rate
+        if self.can_shoot:
+            bullet = Bullet(self.color, BULLET_RADIUS, self.screen_position(), self.bullet_velocity(direction))
+            bullet.initialize_bullet()
+            self._bullets.append(bullet)
+            self._remaining_seconds_to_shoot = self._fire_rate
 
     def decrement_reload_time(self):
         self._remaining_seconds_to_shoot -= self._fire_rate / FPS
@@ -234,6 +242,7 @@ class Chef(Tower):
     def end_tick(self):
         self.decrement_reload_time()
         self.remove_inactive_bullets()
+        print(self._remaining_seconds_to_shoot)
 
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]

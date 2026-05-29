@@ -3,6 +3,7 @@ from .model_normal import GameModel
 from .view_normal import GameView
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
 from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
+from math import asin, acos
 
 import pyxel
 
@@ -24,10 +25,17 @@ class GameController:
                 pyxel.quit()
 
             clicked_btn = self._view.get_clicked_button(self._model.buttons)
+            clicked = self._view.get_clicked()
+            mouse_x, mouse_y = self._view.get_mouse_position()
+            cardinal_x, cardinal_y = (mouse_x - (SCREEN_WIDTH / 2)), (mouse_y - (SCREEN_HEIGHT / 2))
+            hyp = ((cardinal_x * cardinal_x) + (cardinal_y * cardinal_y)) ** (1 / 2)
+            direction = - asin(cardinal_y / hyp)
 
-            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
-                    self._model._game_logic.player_shoot()
-                    
+            self._model._game_logic.player_change_direction(direction)
+            if clicked:
+                self._model._game_logic.player_shoot(direction)
+
+
             # enemy_hit = self._view.get_hitted_enemy(self._model.enemies, self._model.active_bullets)
             self._model.update(clicked_btn)
 
