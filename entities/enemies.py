@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, FPS
+from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, FPS, DATA 
 
 # entity types lang laman neto
 
@@ -79,7 +79,7 @@ class Ube(Enemy):
 
     @property
     def base_speed(self) -> int:
-        return TILE_SIDE_LENGTH / (0.1 * FPS)  # 1 tile per 2 seconds
+        return TILE_SIDE_LENGTH / (2 * FPS)  # 1 tile per 2 seconds
 
     @property
     def current_speed(self) -> int:
@@ -139,9 +139,25 @@ class Ube(Enemy):
             self._x_position += self._current_speed * dx / dist
             self._y_position += self._current_speed * dy / dist
         
+class RegeneratorMixin:
+    def __init__(self, *args, regen_interval: int = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._regen_interval = regen_interval if regen_interval is not None else DATA.get("regenerator_interval", 3)
+        self._cells_moved = 0
+        self._last_path_index = 0  
+
+    def end_tick(self):
+        super().end_tick()
+        if self._path_index > self._last_path_index:
+            cells_advanced = self._path_index - self._last_path_index
+            self._cells_moved += cells_advanced
+            if self._cells_moved % self._regen_interval == 0:
+                self._hit_points += 1 
+        self._last_path_index = self._path_index
+
+class RegeneratorUbe(RegeneratorMixin, Ube):
+    def __init__(self, path, regen_interval: int = None):
+        super().__init__(path, regen_interval=regen_interval)
 
 class Chameleon(Enemy):
-    pass
-
-class Regenerator(Enemy):
     pass

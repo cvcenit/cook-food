@@ -77,7 +77,7 @@ class GameLogic:
         return False
     
     def defeat_enemy(self, enemy) -> None:
-        enemy.receive_hit(999)
+        enemy.receive_hit(enemy.hit_points) 
         self._exp += enemy.points
     
     def lose_life(self) -> None:
@@ -118,8 +118,10 @@ class GameLogic:
                     distance_square = (bx - ex) ** 2 + (by - ey) ** 2
                     hit_distance = bullet.radius + 25
                     if distance_square <= hit_distance ** 2:
-                        self.defeat_enemy(enemy)
+                        enemy.receive_hit(1)
                         bullet.deactivate()
+                        if not enemy.is_alive:
+                            self._exp += enemy.points
         
         for enemy in self._active_enemies:
             if enemy._path_index >= len(enemy._path) - 1:
@@ -131,6 +133,17 @@ class GameLogic:
         
         if self._game_over_condition.is_game_over(len(self._active_enemies), self._lives, self.rounds_left):
             self._is_game_over = True
+            
+            for enemy in self._active_enemies:
+                if enemy._path_index >= len(enemy._path) - 1:
+                    self.lose_life()
+                    enemy.receive_hit(999)
+                        
+            if self._round_over_condition.is_round_over(len(self._active_enemies)):
+                self.advance_round()
+            
+            if self._game_over_condition.is_game_over(len(self._active_enemies), self._lives, self.rounds_left):
+                self._is_game_over = True
 
     @property
     def _active_enemies(self):
