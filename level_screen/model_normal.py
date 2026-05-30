@@ -132,6 +132,11 @@ class GameLogic:
                 if distance_square <= hit_distance ** 2:
                     self.defeat_enemy(enemy)
                     bullet.deactivate()
+        
+        for enemy in self._active_enemies:
+            if enemy._path_index >= len(enemy._path) - 1:
+                self.lose_life()
+                enemy.receive_hit(999)
                     
         if self._round_over_condition.is_round_over(len(self._active_enemies)):
             self.advance_round()

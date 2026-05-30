@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, FPS
 
 # entity types lang laman neto
 
@@ -55,11 +56,18 @@ class Enemy(EnemyInfo):
 class Ube(Enemy):
     def __init__(self, path):
         super().__init__()
+        self._path = path 
+        self._path_index = 0
         self._hit_points = self.base_hit_points
         self._current_speed = self.base_speed
-        self._x_position = self.base_position[0]
-        self._y_position = self.base_position[1]
-        self._path = path
+        # start at first tile of path
+        self._x_position, self._y_position = self._tile_to_screen(path[0])
+
+    def _tile_to_screen(self, tile) -> tuple[float, float]:
+        row, col = tile
+        x = GAMEPLAY_X_OFFSET + col * TILE_SIDE_LENGTH + TILE_SIDE_LENGTH / 2
+        y = GAMEPLAY_Y_OFFSET + row * TILE_SIDE_LENGTH + TILE_SIDE_LENGTH / 2
+        return x, y
 
     @property
     def base_hit_points(self) -> int:
@@ -67,7 +75,7 @@ class Ube(Enemy):
 
     @property
     def base_speed(self) -> int:
-        return 2
+        return TILE_SIDE_LENGTH / (2 * FPS)  # 1 tile per 2 seconds
 
     @property
     def current_speed(self) -> int:
@@ -83,7 +91,7 @@ class Ube(Enemy):
 
     @property
     def is_alive(self) -> bool:
-        return self.hit_points > 0
+        return self._hit_points > 0
 
     @property
     def sprite(self) -> int:
@@ -91,7 +99,7 @@ class Ube(Enemy):
 
     @property
     def base_position(self) -> tuple[float, float]:
-        return (50, 50)
+        return self._tile_to_screen(self._path[0])
 
     @property
     def position(self) -> tuple[float, float]:
@@ -104,7 +112,24 @@ class Ube(Enemy):
         ...
 
     def end_tick(self) -> None:
-        self._x_position += self.current_speed
+        if not self.is_alive:
+            return
+        if self._path_index >= len(self._path) - 1:
+            return  # reached end of path
+
+        # move toward next tile
+        target_x, target_y = self._tile_to_screen(self._path[self._path_index + 1])
+        dx = target_x - self._x_position
+        dy = target_y - self._y_position
+        dist = (dx ** 2 + dy ** 2) ** 0.5
+
+        if dist <= self._current_speed:
+            # snap to next tile
+            self._x_position, self._y_position = target_x, target_y
+            self._path_index += 1
+        else:
+            self._x_position += self._current_speed * dx / dist
+            self._y_position += self._current_speed * dy / dist
         
 #test this
 class Chameleon(Enemy):
