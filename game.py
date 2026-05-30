@@ -1,47 +1,57 @@
 from __future__ import annotations
 
-from level_screen.controller_normal import GameScreen
-from start_menu.start_screen import StartMenuScreen
-from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA
+from level_screen.controller_normal import LevelMenuScreen
+from main_menu.screen_main_menu import MainMenuScreen
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
 
 import pyxel
 
 class Game:
-    def __init__(self):
-        self._screens = {
-        "main": StartMenuScreen(self),
-        "play": GameScreen(self),
-        "quit": 1
-        }
-        self._state = "main"
+    def __init__(self, screens: dict[AppState, Screen], routes: dict[AppState, dict[str, AppState]]):
+        self._screens = screens
+        self._routes = routes
 
-    @property
-    def screens(self):
-        return self._screens
+        self._current_state = AppState.MAIN_MENU
+        self._current_screen = self._screens[self._current_state]
 
-    @property
-    def state(self):
-        return self._state
-
-    def switch_screen(self, state):
-        if state == "quit":
-            pyxel.quit()
-
-        if state in self._screens:
-            self._state = state
-            self._screens[self._state].start_screen()
+    def _switch_screen(self, state: AppState):
+        self._current_state = state
+        self._current_screen = self._screens[state]
+        self._current_screen.reset()
 
     def update(self):
-        self._screens[self._state].update()
+        self._current_screen.update()
+        clicked_button = self._current_screen.get_clicked_button()
+
+        # a bit heavy sa utak
+        if clicked_button is not None:
+            possible_next_state = self._routes.get(self._current_state, {})
+            if clicked_button in possible_next_state:
+                self._switch_screen(possible_next_state[clicked_button])
 
     def draw(self):
-        self._screens[self._state].draw()
+        self._current_screen.draw()
 
     def run(self):
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, fps=FPS)
         pyxel.mouse(visible=True) 
         pyxel.run(self.update, self.draw)
 
-g = Game()
+SCREENS = {
+    AppState.MAIN_MENU: MainMenuScreen,
+    AppState.LEVELS_MENU: LevelMenuScreen
+    }
+
+ROUTES = {
+    AppState.MAIN_MENU: {
+    0: AppState.LEVELS_MENU,
+    1: AppState.MAIN_SETTINGS
+    },
+    AppState.LEVELS_MENU: {
+    0: AppState.MAIN_MENU,
+    }
+}
+
+g = Game(SCREENS, ROUTES)
 if __name__ == "__main__":
     g.run()

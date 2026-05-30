@@ -34,19 +34,24 @@ class TextButton(Button):
 class SpriteButton(Button):
     pass
 
-class Screen(ABC):
-    @abstractmethod
-    def update(self):
-        ...
+class Screen:
+    def __init__(self, model, view, controller):
+        self._model = model
+        self._view = view
+        self._controller = controller
 
-    @abstractmethod
-    def draw(self):
-        ...
-
-    @abstractmethod
     def start_screen(self):
-        ...
+        self._model.start_screen()
 
-class GridLayout:
-    # ang demanding
-    pass
+    def reset(self):
+        self._model.reset()
+        self.start_screen()
+
+    def get_clicked_button(self):
+        return self._view.get_clicked_button(self._model.buttons)
+
+    def update(self):
+        self._controller.update()
+
+    def draw(self):
+        self._controller.draw()

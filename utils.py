@@ -23,10 +23,11 @@ PI = pi
 
 TILE_SIDE_LENGTH = GAMEPLAY_HEIGHT / 10 # Pixels, will change
 
-class MenuState(StrEnum):
-    MAIN_MENU = "main"
+class AppState(StrEnum):
+    MAIN_MENU = "main_menu"
     MAIN_SETTINGS = "main_settings"
-    PLAY_MENU = "play"
+    MAIN_LEADERBOARDS = "main_leaderboards"
+    LEVELS_MENU = "levels_menu"
 
 
 def rectangles_has_collided(rect_one, rect_two) -> bool:
