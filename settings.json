@@ -1,4 +1,5 @@
 {
     "remaining_enemies": 5,
-    "remaining_lives": 2
+    "remaining_lives": 2,
+    "regenerator_interval": 3
 }
