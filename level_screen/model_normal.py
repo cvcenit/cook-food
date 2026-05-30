@@ -151,7 +151,10 @@ class GameLogic:
 class GameModel:
     def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
         self._current_tick = 1
-        self._game_logic = GameLogic(level, game_over_condition, round_over_condition)
+        self._level = level
+        self._game_over_condition = game_over_condition
+        self._round_over_condition = round_over_condition
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
 
         self._buttons = NORMAL_MODE_BUTTONS
         self._is_current_screen = False
@@ -187,6 +190,15 @@ class GameModel:
         self._is_current_screen = True
         self._current_tick = 1
         self._state = "play"
+
+    def reset(self):
+        self._current_tick = 1
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
+
+        self._buttons = NORMAL_MODE_BUTTONS
+        self._is_current_screen = False
+        self._states = ["main"]
+        self._state = self.base_state
 
     def update(self, clicked_idx):
         if clicked_idx is not None:

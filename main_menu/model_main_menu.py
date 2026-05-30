@@ -49,3 +49,6 @@ class StartMenuModel:
         self._is_current_screen = True
         self._current_tick = 1
         self._state = "main"
+
+    def reset(self):
+        self.start_screen()
