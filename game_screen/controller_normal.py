@@ -37,6 +37,9 @@ class GameController:
         if clicked:
             self._model._game_logic.player_shoot()
 
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT):
+            self._model._game_logic.try_place_tower(mouse_x, mouse_y)
+        
         self._model.update(clicked_btn)
 
     def draw(self):
@@ -45,7 +48,7 @@ class GameController:
         # palitan ang laman ng draw_grid, ipass ang level as argument or kahit fields ng level
         # mag aadd ka rin ng valid tiles at invalid tiles at player tile sa level data 
         # imatch ung color ng in/valid tower tiles, path tile, player tile
-        self._view.draw_grid()
+        self._view.draw_grid(self._model._game_logic.grid)
 
         # draw entities
         self._view.draw_towers(self._model._game_logic.towers)

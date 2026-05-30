@@ -31,6 +31,7 @@ class GameLogic:
         round_config = self._level.rounds[index]
 
         self._path = round_config.path
+        self._grid = round_config.grid
         self._enemies = [factory(round_config.path) for factory in round_config.enemies]
         self._player = Chef(7, round_config.player_start)
         self._towers = []
@@ -62,6 +63,10 @@ class GameLogic:
     @property
     def rounds_left(self) -> int:
         return len(self._level.rounds) - self._round_index
+    
+    @property
+    def grid(self):
+        return self._grid
 
     @property
     def bullets(self):

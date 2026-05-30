@@ -37,7 +37,8 @@ class Game:
 
     def run(self):
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, fps=FPS)
-        pyxel.mouse(visible=True) 
+        pyxel.mouse(visible=True)
+        pyxel.load("my_resource.pyxres")
         pyxel.run(self.update, self.draw)
 
 SCREENS = {

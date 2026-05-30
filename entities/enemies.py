@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, FPS, DATA 
-from random import choice 
+from random import choice
+
+import pyxel
 
 # entity types lang laman neto
 
@@ -140,6 +142,16 @@ class Ube(Enemy):
         else:
             self._x_position += self._current_speed * dx / dist
             self._y_position += self._current_speed * dy / dist
+
+    def draw(self):
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            0, 0,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0                # transparent color (black)
+        )
         
 class RegeneratorMixin:
     def __init__(self, *args, regen_interval: int = None, **kwargs):

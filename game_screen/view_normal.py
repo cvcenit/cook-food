@@ -13,9 +13,12 @@ class GameView:
     # OUTPUT METHODS
     def draw_enemies(self, enemies) -> None:
         # put the draw in the enemy class
+        # for enemy in enemies:
+        #     x,y = enemy.position
+        #     pyxel.circ(x, y, 25, enemy.sprite)
         for enemy in enemies:
-            x,y = enemy.position
-            pyxel.circ(x, y, 25, enemy.sprite)
+            if enemy.is_alive:
+                enemy.draw()
 
     def draw_towers(self, towers) -> None:
         for tower in towers:
@@ -32,10 +35,11 @@ class GameView:
     def draw_player(self, player):
         player.draw_tower()
 
-    def draw_grid(self):
-        for i in range(1, 8):
-            for j in range(11):
-                pyxel.rectb(GAMEPLAY_X_OFFSET + (j * TILE_SIDE_LENGTH), GAMEPLAY_Y_OFFSET + (i * TILE_SIDE_LENGTH), TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
+    def draw_grid(self, grid) -> None:
+#        for i in range(1, 8):
+#            for j in range(11):
+#                pyxel.rectb(GAMEPLAY_X_OFFSET + (j * TILE_SIDE_LENGTH), GAMEPLAY_Y_OFFSET + (i * TILE_SIDE_LENGTH), TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
+        grid.draw()
 
     def draw_sidebar(self, buttons):
         pyxel.rect(0, 0, 280, 800, 3)

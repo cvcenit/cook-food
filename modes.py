@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from entities.enemies import RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe
+from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe
+from grid import Grid
 
 
 @dataclass
@@ -8,28 +9,29 @@ class RoundConfig:
 	enemies: list # list of callables
 	path: list
 	player_start: tuple
+	grid: Grid
 
-def make_spiral_path(rows=10, cols=10):
+def make_spiral_path(rows=8, cols=10, row_offset=1):
     path = []
     top, bottom, left, right = 0, rows - 1, 0, cols - 1
 
     while top <= bottom and left <= right:
         for col in range(left, right + 1):
-            path.append((top, col))
+            path.append((top + row_offset, col))
         top += 1
 
         for row in range(top, bottom + 1):
-            path.append((row, right))
+            path.append((row + row_offset, right))
         right -= 1
 
         if top <= bottom:
             for col in range(right, left - 1, -1):
-                path.append((bottom, col))
+                path.append((bottom + row_offset, col))
             bottom -= 1
 
         if left <= right:
             for row in range(bottom, top - 1, -1):
-                path.append((row, left))
+                path.append((row + row_offset, left))
             left += 1
 
     return path
@@ -52,20 +54,35 @@ class Level(ABC):
 
 class CampaignMode(Level):
 	def __init__(self, data: dict):
-		path = make_spiral_path(8, 10)
+		path = [
+			(1, 0), (1, 1),  # goes right
+			(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), # goes down
+			(7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8), (7, 9), # goes right
+			(6, 9), (5, 9), # goes up
+			(5, 9), (5, 8), (5, 7), # goes left
+			(4, 7), (3, 7), # goes up
+			(3, 7), (3, 8), (3, 9), (3, 10), # goes right
+			(2, 10), (1, 10), # goes up
+			(1, 10), (1, 9), (1, 8), (1, 7), (1, 6), # goes left
+			(2, 6), # goes down
+			(2, 5), # goes left
+			(3, 5), # goes down
+			]
+		grid = Grid(9, 11, path)
 		enemy_count = data["remaining_enemies"]
 
 		self._rounds = [
 			RoundConfig(
-				enemies=[lambda p: RegeneratorChameleonUbe(p) for _ in range(enemy_count)],
+				enemies=[lambda p, cls=Ube: cls(p) for _ in range(enemy_count)],
 				path=path,
 				player_start=(4, 5),
+				grid=grid,
 			),
 			RoundConfig(
-				enemies=[lambda p: RegeneratorChameleonUbe(p) for _ in range(enemy_count + 2)],
+				enemies=[lambda p: Ube(p) for _ in range(enemy_count + 2)],
 				path=path,
 				player_start=(4, 5),
-			)
+				grid=grid,			)
 		]
 		self._initial_lives = data["remaining_lives"]
 	
