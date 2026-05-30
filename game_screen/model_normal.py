@@ -86,8 +86,8 @@ class GameLogic:
     def player_change_direction(self, direction):
         self._player.change_direction(direction)
 
-    def player_shoot(self, direction):
-        self._player.shoot(direction)
+    def player_shoot(self):
+        self._player.shoot()
 
     def advance_round(self) -> None:
         self._round_index += 1
@@ -95,6 +95,7 @@ class GameLogic:
             self._load_round(self._round_index)
 
     def update(self):
+        print(self.lives)
         if self._is_game_over:
             return
         
@@ -111,13 +112,14 @@ class GameLogic:
 
         for bullet in self.bullets:
             for enemy in self._active_enemies:
-                ex, ey = enemy.position
-                bx, by = bullet.current_position
-                distance_square = (bx - ex) ** 2 + (by - ey) ** 2
-                hit_distance = bullet.radius + 25
-                if distance_square <= hit_distance ** 2:
-                    self.defeat_enemy(enemy)
-                    bullet.deactivate()
+                if bullet.color == enemy.color:
+                    ex, ey = enemy.position
+                    bx, by = bullet.current_position
+                    distance_square = (bx - ex) ** 2 + (by - ey) ** 2
+                    hit_distance = bullet.radius + 25
+                    if distance_square <= hit_distance ** 2:
+                        self.defeat_enemy(enemy)
+                        bullet.deactivate()
         
         for enemy in self._active_enemies:
             if enemy._path_index >= len(enemy._path) - 1:

@@ -18,6 +18,10 @@ class TextButton(Button):
         self._x, self._y, self._text, self._color = x, y, text, color
         self._text_width = HEADER_FONT.text_width(self._text)
 
+    @property
+    def text_width(self):
+        return self._text_width
+
     def is_clicked(self) -> bool:
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
             if self.is_hovered():
@@ -30,6 +34,14 @@ class TextButton(Button):
 
     def draw_button(self):
         pyxel.text(self._x, self._y, self._text, (8 if self.is_hovered() else self._color), font=HEADER_FONT)
+
+    @property
+    def current_position(self):
+        return self._x, self._y
+
+    def change_position(self, x, y):
+        self._x = x
+        self._y = y
 
 class SpriteButton(Button):
     pass

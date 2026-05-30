@@ -9,7 +9,7 @@ with open("settings.json", "r") as f:
 FPS = 30
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 800
-HEADER_FONT_SIZE = 48
+HEADER_FONT_SIZE = 64
 HEADER_FONT = pyxel.Font("./resources/eater.ttf", font_size=HEADER_FONT_SIZE)
 
 GAMEPLAY_WIDTH = 1000

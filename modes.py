@@ -52,7 +52,7 @@ class Level(ABC):
 
 class CampaignMode(Level):
 	def __init__(self, data: dict):
-		path = make_spiral_path(10, 10)
+		path = make_spiral_path(8, 10)
 		enemy_count = data["remaining_enemies"]
 
 		self._rounds = [
@@ -64,7 +64,7 @@ class CampaignMode(Level):
 			RoundConfig(
 				enemies=[lambda p: Ube(p) for _ in range(enemy_count + 2)],
 				path=path,
-				player_start=(0, 0),
+				player_start=(4, 5),
 			)
 		]
 		self._initial_lives = data["remaining_lives"]

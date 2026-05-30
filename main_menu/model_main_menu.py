@@ -1,15 +1,22 @@
 from graphics import TextButton
-from utils import HEADER_FONT_SIZE
+from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT
+
+MAIN_MENU_BUTTONS = [
+    TextButton(0, 4 * HEADER_FONT_SIZE, "Campaign", 1),
+    TextButton(0, 5 * HEADER_FONT_SIZE, "Endless", 1),
+    TextButton(0, 6 * HEADER_FONT_SIZE, "Leaderboard", 1),
+    TextButton(0, 7 * HEADER_FONT_SIZE, "Settings", 1),
+    TextButton(0, 8 * HEADER_FONT_SIZE, "Quit", 1)
+]
+
+SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2
+for button in MAIN_MENU_BUTTONS:
+    _, y = button.current_position
+    button.change_position(SCREEN_WIDTH_HALF - (button.text_width / 2), y)
 
 class MainMenuModel:
     def __init__(self):
-        self._screen_change_buttons = [
-        TextButton(48, HEADER_FONT_SIZE, "Campaign", 1),
-        TextButton(48, 2 * HEADER_FONT_SIZE, "Endless", 1),
-        TextButton(48, 3 * HEADER_FONT_SIZE, "Leaderboard", 1),
-        TextButton(48, 4 * HEADER_FONT_SIZE, "Settings", 1),
-        TextButton(48, 5 * HEADER_FONT_SIZE, "Quit", 1)
-        ]
+        self._screen_change_buttons = MAIN_MENU_BUTTONS
         self._popup_buttons = []
         self._current_tick = 1
 

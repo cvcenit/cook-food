@@ -24,23 +24,26 @@ class GameController:
             pyxel.quit()
 
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
-        clicked = self._view.get_clicked()
+        clicked = self._view.has_left_clicked()
+
+        # just gets current direction
         mouse_x, mouse_y = self._view.get_mouse_position()
         player_x, player_y = self._model._game_logic.player.screen_position()
         cardinal_x, cardinal_y = (mouse_x - player_x), -(mouse_y - player_y)
         direction = atan2(cardinal_y, cardinal_x)
 
         self._model._game_logic.player_change_direction(direction)
+        self._model._game_logic.player.load_next_bullet(direction)
         if clicked:
-            self._model._game_logic.player_shoot(direction)
+            self._model._game_logic.player_shoot()
 
         self._model.update(clicked_btn)
 
     def draw(self):
         self._view.reset_screen()
         # JOWEE BASAHIN E2
-        # hi, palitan ang laman ng draw_grid, ipass ang level as argument or kahit fields ng level
-        # so mag aadd ka rin ng valid tiles at invalid tiles at player tile sa level data 
+        # palitan ang laman ng draw_grid, ipass ang level as argument or kahit fields ng level
+        # mag aadd ka rin ng valid tiles at invalid tiles at player tile sa level data 
         # imatch ung color ng in/valid tower tiles, path tile, player tile
         self._view.draw_grid()
 

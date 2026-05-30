@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_VELOCITY_MAGNITUDE, PI, TILE_SIDE_LENGTH, BULLET_RADIUS, FPS
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
 from math import sin, cos
+from random import choice
 import pyxel
 
 class TowerInfo(ABC):
@@ -93,6 +94,12 @@ class Bullet(BulletInfo):
     @property
     def is_active(self) -> bool:
         return self._is_active
+
+    def change_velocity(self, vel):
+        self._current_velocity = vel
+
+    def change_position(self, pos):
+        self._current_position = pos
 
     def apply_velocity(self):
         vel_x, vel_y = self.current_velocity
@@ -191,7 +198,7 @@ class Tower(TowerInfo):
         self._color = color
 
     def shoot(self, direction):
-        bullet = Bullet(random.randint(0, ), BULLET_RADIUS, self.screen_position(), self.bullet_velocity(direction))
+        bullet = Bullet(1, BULLET_RADIUS, self.screen_position(), self.bullet_velocity(direction))
         bullet.initialize_bullet()
         self._bullets.append(bullet)
         self._remaining_seconds_to_shoot = self._fire_rate
@@ -212,23 +219,49 @@ class Tower(TowerInfo):
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
 
+# dapat may next bullet na nakashow, few pixels
 class Chef(Tower):
     def __init__(self, color, grid_position):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9 # bullets per second
+        self._next_bullet = None
+
+    @property
+    def next_bullet(self):
+        return self._next_bullet
 
     def change_direction(self, direction) -> None:
         self._current_direction = direction
+        if self._next_bullet is not None:
+            self._next_bullet.change_position((self.next_bullet_position()))
 
     def change_color(self, color):
         self._color = color
 
-    def shoot(self, direction):
-        if self.can_shoot:
-            bullet = Bullet(self.color, BULLET_RADIUS, self.screen_position(), self.bullet_velocity(direction))
+    def next_bullet_color(self):
+        return choice([2, 9, 11, 7, 10, 4])
+
+    def next_bullet_position(self):
+        bx, by = self.screen_position()
+        bx += (TILE_SIDE_LENGTH) * cos(self.current_direction)
+        by -= (TILE_SIDE_LENGTH) * sin(self.current_direction)
+        return bx, by
+
+    def load_next_bullet(self, direction):
+        if self._next_bullet is None:
+            bullet_color = self.next_bullet_color()
+
+            bullet = Bullet(bullet_color, BULLET_RADIUS, self.next_bullet_position(), (0, 0))
             bullet.initialize_bullet()
+
             self._bullets.append(bullet)
+            self._next_bullet = bullet
+
+    def shoot(self):
+        if self.can_shoot:
+            self._next_bullet.change_velocity(self.bullet_velocity(self.current_direction))
             self._remaining_seconds_to_shoot = self._fire_rate
+            self._next_bullet = None
 
     def decrement_reload_time(self):
         self._remaining_seconds_to_shoot -= self._fire_rate / FPS

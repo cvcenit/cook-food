@@ -38,7 +38,7 @@ class GameView:
                 pyxel.rectb(GAMEPLAY_X_OFFSET + (j * TILE_SIDE_LENGTH), GAMEPLAY_Y_OFFSET + (i * TILE_SIDE_LENGTH), TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
 
     def draw_sidebar(self):
-        pyxel.rect(0, 0, 280, 800, 8)
+        pyxel.rect(0, 0, 280, 800, 3)
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)
@@ -53,5 +53,5 @@ class GameView:
     def get_mouse_position(self) -> tuple[float, float]:
         return pyxel.mouse_x, pyxel.mouse_y
 
-    def get_clicked(self) -> bool:
+    def has_left_clicked(self) -> bool:
         return pyxel.btnp((pyxel.MOUSE_BUTTON_LEFT))

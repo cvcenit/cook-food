@@ -30,6 +30,10 @@ class EnemyInfo(ABC):
 
     @property
     @abstractmethod
+    def color(self) -> int: ...
+
+    @property
+    @abstractmethod
     def sprite(self) -> int: ...
 
     @property
@@ -75,7 +79,7 @@ class Ube(Enemy):
 
     @property
     def base_speed(self) -> int:
-        return TILE_SIDE_LENGTH / (2 * FPS)  # 1 tile per 2 seconds
+        return TILE_SIDE_LENGTH / (0.1 * FPS)  # 1 tile per 2 seconds
 
     @property
     def current_speed(self) -> int:
@@ -92,6 +96,10 @@ class Ube(Enemy):
     @property
     def is_alive(self) -> bool:
         return self._hit_points > 0
+
+    @property
+    def color(self):
+        return 2
 
     @property
     def sprite(self) -> int:
