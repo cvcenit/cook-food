@@ -27,7 +27,6 @@ class Game:
         self._current_screen.update()
         clicked_button = self._current_screen.get_clicked_button()
 
-        # a bit heavy sa utak
         if clicked_button is not None:
             possible_next_state = self._routes.get(self._current_state, {})
             if clicked_button in possible_next_state:
@@ -51,7 +50,8 @@ ROUTES = {
     AppState.MAIN_MENU: {
     "campaign_mode": AppState.CAMPAIGN_MENU,
     "endless_mode": AppState.ENDLESS_MENU,
-    1: AppState.MAIN_SETTINGS,
+    "main_settings": AppState.MAIN_SETTINGS,
+    "main_leaderboards": AppState.MAIN_LEADERBOARDS,
     "main_quit": AppState.MAIN_QUIT
     },
     AppState.CAMPAIGN_MENU: {

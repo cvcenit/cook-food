@@ -26,14 +26,14 @@ class GameController:
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         clicked = self._view.get_clicked()
         mouse_x, mouse_y = self._view.get_mouse_position()
-        cardinal_x, cardinal_y = (mouse_x - (SCREEN_WIDTH / 2)), -(mouse_y - (SCREEN_HEIGHT / 2))
+        player_x, player_y = self._model._game_logic.player.screen_position()
+        cardinal_x, cardinal_y = (mouse_x - player_x), -(mouse_y - player_y)
         direction = atan2(cardinal_y, cardinal_x)
 
         self._model._game_logic.player_change_direction(direction)
         if clicked:
             self._model._game_logic.player_shoot(direction)
 
-        # enemy_hit = self._view.get_hitted_enemy(self._model.enemies, self._model.active_bullets)
         self._model.update(clicked_btn)
 
     def draw(self):

@@ -1,11 +1,6 @@
 from graphics import TextButton
 from utils import HEADER_FONT_SIZE
 
-# problem in mind: popup buttons and buttons that will change screen has some conflict
-# solution: create two different methods for popup buttons and change screen buttons
-
-# TODO: lagay endless mode at campaign mode sa main menu
-
 class CampaignMenuModel:
     def __init__(self, levels):
         self._levels = levels

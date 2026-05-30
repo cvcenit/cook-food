@@ -12,9 +12,6 @@ NORMAL_MODE_BUTTONS = [TextButton(48, 192, "Back", 1),]
 # TODO: Load player
 # TODO: Load grid
 
-# part ko pa
-# TODO: Separate UI Logic and Game Logic in an elegant manner
-# TODO: Add collision
 class GameLogic:
     def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
         self._level = level
@@ -23,17 +20,6 @@ class GameLogic:
         self._exp = level.initial_exp
         self._lives = level.initial_lives
         self._load_round(self._round_index)
-
-        #self.rounds = 12
-        #self.enemies = [Ube(1) for _ in range(self.number_of_enemies)]
-        #self.path = levelpath
-
-        # player data
-        #self._player = Chef(2, (8, 5)) # this will make sense after I create that chef class
-        #self.lives = data["remaining_lives"]
-        #self.damage = 1
-
-        #self._towers = [Tower(2, (5, 5))]
 
         # game data
         self._is_game_over = False
@@ -172,14 +158,13 @@ class GameModel:
         return self._popup_buttons
 
     def start_screen(self):
-        self._is_current_screen = True
         self._current_tick = 1
-        self._state = "play"
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
+        self._screen_change_buttons = NORMAL_MODE_BUTTONS
 
     def reset(self):
         self._current_tick = 1
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
-
         self._screen_change_buttons = NORMAL_MODE_BUTTONS
 
     def update(self, clicked_idx):

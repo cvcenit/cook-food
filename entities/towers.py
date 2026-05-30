@@ -1,6 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_VELOCITY_MAGNITUDE, PI, TILE_SIDE_LENGTH, BULLET_RADIUS, FPS
+from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
 from math import sin, cos
 import pyxel
 
@@ -173,10 +174,10 @@ class Tower(TowerInfo):
     
     def screen_position(self) -> tuple[float, float]:
         i, j = self.grid_position
-        x_screen_offset = 0 # will change kapag finalized na
-        y_screen_offset = 0 # will change kapag finalized na
-        x = (j * TILE_SIDE_LENGTH) + x_screen_offset - (TILE_SIDE_LENGTH / 2)
-        y = (i * TILE_SIDE_LENGTH) + y_screen_offset - (TILE_SIDE_LENGTH / 2)
+        x_screen_offset = GAMEPLAY_X_OFFSET # will change kapag finalized na
+        y_screen_offset = GAMEPLAY_Y_OFFSET # will change kapag finalized na
+        x = (j * TILE_SIDE_LENGTH) + x_screen_offset + (TILE_SIDE_LENGTH / 2)
+        y = (i * TILE_SIDE_LENGTH) + y_screen_offset + (TILE_SIDE_LENGTH / 2)
         return x, y
 
     def bullet_velocity(self, direction) -> tuple[float, float]:
@@ -216,14 +217,6 @@ class Chef(Tower):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9 # bullets per second
 
-    def screen_position(self) -> tuple[float, float]:
-        i, j = self.grid_position
-        x_screen_offset = 0 # will change kapag finalized na
-        y_screen_offset = 0 # will change kapag finalized na
-        x = (j * TILE_SIDE_LENGTH) + x_screen_offset - (TILE_SIDE_LENGTH / 2)
-        y = (i * TILE_SIDE_LENGTH) + y_screen_offset - (TILE_SIDE_LENGTH / 2)
-        return SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2
-
     def change_direction(self, direction) -> None:
         self._current_direction = direction
 
@@ -247,7 +240,8 @@ class Chef(Tower):
     def end_tick(self):
         self.decrement_reload_time()
         self.remove_inactive_bullets()
-        print(self._remaining_seconds_to_shoot)
+        if self.can_shoot and self._remaining_seconds_to_shoot != 0:
+            self._remaining_seconds_to_shoot = 0
 
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]

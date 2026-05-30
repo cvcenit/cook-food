@@ -52,14 +52,14 @@ class Level(ABC):
 
 class CampaignMode(Level):
 	def __init__(self, data: dict):
-		path = make_spiral_path(10, 16)
+		path = make_spiral_path(10, 10)
 		enemy_count = data["remaining_enemies"]
 
 		self._rounds = [
 			RoundConfig(
 				enemies=[lambda p: Ube(p) for _ in range(enemy_count)],
 				path=path,
-				player_start=(0, 0),
+				player_start=(5, 5),
 			),
 			RoundConfig(
 				enemies=[lambda p: Ube(p) for _ in range(enemy_count + 2)],
