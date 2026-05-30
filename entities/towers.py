@@ -191,7 +191,7 @@ class Tower(TowerInfo):
         self._color = color
 
     def shoot(self, direction):
-        bullet = Bullet(self.color, BULLET_RADIUS, self.screen_position(), self.bullet_velocity(direction))
+        bullet = Bullet(random.randint(0, ), BULLET_RADIUS, self.screen_position(), self.bullet_velocity(direction))
         bullet.initialize_bullet()
         self._bullets.append(bullet)
         self._remaining_seconds_to_shoot = self._fire_rate

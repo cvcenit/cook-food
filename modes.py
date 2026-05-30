@@ -59,7 +59,7 @@ class CampaignMode(Level):
 			RoundConfig(
 				enemies=[lambda p: Ube(p) for _ in range(enemy_count)],
 				path=path,
-				player_start=(5, 5),
+				player_start=(4, 5),
 			),
 			RoundConfig(
 				enemies=[lambda p: Ube(p) for _ in range(enemy_count + 2)],

@@ -54,10 +54,12 @@ ROUTES = {
     "main_leaderboards": AppState.MAIN_LEADERBOARDS,
     "main_quit": AppState.MAIN_QUIT
     },
+
     AppState.CAMPAIGN_MENU: {
     "main_menu": AppState.MAIN_MENU,
     "level_1": AppState.GAMEPLAY
     },
+    
     AppState.GAMEPLAY: {
     "campaign_mode": AppState.CAMPAIGN_MENU
     }

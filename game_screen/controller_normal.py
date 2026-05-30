@@ -38,13 +38,22 @@ class GameController:
 
     def draw(self):
         self._view.reset_screen()
+        # JOWEE BASAHIN E2
+        # hi, palitan ang laman ng draw_grid, ipass ang level as argument or kahit fields ng level
+        # so mag aadd ka rin ng valid tiles at invalid tiles at player tile sa level data 
+        # imatch ung color ng in/valid tower tiles, path tile, player tile
         self._view.draw_grid()
+
+        # draw entities
         self._view.draw_towers(self._model._game_logic.towers)
         self._view.draw_player(self._model._game_logic.player)
         self._view.draw_enemies(self._model._game_logic.enemies)
+        self._view.draw_bullets(self._model._game_logic.bullets)
+
+        # draw ui + buttons
+        self._view.draw_sidebar()
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
-        self._view.draw_bullets(self._model._game_logic.bullets)
 
 mode = "campaign"
 

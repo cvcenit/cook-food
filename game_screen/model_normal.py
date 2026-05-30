@@ -31,7 +31,7 @@ class GameLogic:
 
         self._path = round_config.path
         self._enemies = [factory(round_config.path) for factory in round_config.enemies]
-        self._player = Chef(2, round_config.player_start)
+        self._player = Chef(7, round_config.player_start)
         self._towers = []
 
     @property

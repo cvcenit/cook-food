@@ -12,10 +12,10 @@ SCREEN_HEIGHT = 800
 HEADER_FONT_SIZE = 48
 HEADER_FONT = pyxel.Font("./resources/eater.ttf", font_size=HEADER_FONT_SIZE)
 
-GAMEPLAY_WIDTH = 800
-GAMEPLAY_HEIGHT = 600
-GAMEPLAY_X_OFFSET = 380
-GAMEPLAY_Y_OFFSET = 100
+GAMEPLAY_WIDTH = 1000
+GAMEPLAY_HEIGHT = 800
+GAMEPLAY_X_OFFSET = 280
+GAMEPLAY_Y_OFFSET = 0
 BULLET_RADIUS = 15
 
 # pixels per second, diagonal length in 5 seconds
@@ -23,7 +23,7 @@ BULLET_VELOCITY_MAGNITUDE = ((((GAMEPLAY_WIDTH ** 2) + (GAMEPLAY_HEIGHT ** 2)) *
 
 PI = pi
 
-TILE_SIDE_LENGTH = GAMEPLAY_HEIGHT / 10 # Pixels, will change
+TILE_SIDE_LENGTH = GAMEPLAY_WIDTH / 10 # Pixels, will change
 
 class AppState(StrEnum):
     MAIN_MENU = "main_menu"

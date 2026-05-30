@@ -33,9 +33,12 @@ class GameView:
         player.draw_tower()
 
     def draw_grid(self):
-        for i in range(10):
-            for j in range(20):
+        for i in range(1, 8):
+            for j in range(10):
                 pyxel.rectb(GAMEPLAY_X_OFFSET + (j * TILE_SIDE_LENGTH), GAMEPLAY_Y_OFFSET + (i * TILE_SIDE_LENGTH), TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
+
+    def draw_sidebar(self):
+        pyxel.rect(0, 0, 280, 800, 8)
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)
