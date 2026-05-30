@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, FPS, DATA 
+from random import choice 
 
 # entity types lang laman neto
 
@@ -66,6 +67,7 @@ class Ube(Enemy):
         self._current_speed = self.base_speed
         # start at first tile of path
         self._x_position, self._y_position = self._tile_to_screen(path[0])
+        self._color = 2
 
     def _tile_to_screen(self, tile) -> tuple[float, float]:
         row, col = tile
@@ -99,7 +101,7 @@ class Ube(Enemy):
 
     @property
     def color(self):
-        return 2
+        return self._color
 
     @property
     def sprite(self) -> int:
@@ -159,5 +161,31 @@ class RegeneratorUbe(RegeneratorMixin, Ube):
     def __init__(self, path, regen_interval: int = None):
         super().__init__(path, regen_interval=regen_interval)
 
-class Chameleon(Enemy):
-    pass
+ENEMY_COLORS = [2, 9, 11, 7, 10, 4]
+
+class ChameleonMixin:
+    def __init__(self, *args, chameleon_interval: int = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._chameleon_interval = chameleon_interval if chameleon_interval is not None else DATA.get("chameleon_interval", 60)
+        self._ticks_since_color_change = 0
+
+    def end_tick(self):
+        super().end_tick()
+        if not self.is_alive:
+            return
+        self._ticks_since_color_change += 1
+        if self._ticks_since_color_change >= self._chameleon_interval:
+            self._change_color()
+            self._ticks_since_color_change = 0
+
+    def _change_color(self):
+        available = [c for c in ENEMY_COLORS if c != self._color]
+        self._color = choice(available)
+
+class ChameleonUbe(ChameleonMixin, Ube):
+    def __init__(self, path, chameleon_interval: int = None):
+        super().__init__(path, chameleon_interval=chameleon_interval)
+
+class RegeneratorChameleonUbe(RegeneratorMixin, ChameleonMixin, Ube):
+    def __init__(self, path, regen_interval=None, chameleon_interval=None):
+        super().__init__(path, regen_interval=regen_interval, chameleon_interval=chameleon_interval)

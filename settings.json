@@ -1,5 +1,6 @@
 {
     "remaining_enemies": 5,
     "remaining_lives": 2,
-    "regenerator_interval": 3
+    "regenerator_interval": 3,
+    "chameleon_interval": 60
 }

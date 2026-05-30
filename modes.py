@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from entities.enemies import RegeneratorUbe
+from entities.enemies import RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe
 
 
 @dataclass
@@ -57,12 +57,12 @@ class CampaignMode(Level):
 
 		self._rounds = [
 			RoundConfig(
-				enemies=[lambda p: RegeneratorUbe(p) for _ in range(enemy_count)],
+				enemies=[lambda p: RegeneratorChameleonUbe(p) for _ in range(enemy_count)],
 				path=path,
 				player_start=(4, 5),
 			),
 			RoundConfig(
-				enemies=[lambda p: RegeneratorUbe(p) for _ in range(enemy_count + 2)],
+				enemies=[lambda p: RegeneratorChameleonUbe(p) for _ in range(enemy_count + 2)],
 				path=path,
 				player_start=(4, 5),
 			)
@@ -90,7 +90,7 @@ class EndlessMode(Level):
 	def get_round(self, round_num: int) -> RoundConfig:
 		count = self._base_count + round_num + 2
 		return RoundConfig(
-			enemies=[lambda p: RegeneratorUbe(p) for _ in range(count)],
+			enemies=[lambda p: RegeneratorChameleonUbe(p) for _ in range(count)],
 			path=self._path,
 			player_start=(5, 5),
 		)
