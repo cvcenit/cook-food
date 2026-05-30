@@ -34,7 +34,7 @@ class GameView:
 
     def draw_grid(self):
         for i in range(1, 8):
-            for j in range(10):
+            for j in range(11):
                 pyxel.rectb(GAMEPLAY_X_OFFSET + (j * TILE_SIDE_LENGTH), GAMEPLAY_Y_OFFSET + (i * TILE_SIDE_LENGTH), TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
 
     def draw_sidebar(self, buttons):

@@ -23,7 +23,7 @@ BULLET_VELOCITY_MAGNITUDE = ((((GAMEPLAY_WIDTH ** 2) + (GAMEPLAY_HEIGHT ** 2)) *
 
 PI = pi
 
-TILE_SIDE_LENGTH = GAMEPLAY_WIDTH / 10 # Pixels, will change
+TILE_SIDE_LENGTH = GAMEPLAY_WIDTH / 11 # Pixels, will change
 
 class AppState(StrEnum):
     MAIN_MENU = "main_menu"
