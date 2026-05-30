@@ -5,7 +5,7 @@ from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton
 
 
-NORMAL_MODE_BUTTONS = [TextButton(48, 192, "Pause", 1),]
+NORMAL_MODE_BUTTONS = [TextButton(48, 192, "Back", 1),]
 
 # part ni jowee
 # TODO: Load level
@@ -156,35 +156,20 @@ class GameModel:
         self._round_over_condition = round_over_condition
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
 
-        self._buttons = NORMAL_MODE_BUTTONS
-        self._is_current_screen = False
-        self._states = ["main"]
-        self._state = self.base_state
+        self._screen_change_buttons = NORMAL_MODE_BUTTONS
+        self._popup_buttons = []
 
     @property
     def current_tick(self):
         return self._current_tick
 
     @property
-    def buttons(self):
-        return self._buttons
+    def screen_change_buttons(self):
+        return self._screen_change_buttons
 
     @property
-    def is_current_screen(self):
-        return self._is_current_screen
-    
-    @property
-    def state(self):
-        return self._state
-
-    @property
-    def base_state(self):
-        return "play"
-
-    def change_screen(self, state):
-        self._is_current_screen = False
-        self._current_tick = 1
-        self._state = state
+    def popup_buttons(self):
+        return self._popup_buttons
 
     def start_screen(self):
         self._is_current_screen = True
@@ -195,14 +180,8 @@ class GameModel:
         self._current_tick = 1
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
 
-        self._buttons = NORMAL_MODE_BUTTONS
-        self._is_current_screen = False
-        self._states = ["main"]
-        self._state = self.base_state
+        self._screen_change_buttons = NORMAL_MODE_BUTTONS
 
     def update(self, clicked_idx):
-        if clicked_idx is not None:
-            self.change_screen(self._states[clicked_idx])
-
         self._game_logic.update()
         self._current_tick += 1

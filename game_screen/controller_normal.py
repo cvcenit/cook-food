@@ -13,11 +13,17 @@ class GameController:
         self._model = model
         self._view = view
 
+    def get_clicked_screen_change_button(self):
+        actions = ["campaign_mode"]
+        clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
+        if clicked_btn is not None:
+            return actions[clicked_btn]
+
     def update(self):
         if self._model._game_logic.is_game_over:
             pyxel.quit()
 
-        clicked_btn = self._view.get_clicked_button(self._model.buttons)
+        clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         clicked = self._view.get_clicked()
         mouse_x, mouse_y = self._view.get_mouse_position()
         cardinal_x, cardinal_y = (mouse_x - (SCREEN_WIDTH / 2)), -(mouse_y - (SCREEN_HEIGHT / 2))
@@ -36,7 +42,8 @@ class GameController:
         self._view.draw_towers(self._model._game_logic.towers)
         self._view.draw_player(self._model._game_logic.player)
         self._view.draw_enemies(self._model._game_logic.enemies)
-        self._view.draw_buttons(self._model.buttons)
+        self._view.draw_buttons(self._model.screen_change_buttons)
+        self._view.draw_buttons(self._model.popup_buttons)
         self._view.draw_bullets(self._model._game_logic.bullets)
 
 mode = "campaign"

@@ -1,6 +1,6 @@
 import pyxel
 
-class StartMenuView:
+class MainMenuView:
     def __init__(self, width, height):
         self._width, self._height = width, height
         self._bg_color: int = 6
@@ -11,7 +11,7 @@ class StartMenuView:
         for button in buttons:
             button.draw_button()
 
-    def get_clicked_button(self, buttons) -> int:
+    def get_clicked_button(self, buttons) -> None | int:
         for i, button in enumerate(buttons):
             if button.is_clicked():
                 return i

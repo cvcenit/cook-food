@@ -27,7 +27,10 @@ class AppState(StrEnum):
     MAIN_MENU = "main_menu"
     MAIN_SETTINGS = "main_settings"
     MAIN_LEADERBOARDS = "main_leaderboards"
-    LEVELS_MENU = "levels_menu"
+    CAMPAIGN_MENU = "campaign_menu"
+    ENDLESS_MENU = "endless_menu"
+    GAMEPLAY = "gameplay"
+    MAIN_QUIT = "main_quit"
 
 
 def rectangles_has_collided(rect_one, rect_two) -> bool:

@@ -1,6 +1,6 @@
 import pyxel
 
-class StartMenuView:
+class CampaignMenuView:
     def __init__(self, width, height):
         self._width, self._height = width, height
         self._bg_color: int = 6

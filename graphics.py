@@ -48,7 +48,7 @@ class Screen:
         self.start_screen()
 
     def get_clicked_button(self):
-        return self._view.get_clicked_button(self._model.buttons)
+        return self._controller.get_clicked_screen_change_button()
 
     def update(self):
         self._controller.update()

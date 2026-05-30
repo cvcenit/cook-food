@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from campaign_menu.controller_campaign_menu import CampaignMenuScreen
 from game_screen.controller_normal import LevelMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
@@ -15,6 +16,9 @@ class Game:
         self._current_screen = self._screens[self._current_state]
 
     def _switch_screen(self, state: AppState):
+        if state == AppState.MAIN_QUIT:
+            pyxel.quit()
+
         self._current_state = state
         self._current_screen = self._screens[state]
         self._current_screen.reset()
@@ -39,16 +43,23 @@ class Game:
 
 SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
-    AppState.LEVELS_MENU: LevelMenuScreen
+    AppState.CAMPAIGN_MENU: CampaignMenuScreen,
+    AppState.GAMEPLAY: LevelMenuScreen
     }
 
 ROUTES = {
     AppState.MAIN_MENU: {
-    0: AppState.LEVELS_MENU,
-    1: AppState.MAIN_SETTINGS
+    "campaign_mode": AppState.CAMPAIGN_MENU,
+    "endless_mode": AppState.ENDLESS_MENU,
+    1: AppState.MAIN_SETTINGS,
+    "main_quit": AppState.MAIN_QUIT
     },
-    AppState.LEVELS_MENU: {
-    0: AppState.MAIN_MENU,
+    AppState.CAMPAIGN_MENU: {
+    "main_menu": AppState.MAIN_MENU,
+    "level_1": AppState.GAMEPLAY
+    },
+    AppState.GAMEPLAY: {
+    "campaign_mode": AppState.CAMPAIGN_MENU
     }
 }
 
