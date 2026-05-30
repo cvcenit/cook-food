@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from level_screen.controller_normal import LevelMenuScreen
-from main_menu.screen_main_menu import MainMenuScreen
+from game_screen.controller_normal import LevelMenuScreen
+from main_menu.controller_main_menu import MainMenuScreen
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
 
 import pyxel
