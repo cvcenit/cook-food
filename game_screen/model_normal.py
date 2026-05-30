@@ -5,7 +5,8 @@ from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton
 
 
-NORMAL_MODE_BUTTONS = [TextButton(48, 192, "Back", 1),]
+NORMAL_MODE_BUTTONS = [TextButton(48, 48, "Back", 1),]
+SIDEBAR_BUTTONS = [TextButton(10, 192, "Tower 1", 1)]
 
 # part ni jowee
 # TODO: Load level
@@ -146,6 +147,7 @@ class GameModel:
 
         self._screen_change_buttons = NORMAL_MODE_BUTTONS
         self._popup_buttons = []
+        self._sidebar_buttons = SIDEBAR_BUTTONS
 
     @property
     def current_tick(self):
@@ -158,6 +160,10 @@ class GameModel:
     @property
     def popup_buttons(self):
         return self._popup_buttons
+
+    @property
+    def sidebar_buttons(self):
+        return self._sidebar_buttons
 
     def start_screen(self):
         self._current_tick = 1

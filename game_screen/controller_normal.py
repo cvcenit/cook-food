@@ -54,7 +54,7 @@ class GameController:
         self._view.draw_bullets(self._model._game_logic.bullets)
 
         # draw ui + buttons
-        self._view.draw_sidebar()
+        self._view.draw_sidebar(self._model.sidebar_buttons)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
 
