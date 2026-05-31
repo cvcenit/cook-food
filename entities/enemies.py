@@ -70,6 +70,7 @@ class Ube(Enemy):
         # start at first tile of path
         self._x_position, self._y_position = self._tile_to_screen(path[0])
         self._color = 2
+        self._tick_counter = 0
 
     def _tile_to_screen(self, tile) -> tuple[float, float]:
         row, col = tile
@@ -144,13 +145,15 @@ class Ube(Enemy):
                 self._x_position += self._current_speed * dx / dist
                 self._y_position += self._current_speed * dy / dist
         else:
-            self._tick_counter = getattr(self, "_tick_counter", 0) + 1
+            self._tick_counter += 1
             if self._tick_counter >= 2 * FPS:
                 self._x_position, self._y_position = target_x, target_y
                 self._path_index += 1
                 self._tick_counter = 0
 
-    def draw(self):
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
         x, y = self.position
         pyxel.blt(
             x - 16, y - 16,  # center the sprite

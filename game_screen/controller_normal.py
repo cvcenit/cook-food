@@ -63,7 +63,7 @@ class GameController:
         # draw entities
         self._view.draw_towers(self._model._game_logic.towers)
         self._view.draw_player(self._model._game_logic.player)
-        self._view.draw_enemies(self._model._game_logic.enemies)
+        self._view.draw_enemies(self._model._game_logic.enemies, self._model._game_logic.tunnels)
         self._view.draw_bullets(self._model._game_logic.bullets)
 
         # draw ui + buttons

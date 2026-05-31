@@ -12,10 +12,20 @@ class GameView:
 
     # OUTPUT METHODS
     # CHANGED DRAW ENEMIES FOR SPRITE TESTING
+<<<<<<< HEAD
     def draw_enemies(self, enemies) -> None:
+=======
+    def draw_enemies(self, enemies, tunnels: set) -> None:
+        # put the draw in the enemy class
+        # for enemy in enemies:
+        #     x,y = enemy.position
+        #     pyxel.circ(x, y, 25, enemy.sprite)
+>>>>>>> refs/remotes/origin/main
         for enemy in enemies:
             if enemy.is_alive:
-                enemy.draw()
+                enemy_tile = enemy._path[enemy._path_index]
+                in_tunnel = enemy_tile in tunnels
+                enemy.draw(in_tunnel)
 
     def draw_towers(self, towers) -> None:
         for tower in towers:

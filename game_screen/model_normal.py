@@ -43,6 +43,7 @@ class GameLogic:
         self._spawn_timer = 0
         self._enemies = [] # [factory(round_config.path) for factory in round_config.enemies]
         self._player = Chef(7, round_config.player_start)
+        self._tunnels = set(round_config.tunnels or [])
 
     @property
     def is_game_over(self) -> bool:
@@ -85,6 +86,10 @@ class GameLogic:
         return self._not_enough_exp
 
     @property
+    def tunnels(self):
+        return self._tunnels
+
+    @property
     def bullets(self):
         result = []
         for tower in self._towers:
@@ -101,6 +106,8 @@ class GameLogic:
     
     def toggle_placement_mode(self):
         self._placing_tower = not self.placing_tower
+        if not self._placing_tower:
+            self._not_enough_exp = False
 
     def place_tower(self, mouse_x: float, mouse_y: float):
         # should not be instant (pagkaselect ng tower, tinatry agad to, add a timer)
@@ -166,10 +173,26 @@ class GameLogic:
 
         self._player.end_tick()
 
-        for bullet in self.bullets:
+        active_bullets = [b for b in self.bullets if b.is_active]
+        for bullet in active_bullets:
             for enemy in self._active_enemies:
+                if not bullet.is_active:
+                    continue
+                bx, by = bullet.current_position
+                for tunnel_tile in self._tunnels:
+                    tr, tc, = tunnel_tile
+                    tx = GAMEPLAY_X_OFFSET + tc * TILE_SIDE_LENGTH
+                    ty = GAMEPLAY_Y_OFFSET + tr * TILE_SIDE_LENGTH
+                    if tx <= bx <= tx + TILE_SIDE_LENGTH and ty <= by <= ty + TILE_SIDE_LENGTH:
+                        bullet.deactivate()
+                        break
+                if not bullet.is_active:
+                    continue
                 if bullet.color == enemy.color:
                     ex, ey = enemy.position
+                    enemy_tile = self._path[enemy._path_index]
+                    if enemy_tile in self._tunnels:
+                        continue
                     bx, by = bullet.current_position
                     distance_square = (bx - ex) ** 2 + (by - ey) ** 2
                     hit_distance = bullet.radius + 25

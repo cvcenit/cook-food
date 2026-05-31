@@ -10,6 +10,7 @@ class RoundConfig:
 	path: list
 	player_start: tuple
 	grid: Grid # added grid in round config
+	tunnels: list[tuple[int, int]] = None
 
 # WILL PROBABLY NOT BE USED BUT WILL LEAVE HERE
 def make_spiral_path(rows=8, cols=10, row_offset=1):
@@ -65,7 +66,12 @@ class CampaignMode(Level):
 			(3, 4), (3, 3), # goes left 
 			(2, 3), (1, 3) # goes up
 			]
-		grid = Grid(9, 11, path)
+		
+		tunnels = [(3, 1), (4, 1),
+			 	   (6, 4), (6, 5), (6, 6)
+				   ]
+		
+		grid = Grid(9, 11, path, tunnels)
 		enemy_count = data["remaining_enemies"]
 
 		self._rounds = [
@@ -74,12 +80,15 @@ class CampaignMode(Level):
 				path=path,
 				player_start=(4, 5),
 				grid=grid,
+				tunnels=tunnels,
 			),
 			RoundConfig(
 				enemies=[lambda p, cls=Ube: cls(p) for _ in range(enemy_count)],
 				path=path,
 				player_start=(4, 5),
-				grid=grid,			)
+				grid=grid,
+				tunnels=tunnels,
+			)
 		]
 		self._initial_lives = data["remaining_lives"]
 	
