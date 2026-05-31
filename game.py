@@ -3,6 +3,7 @@ from __future__ import annotations
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
 from game_screen.controller_normal import LevelMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
+from settings_screen.controller_settings import SettingsScreen
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
 
 import pyxel
@@ -44,7 +45,8 @@ class Game:
 SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
     AppState.CAMPAIGN_MENU: CampaignMenuScreen,
-    AppState.GAMEPLAY: LevelMenuScreen
+    AppState.GAMEPLAY: LevelMenuScreen,
+    AppState.MAIN_SETTINGS: SettingsScreen
     }
 
 ROUTES = {
@@ -63,6 +65,11 @@ ROUTES = {
     
     AppState.GAMEPLAY: {
     "campaign_mode": AppState.CAMPAIGN_MENU
+    },
+
+    AppState.MAIN_SETTINGS: {
+        "main_menu": AppState.MAIN_MENU,
+        "save": AppState.MAIN_MENU
     }
 }
 

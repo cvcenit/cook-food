@@ -33,3 +33,4 @@ class AppState(StrEnum):
     ENDLESS_MENU = "endless_menu"
     GAMEPLAY = "gameplay"
     MAIN_QUIT = "main_quit"
+    SETTINGS = "main_settings"
