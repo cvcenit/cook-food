@@ -253,6 +253,8 @@ class GameModel:
 
     # to be implemented by janella
     def pause_popup(self):
+        # will "activate" the hidden buttons, or ikaw bahala
+        # pauses the game, goodluck
         ...
 
     def start_screen(self):
