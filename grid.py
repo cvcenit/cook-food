@@ -19,8 +19,8 @@ class Tile:
     def draw(self):
         x, y = self.screen_position()
         color = 3 if self._isPath else 8 # 3 (green), 8 (red)
-        pyxel.rect(x, y, TILE_SIDE_LENGTH - 1, TILE_SIDE_LENGTH - 1, color)
-        pyxel.rectb(x, y, TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
+        pyxel.rect(x, y, TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, color)
+        # pyxel.rectb(x, y, TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
 
 class Grid:
     def __init__(self, rows: int, cols: int, path: list[tuple[int, int]]):
