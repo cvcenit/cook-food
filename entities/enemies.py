@@ -178,7 +178,8 @@ class Kutsinta(GenericEnemy):
             0,               # image bank 0
             32, 0,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0                # transparent color (black)
+            0,                # transparent color (black)
+            scale=TILE_SIDE_LENGTH/32
         )
 
 
