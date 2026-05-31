@@ -22,6 +22,8 @@ class SettingsController:
         self._update_lives()
         self._update_enemies()
         self._update_regenerator()
+        self._update_chameleon()
+        self._update_smooth_movement()
         self._model.update(clicked_idx)
 
     def _update_lives(self):
@@ -41,6 +43,16 @@ class SettingsController:
             self._model.decrease_regenerator()
         if self._model.regenerator_increase_button.is_clicked():
             self._model.increase_regenerator()
+    
+    def _update_chameleon(self):
+        if self._model.chameleon_decrease_button.is_clicked():
+            self._model.decrease_chameleon()
+        if self._model.chameleon_increase_button.is_clicked():
+            self._model.increase_chameleon()
+    
+    def _update_smooth_movement(self):
+        if self._view.is_smooth_movement_clicked():
+            self._model.toggle_smooth_movement()
 
     def draw(self):
         self._view.reset_screen()
@@ -48,6 +60,8 @@ class SettingsController:
         self._draw_lives_buttons()
         self._draw_enemies_buttons()
         self._draw_regenerator_buttons()
+        self._draw_chameleon_buttons()
+        self._view.draw_smooth_movement(self._model.smooth_movement)
     
     def _draw_lives_buttons(self):
         self._view.draw_buttons([self._model.lives_decrease_button, self._model.lives_increase_button])  
@@ -60,6 +74,10 @@ class SettingsController:
     def _draw_regenerator_buttons(self):
         self._view.draw_buttons([self._model.regenerator_decrease_button, self._model.regenerator_increase_button])  
         self._view.draw_regenerator_label(self._model.regenerator_interval)
+
+    def _draw_chameleon_buttons(self):
+        self._view.draw_buttons([self._model.chameleon_decrease_button, self._model.chameleon_increase_button])  
+        self._view.draw_chameleon_label(self._model.chameleon_interval)
 
 model = SettingsModel()
 
