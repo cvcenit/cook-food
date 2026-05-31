@@ -102,7 +102,7 @@ class CampaignMode(Level):
 	
 	@property
 	def initial_exp(self) -> int:
-		return 0
+		return 10
 
 class EndlessMode(Level):
 	def __init__(self, data: dict):

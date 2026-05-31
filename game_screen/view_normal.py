@@ -43,9 +43,9 @@ class GameView:
         pyxel.text(10, 264, f"LIVES: {lives}", 7, font=HEADER_FONT)
         if placing_tower:
             if not_enough_exp:
-                pyxel.text(10, 700, "NOT ENOUGH EXP!", 7, font=HEADER_FONT)
+                pyxel.text(10, 400, "NOT ENOUGH EXP!", 7, font=HEADER_FONT)
             else:
-                pyxel.text(10, 700, "PLACING TOWER...", 7, font=HEADER_FONT)
+                pyxel.text(10, 400, "PLACING TOWER...", 7, font=HEADER_FONT)
         for button in buttons:
             button.draw_button()
 
@@ -64,3 +64,6 @@ class GameView:
 
     def has_left_clicked(self) -> bool:
         return pyxel.btnp((pyxel.MOUSE_BUTTON_LEFT))
+
+    def has_right_clicked(self) -> bool:
+        return pyxel.btnp((pyxel.MOUSE_BUTTON_RIGHT))

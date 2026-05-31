@@ -137,9 +137,9 @@ class Bullet(BulletInfo):
             self.deactivate()
 
 # TODO: Refactor, dapat maganda ung end_tick, i believe merong state kagaya ng moles 
-# (eg., bullets have a hit state, active state, inactive state) 
 # (towers ay may active, inactive state, depende sa current tick kung nagreload na ba)
 # enemies, nasa kabilang file, meron ding hit state, active state, at inactive state
+# lowkey, need neto dahil merong "readied state" ang bullet, different from "shot state", at "inactive state"
 
 class Tower(TowerInfo):
     def __init__(self, color, grid_position):
@@ -156,11 +156,16 @@ class Tower(TowerInfo):
 
         self._next_bullets = []
 
-        self._tower_level = 1
+        self._tower_level = 2
 
     @property
     def color(self):
         return self._color
+
+    @property
+    def tower_level(self):
+        return self._tower_level
+    
 
     @property
     def current_direction(self):
@@ -226,9 +231,9 @@ class Tower(TowerInfo):
                     r = ((2 * (bullet_index - 1))) * (BULLET_RADIUS) + (BULLET_RADIUS * 2)
         else:
             if bullet_index % 2:
-                r = - ((2 * bullet_index)) * (BULLET_RADIUS) - (BULLET_RADIUS / 2)
+                r = - ((2 * bullet_index)) * (BULLET_RADIUS)
             else:
-                r = ((2 * (bullet_index + 1))) * (BULLET_RADIUS) + (BULLET_RADIUS / 2)
+                r = ((2 * (bullet_index + 1))) * (BULLET_RADIUS)
 
         t = TILE_SIDE_LENGTH / 1.5
         beta = atan2(r, t)
@@ -243,8 +248,8 @@ class Tower(TowerInfo):
             bullet_color = self.next_bullet_color()
 
             bullet = Bullet(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(bullet_index), (0, 0))
-            bullet.initialize_bullet()
 
+            bullet.initialize_bullet()
             self._bullets.append(bullet)
             self._next_bullets.append(bullet)
 

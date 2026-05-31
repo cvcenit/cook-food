@@ -30,13 +30,16 @@ class GameController:
             pyxel.quit()
 
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
-        clicked = self._view.has_left_clicked()
+
+        left_clicked = self._view.has_left_clicked()
+        right_clicked = self._view.has_right_clicked()
+
         mouse_x, mouse_y = self._view.get_mouse_position()
 
         direction = self.get_player_direction((mouse_x, mouse_y))
 
         self._model._game_logic.player_change_direction(direction)
-        for i in range(4):
+        for i in range(self._model._game_logic.player.tower_level):
             self._model._game_logic.player.load_next_bullet(i)
         
         sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
@@ -47,7 +50,7 @@ class GameController:
             else:
                 ...
 
-        if clicked:
+        if left_clicked:
             if self._model._game_logic.placing_tower:
                 self._model._game_logic.place_tower(mouse_x, mouse_y)
             elif (0 <= mouse_x <= GAMEPLAY_X_OFFSET) or (0 <= mouse_y <= GAMEPLAY_Y_OFFSET):
