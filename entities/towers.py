@@ -1,7 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_VELOCITY_MAGNITUDE, PI, TILE_SIDE_LENGTH, BULLET_RADIUS, FPS
-from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
+from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, ENEMY_COLORS
 from math import sin, cos, atan2
 from random import choice
 import pyxel
@@ -153,7 +153,10 @@ class Tower(TowerInfo):
         self._current_direction = self.base_direction
         self._color = color
         self._remaining_seconds_to_shoot = self._fire_rate
-        self._next_bullet = None
+
+        self._next_bullets = []
+
+        self._tower_level = 4
 
     @property
     def color(self):
@@ -199,41 +202,53 @@ class Tower(TowerInfo):
         self._current_direction = cardinal_directions[direction]
 
     @property
-    def next_bullet(self):
-        return self._next_bullet
+    def next_bullets(self):
+        return self._next_bullets
 
     def change_color(self, color):
         self._color = color
 
-    def next_bullet_color(self, colors):
-        return choice([2, 9, 11, 7, 10, 4])
-        #if not colors:
-        #    return choice([2, 9, 11, 7, 10, 4])
-        #else:
-        #    return choice(colors)
+    def next_bullet_color(self):
+        return choice(ENEMY_COLORS)
 
-    def next_bullet_position(self):
+    def next_bullet_position(self, bullet_index):
+        bullets_are_odd = self._tower_level % 2
         bx, by = self.screen_position()
-        bx += (TILE_SIDE_LENGTH / 1.5) * cos(self.current_direction)
-        by -= (TILE_SIDE_LENGTH / 1.5) * sin(self.current_direction)
+        theta = self.current_direction
+
+        if bullets_are_odd:
+            ...
+        else:
+            placed_on_right = bullet_index % 2
+            if placed_on_right:
+                r = - ((2 * bullet_index)) * (BULLET_RADIUS) - (BULLET_RADIUS / 2)
+            else:
+                r = ((2 * (bullet_index + 1))) * (BULLET_RADIUS) + (BULLET_RADIUS / 2)
+        t = TILE_SIDE_LENGTH / 1.5
+        hyp = ((r ** 2) + (t ** 2)) ** (1 / 2)
+        beta = atan2(r, t)
+
+        bx += (hyp) * cos(beta + theta)
+        by -= (hyp) * sin(beta + theta)
         return bx, by
 
-    def load_next_bullet(self, colors):
-        if self._next_bullet is None:
-            bullet_color = self.next_bullet_color(colors)
+    def load_next_bullet(self, bullet_index):
+        if len(self._next_bullets) < self._tower_level:
+            bullet_color = self.next_bullet_color()
 
-            bullet = Bullet(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(), (0, 0))
+            bullet = Bullet(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(bullet_index), (0, 0))
             bullet.initialize_bullet()
 
             self._bullets.append(bullet)
-            self._next_bullet = bullet
+            self._next_bullets.append(bullet)
 
     def shoot(self):
-        if self._next_bullet is not None:
+        if self._next_bullets:
             if self.can_shoot:
-                self._next_bullet.change_velocity(self.bullet_velocity(self.current_direction))
+                for bullet in self._next_bullets:
+                    bullet.change_velocity(self.bullet_velocity(self.current_direction))
                 self._remaining_seconds_to_shoot = self._fire_rate
-                self._next_bullet = None
+                self._next_bullets = []
 
     def decrement_reload_time(self):
         self._remaining_seconds_to_shoot -= self._fire_rate / FPS
@@ -243,19 +258,20 @@ class Tower(TowerInfo):
         pyxel.circ(x, y, TILE_SIDE_LENGTH / 2.5, self.color)
 
     def end_tick(self, enemies = None):
-        if not enemies:
-            self.load_next_bullet([])
-        else:
-            self.load_next_bullet([enemy.color for enemy in enemies])
+        for i in range(self._tower_level):
+            self.load_next_bullet(i)
 
         if self.can_shoot and self._remaining_seconds_to_shoot != 0:
             self._remaining_seconds_to_shoot = 0
+
         if self.can_shoot:
            self.shoot()
+
         self.decrement_reload_time()
         self.remove_inactive_bullets()
-        if self._next_bullet is not None:
-            self._next_bullet.change_radius(BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot))
+
+        for bullet in self._next_bullets:
+            bullet.change_radius(BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot))
 
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
@@ -265,21 +281,20 @@ class Chef(Tower):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9
 
-    def next_bullet_color(self, colors):
-        if not colors:
-            return choice([2, 9, 11, 7, 10, 4])
-        else:
-            return choice(colors)
-
     def change_direction(self, direction) -> None:
         self._current_direction = direction
-        if self._next_bullet is not None:
-            self._next_bullet.change_position((self.next_bullet_position()))
+        for i, bullet in enumerate(self._next_bullets):
+            bullet.change_position((self.next_bullet_position(i)))
 
     def end_tick(self):
-        self.decrement_reload_time()
-        self.remove_inactive_bullets()
-        if self._next_bullet is not None:
-            self._next_bullet.change_radius(BULLET_RADIUS * (1 - self._remaining_seconds_to_shoot))
+        for i in range(self._tower_level):
+            self.load_next_bullet(i)
+
         if self.can_shoot and self._remaining_seconds_to_shoot != 0:
             self._remaining_seconds_to_shoot = 0
+
+        self.decrement_reload_time()
+        self.remove_inactive_bullets()
+
+        for bullet in self._next_bullets:
+            bullet.change_radius(BULLET_RADIUS * (1 - self._remaining_seconds_to_shoot))

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe
+from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe, Kutsinta
 from grid import Grid
 
 
@@ -83,7 +83,7 @@ class CampaignMode(Level):
 				tunnels=tunnels,
 			),
 			RoundConfig(
-				enemies=[lambda p, cls=Ube: cls(p) for _ in range(enemy_count)],
+				enemies=[lambda p, cls=Kutsinta: cls(p) for _ in range(enemy_count)],
 				path=path,
 				player_start=(4, 5),
 				grid=grid,

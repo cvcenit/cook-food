@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
-from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, FPS, DATA 
+from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, FPS, DATA, ENEMY_COLORS
 from random import choice
 
 import pyxel
-
-# entity types lang laman neto
 
 class EnemyInfo(ABC):
     @property
@@ -37,10 +35,6 @@ class EnemyInfo(ABC):
 
     @property
     @abstractmethod
-    def sprite(self) -> int: ...
-
-    @property
-    @abstractmethod
     def base_position(self) -> tuple[float, float]: ...
 
     @property
@@ -60,7 +54,7 @@ class Enemy(EnemyInfo):
     def end_tick(self) -> None:
         ...
 
-class Ube(Enemy):
+class GenericEnemy(Enemy):
     def __init__(self, path):
         super().__init__()
         self._path = path
@@ -69,7 +63,6 @@ class Ube(Enemy):
         self._current_speed = self.base_speed
         # start at first tile of path
         self._x_position, self._y_position = self._tile_to_screen(path[0])
-        self._color = 2
         self._tick_counter = 0
 
     def _tile_to_screen(self, tile) -> tuple[float, float]:
@@ -78,9 +71,28 @@ class Ube(Enemy):
         y = GAMEPLAY_Y_OFFSET + row * TILE_SIDE_LENGTH + TILE_SIDE_LENGTH / 2
         return x, y
 
+    # diff per enemy
     @property
     def base_hit_points(self) -> int:
         return 1
+
+    # diff
+    @property
+    def color(self):
+        return 2
+
+    # diff
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            0, 0,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0                # transparent color (black)
+        )
 
     @property
     def base_speed(self) -> int:
@@ -101,14 +113,6 @@ class Ube(Enemy):
     @property
     def is_alive(self) -> bool:
         return self._hit_points > 0
-
-    @property
-    def color(self):
-        return self._color
-
-    @property
-    def sprite(self) -> int:
-        return 2
 
     @property
     def base_position(self) -> tuple[float, float]:
@@ -151,6 +155,23 @@ class Ube(Enemy):
                 self._path_index += 1
                 self._tick_counter = 0
 
+class Ube(GenericEnemy):
+    def __init__(self, path):
+        super().__init__(path)
+
+class Kutsinta(GenericEnemy):
+    def __init__(self, path):
+        super().__init__(path)
+
+    @property
+    def base_hit_points(self) -> int:
+        return 1
+
+    @property
+    def color(self):
+        return 9
+
+    # diff
     def draw(self, in_tunnel: bool = False):
         if in_tunnel:
             return
@@ -158,11 +179,13 @@ class Ube(Enemy):
         pyxel.blt(
             x - 16, y - 16,  # center the sprite
             0,               # image bank 0
-            0, 0,            # sprite starts at (0, 0)
+            32, 0,            # sprite starts at (0, 0)
             32, 32,          # 32x32
             0                # transparent color (black)
         )
-        
+
+
+# refactor, mas maganda siguro kung may color nalang sila na argument
 class RegeneratorMixin:
     def __init__(self, *args, regen_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -182,8 +205,6 @@ class RegeneratorMixin:
 class RegeneratorUbe(RegeneratorMixin, Ube):
     def __init__(self, path, regen_interval: int = None):
         super().__init__(path, regen_interval=regen_interval)
-
-ENEMY_COLORS = [2, 9, 11, 7, 10, 4]
 
 class ChameleonMixin:
     def __init__(self, *args, chameleon_interval: int = None, **kwargs):

@@ -36,7 +36,8 @@ class GameController:
         direction = self.get_player_direction((mouse_x, mouse_y))
 
         self._model._game_logic.player_change_direction(direction)
-        self._model._game_logic.player.load_next_bullet(self._model._game_logic.colors_of_remaining_enemies())
+        for i in range(2):
+            self._model._game_logic.player.load_next_bullet(i)
         
         sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
 
