@@ -182,6 +182,93 @@ class Kutsinta(GenericEnemy):
             scale=TILE_SIDE_LENGTH/32
         )
 
+class Gulaman(GenericEnemy):
+    def __init__(self, path):
+        super().__init__(path)
+
+    @property
+    def color(self):
+        return 11
+
+    # diff
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            0, 32,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0,                # transparent color (black)
+            scale=TILE_SIDE_LENGTH/32
+        )
+
+class Palitaw(GenericEnemy):
+    def __init__(self, path):
+        super().__init__(path)
+
+    @property
+    def color(self):
+        return 7
+
+    # diff
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            0, 64,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0,                # transparent color (black)
+            scale=TILE_SIDE_LENGTH/32
+        )
+
+class Lecheflan(GenericEnemy):
+    def __init__(self, path):
+        super().__init__(path)
+
+    @property
+    def color(self):
+        return 10
+
+    # diff
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            32, 32,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0,                # transparent color (black)
+            scale=TILE_SIDE_LENGTH/32
+        )
+
+class Champorado(GenericEnemy):
+    def __init__(self, path):
+        super().__init__(path)
+
+    @property
+    def color(self):
+        return 4
+
+    # diff
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            32, 64,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0,                # transparent color (black)
+            scale=TILE_SIDE_LENGTH/32
+        )
 
 # refactor, mas maganda siguro kung may color nalang sila na argument para genericenemy iinherit maybe
 class RegeneratorMixin:

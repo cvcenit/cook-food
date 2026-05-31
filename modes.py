@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe, Kutsinta
+from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado
 from grid import Grid
 
 
@@ -88,7 +88,35 @@ class CampaignMode(Level):
 				player_start=(4, 5),
 				grid=grid,
 				tunnels=tunnels,
-			)
+			),
+			RoundConfig(
+				enemies=[lambda p, cls=Gulaman: cls(p) for _ in range(enemy_count)],
+				path=path,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[lambda p, cls=Palitaw: cls(p) for _ in range(enemy_count)],
+				path=path,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[lambda p, cls=Lecheflan: cls(p) for _ in range(enemy_count)],
+				path=path,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[lambda p, cls=Champorado: cls(p) for _ in range(enemy_count)],
+				path=path,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
 		]
 		self._initial_lives = data["remaining_lives"]
 	
