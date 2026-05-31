@@ -231,9 +231,9 @@ class Tower(TowerInfo):
                     r = ((2 * (bullet_index - 1))) * (BULLET_RADIUS) + (BULLET_RADIUS * 2)
         else:
             if bullet_index % 2:
-                r = - ((2 * bullet_index)) * (BULLET_RADIUS)
+                r = - ((2 * bullet_index)) * (BULLET_RADIUS / 2) - (BULLET_RADIUS / 2)
             else:
-                r = ((2 * (bullet_index + 1))) * (BULLET_RADIUS)
+                r = ((2 * (bullet_index + 1))) * (BULLET_RADIUS / 2) + (BULLET_RADIUS / 2)
 
         t = TILE_SIDE_LENGTH / 1.5
         beta = atan2(r, t)

@@ -58,9 +58,8 @@ class TextButton(Button):
 @dataclass
 class SpriteInfo:
     image_bank: int
-    bank_position: int
-    width: int
-    height: int
+    position: tuple[int, int]
+    width_height: tuple[int, int]
 
 class SpriteButton(Button):
     def __init__(self, x, y, sprite):
@@ -86,14 +85,18 @@ class SpriteButton(Button):
     def draw_button(self):
         if self._is_active:
             x, y = self.current_position
+            image_bank = self._sprite.image_bank
+            position_x, position_y = self._sprite.position
+            width, height = self._sprite.width_height
+            s = 240/width
 
             pyxel.blt(
-            x - 16, y - 16,  # center the sprite
-            0,               # image bank 0
-            32, 0,           # sprite starts at (0, 0)
-            32, 32,          # 32x32
-            0,                # transparent color (black)
-            scale=TILE_SIDE_LENGTH/32
+            91, y + height,  # center the sprite
+            image_bank,               # image bank 0
+            position_x, position_y,           # sprite starts at (0, 0)
+            width, height,          # 32x32
+            11,                # transparent color (black)
+            scale=s
             )
     @property
     def current_position(self):

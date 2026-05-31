@@ -2,17 +2,21 @@ from __future__ import annotations
 from entities.enemies import Ube
 from entities.towers import Chef, Tower
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
-from graphics import TextButton
+from graphics import TextButton, SpriteButton, SpriteInfo
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS
 
 
 NORMAL_MODE_BUTTONS = [TextButton(48, 48, "Back", 1),] # buttons for the pause menu? depende sa implementation ni janella
+
+BUTTON_SPRITES = [
+    SpriteInfo(1, (0, 0), (96, 32))
+]
 SIDEBAR_BUTTONS = [
     TextButton(48, 48, "___", 1), 
     TextButton(24, 512, "Tower 4", 1, size=48),
     TextButton(24, 800 - 3 * (178 - 98), "Tower 3", 1, size=48),
     TextButton(24, 800 - 178, "Tower 2", 1, size=48),
-    TextButton(24, 702, "Tower 1", 1, size=48)
+    SpriteButton(20, 695, BUTTON_SPRITES[0])
     ]
 
 
