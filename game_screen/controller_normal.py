@@ -36,7 +36,7 @@ class GameController:
         direction = self.get_player_direction((mouse_x, mouse_y))
 
         self._model._game_logic.player_change_direction(direction)
-        for i in range(2):
+        for i in range(4):
             self._model._game_logic.player.load_next_bullet(i)
         
         sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)

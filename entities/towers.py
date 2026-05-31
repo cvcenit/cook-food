@@ -2,7 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_VELOCITY_MAGNITUDE, PI, TILE_SIDE_LENGTH, BULLET_RADIUS, FPS
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, ENEMY_COLORS
-from math import sin, cos, atan2
+from math import sin, cos, atan2, hypot
 from random import choice
 import pyxel
 
@@ -156,7 +156,7 @@ class Tower(TowerInfo):
 
         self._next_bullets = []
 
-        self._tower_level = 4
+        self._tower_level = 10
 
     @property
     def color(self):
@@ -217,16 +217,22 @@ class Tower(TowerInfo):
         theta = self.current_direction
 
         if bullets_are_odd:
-            ...
+            if bullet_index == 0:
+                r = 0
+            else:
+                if bullet_index % 2:
+                    r = - ((2 * bullet_index)) * (BULLET_RADIUS) - (BULLET_RADIUS * 2)
+                else:
+                    r = ((2 * (bullet_index - 1))) * (BULLET_RADIUS) + (BULLET_RADIUS * 2)
         else:
-            placed_on_right = bullet_index % 2
-            if placed_on_right:
+            if bullet_index % 2:
                 r = - ((2 * bullet_index)) * (BULLET_RADIUS) - (BULLET_RADIUS / 2)
             else:
                 r = ((2 * (bullet_index + 1))) * (BULLET_RADIUS) + (BULLET_RADIUS / 2)
+
         t = TILE_SIDE_LENGTH / 1.5
-        hyp = ((r ** 2) + (t ** 2)) ** (1 / 2)
         beta = atan2(r, t)
+        hyp = hypot(r, t)
 
         bx += (hyp) * cos(beta + theta)
         by -= (hyp) * sin(beta + theta)
@@ -280,6 +286,7 @@ class Chef(Tower):
     def __init__(self, color, grid_position):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9
+        #self._tower_level = 1
 
     def change_direction(self, direction) -> None:
         self._current_direction = direction
