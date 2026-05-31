@@ -101,6 +101,9 @@ class Bullet(BulletInfo):
     def change_position(self, pos):
         self._current_position = pos
 
+    def change_radius(self, rad):
+        self._radius = rad
+
     def apply_velocity(self):
         vel_x, vel_y = self.current_velocity
 
@@ -149,7 +152,7 @@ class Tower(TowerInfo):
         self._bullets = []
         self._current_direction = self.base_direction
         self._color = color
-        self._remaining_seconds_to_shoot = 0
+        self._remaining_seconds_to_shoot = self._fire_rate
         self._next_bullet = None
 
     @property
@@ -203,10 +206,11 @@ class Tower(TowerInfo):
         self._color = color
 
     def next_bullet_color(self, colors):
-        if not colors:
-            return choice([2, 9, 11, 7, 10, 4])
-        else:
-            return choice(colors)
+        return choice([2, 9, 11, 7, 10, 4])
+        #if not colors:
+        #    return choice([2, 9, 11, 7, 10, 4])
+        #else:
+        #    return choice(colors)
 
     def next_bullet_position(self):
         bx, by = self.screen_position()
@@ -218,7 +222,7 @@ class Tower(TowerInfo):
         if self._next_bullet is None:
             bullet_color = self.next_bullet_color(colors)
 
-            bullet = Bullet(bullet_color, BULLET_RADIUS, self.next_bullet_position(), (0, 0))
+            bullet = Bullet(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(), (0, 0))
             bullet.initialize_bullet()
 
             self._bullets.append(bullet)
@@ -250,6 +254,8 @@ class Tower(TowerInfo):
            self.shoot()
         self.decrement_reload_time()
         self.remove_inactive_bullets()
+        if self._next_bullet is not None:
+            self._next_bullet.change_radius(BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot))
 
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
@@ -259,6 +265,12 @@ class Chef(Tower):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9
 
+    def next_bullet_color(self, colors):
+        if not colors:
+            return choice([2, 9, 11, 7, 10, 4])
+        else:
+            return choice(colors)
+
     def change_direction(self, direction) -> None:
         self._current_direction = direction
         if self._next_bullet is not None:
@@ -267,5 +279,7 @@ class Chef(Tower):
     def end_tick(self):
         self.decrement_reload_time()
         self.remove_inactive_bullets()
+        if self._next_bullet is not None:
+            self._next_bullet.change_radius(BULLET_RADIUS * (1 - self._remaining_seconds_to_shoot))
         if self.can_shoot and self._remaining_seconds_to_shoot != 0:
             self._remaining_seconds_to_shoot = 0

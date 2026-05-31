@@ -18,7 +18,7 @@ class Tile:
     
     def draw(self):
         x, y = self.screen_position()
-        color = 11 if self._isPath else 8 # 11 (green), 8 (red)
+        color = 3 if self._isPath else 8 # 3 (green), 8 (red)
         pyxel.rect(x, y, TILE_SIDE_LENGTH - 1, TILE_SIDE_LENGTH - 1, color)
         pyxel.rectb(x, y, TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, 1)
 

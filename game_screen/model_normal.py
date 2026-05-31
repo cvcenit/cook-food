@@ -24,6 +24,7 @@ class GameLogic:
         self._load_round(self._round_index)
         self._placing_tower = False
         self._not_enough_exp = False
+        self._towers = []
 
         # game data
         self._is_game_over = False
@@ -40,7 +41,6 @@ class GameLogic:
         self._spawn_timer = 0
         self._enemies = [] # [factory(round_config.path) for factory in round_config.enemies]
         self._player = Chef(7, round_config.player_start)
-        self._towers = []
 
     @property
     def is_game_over(self) -> bool:
