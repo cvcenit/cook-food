@@ -11,16 +11,7 @@ class GameView:
         self._top_margin: float = self._height / 4
 
     # OUTPUT METHODS
-    # CHANGED DRAW ENEMIES FOR SPRITE TESTING
-<<<<<<< HEAD
-    def draw_enemies(self, enemies) -> None:
-=======
     def draw_enemies(self, enemies, tunnels: set) -> None:
-        # put the draw in the enemy class
-        # for enemy in enemies:
-        #     x,y = enemy.position
-        #     pyxel.circ(x, y, 25, enemy.sprite)
->>>>>>> refs/remotes/origin/main
         for enemy in enemies:
             if enemy.is_alive:
                 enemy_tile = enemy._path[enemy._path_index]
