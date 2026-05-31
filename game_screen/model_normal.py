@@ -10,9 +10,9 @@ NORMAL_MODE_BUTTONS = [] # buttons for the pause menu? depende sa implementation
 SIDEBAR_BUTTONS = [
     TextButton(48, 48, "Pause", 1), 
     TextButton(24, 512, "Tower 4", 1, size=48),
-    TextButton(24, 560, "Tower 3", 1, size=48),
-    TextButton(24, 608, "Tower 2", 1, size=48),
-    TextButton(24, 656, "Tower 1", 1, size=48)
+    TextButton(24, 800 - 3 * (178 - 98), "Tower 3", 1, size=48),
+    TextButton(24, 800 - 178, "Tower 2", 1, size=48),
+    TextButton(24, 702, "Tower 1", 1, size=48)
     ]
 
 
@@ -163,7 +163,7 @@ class GameLogic:
                 self._spawn_timer = 0
 
         for tower in self._towers:
-            tower.end_tick(self._active_enemies)
+            tower.end_tick()
 
         for bullet in self.bullets:
             bullet.end_tick()
@@ -173,6 +173,7 @@ class GameLogic:
 
         self._player.end_tick()
 
+        # pls refactor
         active_bullets = [b for b in self.bullets if b.is_active]
         for bullet in active_bullets:
             for enemy in self._active_enemies:
@@ -189,11 +190,12 @@ class GameLogic:
                 if not bullet.is_active:
                     continue
                 if bullet.color == enemy.color:
-                    ex, ey = enemy.position
                     enemy_tile = self._path[enemy._path_index]
                     if enemy_tile in self._tunnels:
                         continue
+                    ex, ey = enemy.position
                     bx, by = bullet.current_position
+                    # fix, dapat pag nagcollide na ung bullet sa square sasabog na
                     distance_square = (bx - ex) ** 2 + (by - ey) ** 2
                     hit_distance = bullet.radius + 25
                     if distance_square <= hit_distance ** 2:

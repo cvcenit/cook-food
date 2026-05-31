@@ -91,7 +91,8 @@ class GenericEnemy(Enemy):
             0,               # image bank 0
             0, 0,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0                # transparent color (black)
+            0,                # transparent color (black)
+            scale=TILE_SIDE_LENGTH/32
         )
 
     @property
@@ -164,10 +165,6 @@ class Kutsinta(GenericEnemy):
         super().__init__(path)
 
     @property
-    def base_hit_points(self) -> int:
-        return 1
-
-    @property
     def color(self):
         return 9
 
@@ -185,7 +182,7 @@ class Kutsinta(GenericEnemy):
         )
 
 
-# refactor, mas maganda siguro kung may color nalang sila na argument
+# refactor, mas maganda siguro kung may color nalang sila na argument para genericenemy iinherit maybe
 class RegeneratorMixin:
     def __init__(self, *args, regen_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)

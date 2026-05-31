@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT_SIZE, HEADER_FONT
+from dataclasses import dataclass
 
 import pyxel
 
@@ -54,8 +55,53 @@ class TextButton(Button):
         self._x = x
         self._y = y
 
+@dataclass
+class SpriteInfo:
+    image_bank: int
+    bank_position: int
+    width: int
+    height: int
+
 class SpriteButton(Button):
-    pass
+    def __init__(self, x, y, sprite):
+        #TODO: make it possible to use different fonts/font sizes by D.I.?? ang arte tlg ng term
+        self._x, self._y = x, y
+        self._is_active = True
+        self._sprite = sprite
+
+    def toggle_active(self):
+        self._is_active = not self._is_active
+
+    def is_clicked(self) -> bool:
+        if self._is_active:
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+                if self.is_hovered():
+                    return True
+            return False
+
+    def is_hovered(self):
+        if self._is_active:
+            ...
+
+    def draw_button(self):
+        if self._is_active:
+            x, y = self.current_position
+
+            pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            32, 0,           # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0,                # transparent color (black)
+            scale=TILE_SIDE_LENGTH/32
+            )
+    @property
+    def current_position(self):
+        return self._x, self._y
+
+    def change_position(self, x, y):
+        self._x = x
+        self._y = y
 
 class Screen:
     def __init__(self, model, view, controller):

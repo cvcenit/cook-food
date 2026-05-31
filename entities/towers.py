@@ -140,7 +140,7 @@ class Bullet(BulletInfo):
 # (eg., bullets have a hit state, active state, inactive state) 
 # (towers ay may active, inactive state, depende sa current tick kung nagreload na ba)
 # enemies, nasa kabilang file, meron ding hit state, active state, at inactive state
-# TODO: Refactor ung time left, included siya sa pag end tick
+
 class Tower(TowerInfo):
     def __init__(self, color, grid_position):
         self._grid_position = grid_position
@@ -156,7 +156,7 @@ class Tower(TowerInfo):
 
         self._next_bullets = []
 
-        self._tower_level = 10
+        self._tower_level = 1
 
     @property
     def color(self):
@@ -263,7 +263,7 @@ class Tower(TowerInfo):
         x, y = self.screen_position()
         pyxel.circ(x, y, TILE_SIDE_LENGTH / 2.5, self.color)
 
-    def end_tick(self, enemies = None):
+    def end_tick(self):
         for i in range(self._tower_level):
             self.load_next_bullet(i)
 
@@ -286,7 +286,7 @@ class Chef(Tower):
     def __init__(self, color, grid_position):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9
-        #self._tower_level = 1
+        self._tower_level = 5
 
     def change_direction(self, direction) -> None:
         self._current_direction = direction
