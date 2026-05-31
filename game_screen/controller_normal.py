@@ -34,11 +34,15 @@ class GameController:
 
         self._model._game_logic.player_change_direction(direction)
         self._model._game_logic.player.load_next_bullet(direction)
-        if clicked:
-            self._model._game_logic.player_shoot()
-
-        if pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT):
-            self._model._game_logic.try_place_tower(mouse_x, mouse_y)
+        
+        sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
+        if sidebar_clicked == 0:
+            self._model._game_logic.toggle_placement_mode()
+        elif clicked:
+            if self._model._game_logic.placing_tower:
+                self._model._game_logic.place_tower(mouse_x, mouse_y)
+            else:
+                self._model._game_logic.player_shoot()
         
         self._model.update(clicked_btn)
 
@@ -57,7 +61,7 @@ class GameController:
         self._view.draw_bullets(self._model._game_logic.bullets)
 
         # draw ui + buttons
-        self._view.draw_sidebar(self._model.sidebar_buttons)
+        self._view.draw_sidebar(self._model.sidebar_buttons, self._model._game_logic.exp, self._model._game_logic.lives, self._model._game_logic.placing_tower, self._model._game_logic.not_enough_exp)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
 

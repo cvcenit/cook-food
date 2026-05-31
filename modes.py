@@ -9,8 +9,9 @@ class RoundConfig:
 	enemies: list # list of callables
 	path: list
 	player_start: tuple
-	grid: Grid
+	grid: Grid # added grid in round config
 
+# WILL PROBABLY NOT BE USED BUT WILL LEAVE HERE
 def make_spiral_path(rows=8, cols=10, row_offset=1):
     path = []
     top, bottom, left, right = 0, rows - 1, 0, cols - 1
@@ -54,6 +55,7 @@ class Level(ABC):
 
 class CampaignMode(Level):
 	def __init__(self, data: dict):
+		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
 		path = [
 			(1, 0), (1, 1),  # goes right
 			(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), # goes down
@@ -107,7 +109,7 @@ class EndlessMode(Level):
 	def get_round(self, round_num: int) -> RoundConfig:
 		count = self._base_count + round_num + 2
 		return RoundConfig(
-			enemies=[lambda p: RegeneratorChameleonUbe(p) for _ in range(count)],
+			enemies=[lambda p, cls=Ube: cls(p) for _ in range(count)],
 			path=self._path,
 			player_start=(5, 5),
 		)

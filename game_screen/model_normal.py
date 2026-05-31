@@ -3,6 +3,7 @@ from entities.enemies import Ube
 from entities.towers import Chef, Tower
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton
+from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS
 
 
 NORMAL_MODE_BUTTONS = [TextButton(48, 48, "Back", 1),]
@@ -21,6 +22,8 @@ class GameLogic:
         self._exp = level.initial_exp
         self._lives = level.initial_lives
         self._load_round(self._round_index)
+        self._placing_tower = False
+        self._not_enough_exp = False
 
         # game data
         self._is_game_over = False
@@ -29,10 +32,13 @@ class GameLogic:
 
     def _load_round(self, index: int):
         round_config = self._level.rounds[index]
-
         self._path = round_config.path
         self._grid = round_config.grid
-        self._enemies = [factory(round_config.path) for factory in round_config.enemies]
+        self._enemy_factories = round_config.enemies
+        self._spawn_queue = list(round_config.enemies)
+        self._spawn_interval = 2 * FPS
+        self._spawn_timer = 0
+        self._enemies = [] # [factory(round_config.path) for factory in round_config.enemies]
         self._player = Chef(7, round_config.player_start)
         self._towers = []
 
@@ -67,6 +73,14 @@ class GameLogic:
     @property
     def grid(self):
         return self._grid
+    
+    @property
+    def placing_tower(self) -> bool:
+        return self._placing_tower
+    
+    @property
+    def not_enough_exp(self) -> bool:
+        return self._not_enough_exp
 
     @property
     def bullets(self):
@@ -75,12 +89,28 @@ class GameLogic:
             result += tower.bullets
         return result + self._player.bullets
     
-    def place_tower(self, tower: Tower) -> bool:
-        if self._exp >= tower._purchase_cost:
-            self._exp -= tower._purchase_cost
-            self._towers.append(tower)
-            return True
-        return False
+    def toggle_placement_mode(self):
+        self._placing_tower = not self.placing_tower
+
+    def place_tower(self, mouse_x: float, mouse_y: float):
+        col = int((mouse_x - GAMEPLAY_X_OFFSET) / TILE_SIDE_LENGTH)
+        row = int((mouse_y - GAMEPLAY_Y_OFFSET) / TILE_SIDE_LENGTH)
+
+        tiles = self._grid._tiles
+        if not (0 <= row < len(tiles) and 0 <= col < len(tiles[0])):
+            return
+        if tiles[row][col]._isPath:
+            return
+        for tower in self._towers:
+            if tower.grid_position == (row, col):
+                return
+        if self._exp >= 5:
+            self._exp -= 5
+            self._towers.append(Tower(2, (row, col)))
+            self._placing_tower = False
+            self._not_enough_exp = False
+        else:
+            self._not_enough_exp = True
     
     def defeat_enemy(self, enemy) -> None:
         enemy.receive_hit(enemy.hit_points) 
@@ -105,6 +135,14 @@ class GameLogic:
         if self._is_game_over:
             return
         
+        # SPAWNING INTERVAL FOR ENEMIES SO THAT THEY DO NOT STACK
+        if self._spawn_queue:
+            self._spawn_timer += 1
+            if self._spawn_timer >= self._spawn_interval:
+                factory = self._spawn_queue.pop(0)
+                self._enemies.append(factory(self._path))
+                self._spawn_timer = 0
+
         for tower in self._towers:
             tower.end_tick()
 
@@ -133,23 +171,18 @@ class GameLogic:
             if enemy._path_index >= len(enemy._path) - 1:
                 self.lose_life()
                 enemy.receive_hit(999)
-                    
-        if self._round_over_condition.is_round_over(len(self._active_enemies)):
+        
+        # CHANGED TO NOT SELF._SPAWN_QUEUE TO SEE IF THERE ARE NO MORE ENEMIES IN THE QUEUE
+        if not self._spawn_queue and self._round_over_condition.is_round_over(len(self._active_enemies)):
             self.advance_round()
         
         if self._game_over_condition.is_game_over(len(self._active_enemies), self._lives, self.rounds_left):
             self._is_game_over = True
-            
-            for enemy in self._active_enemies:
-                if enemy._path_index >= len(enemy._path) - 1:
-                    self.lose_life()
-                    enemy.receive_hit(999)
-                        
-            if self._round_over_condition.is_round_over(len(self._active_enemies)):
-                self.advance_round()
-            
-            if self._game_over_condition.is_game_over(len(self._active_enemies), self._lives, self.rounds_left):
-                self._is_game_over = True
+
+        for enemy in self._active_enemies:
+            if enemy._path_index >= len(enemy._path) - 1:
+                self.lose_life()
+                enemy.receive_hit(999)
 
     @property
     def _active_enemies(self):
