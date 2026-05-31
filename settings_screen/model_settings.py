@@ -15,6 +15,8 @@ ENEMIES_DECREASE_BUTTON = TextButton(0, 6 * HEADER_FONT_SIZE, "<", 1)
 ENEMIES_INCREASE_BUTTON = TextButton(0, 6 * HEADER_FONT_SIZE, ">", 1)
 REGENERATOR_DECREASE_BUTTON = TextButton(0, 8 * HEADER_FONT_SIZE, "<", 1)
 REGENERATOR_INCREASE_BUTTON = TextButton(0, 8 * HEADER_FONT_SIZE, ">", 1)
+CHAMELEON_DECREASE_BUTTON = TextButton(0, 9 * HEADER_FONT_SIZE, "<", 1)
+CHAMELEON_INCREASE_BUTTON = TextButton(0, 9 * HEADER_FONT_SIZE, ">", 1)
 
 ARROW_BUTTONS = [
     LIVES_DECREASE_BUTTON, 
@@ -22,7 +24,9 @@ ARROW_BUTTONS = [
     ENEMIES_DECREASE_BUTTON,
     ENEMIES_INCREASE_BUTTON,
     REGENERATOR_DECREASE_BUTTON,
-    REGENERATOR_INCREASE_BUTTON
+    REGENERATOR_INCREASE_BUTTON,
+    CHAMELEON_DECREASE_BUTTON,
+    CHAMELEON_INCREASE_BUTTON
 ]
 
 SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2
@@ -33,17 +37,20 @@ for button in SETTINGS_BUTTONS + ARROW_BUTTONS:
 
 lives_width = HEADER_FONT.text_width("Lives:  _")
 enemies_width = HEADER_FONT.text_width("Enemies:  _")
-regenerator_width = HEADER_FONT.text_width("Regenerator Interval:  _")
+regenerator_width = HEADER_FONT.text_width("Regenerator Interval:   _")
+chameleon_width = HEADER_FONT.text_width("Chameleon Interval:  _")
 arrow_width = HEADER_FONT.text_width("<")
 gap = 8
 
 
 LIVES_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - lives_width // 2 - gap - arrow_width, 3 * HEADER_FONT_SIZE)
 LIVES_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + lives_width // 2 + gap, 3 * HEADER_FONT_SIZE)
-ENEMIES_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - enemies_width // 2 - gap - arrow_width, 5 * HEADER_FONT_SIZE)
-ENEMIES_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + enemies_width // 2 + gap, 5 * HEADER_FONT_SIZE)
-REGENERATOR_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - regenerator_width // 2 - gap - arrow_width, 7 * HEADER_FONT_SIZE)
-REGENERATOR_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + regenerator_width // 2 + gap, 7 * HEADER_FONT_SIZE)
+ENEMIES_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - enemies_width // 2 - gap - arrow_width, 4 * HEADER_FONT_SIZE)
+ENEMIES_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + enemies_width // 2 + gap, 4 * HEADER_FONT_SIZE)
+REGENERATOR_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - regenerator_width // 2 - gap - arrow_width, 5 * HEADER_FONT_SIZE)
+REGENERATOR_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + regenerator_width // 2 + gap, 5 * HEADER_FONT_SIZE)
+CHAMELEON_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - chameleon_width // 2 - gap - arrow_width, 6 * HEADER_FONT_SIZE)
+CHAMELEON_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + chameleon_width // 2 + gap, 6 * HEADER_FONT_SIZE)
 
 
 class SettingsModel:
@@ -53,12 +60,16 @@ class SettingsModel:
         self._lives = DATA["remaining_lives"]
         self._enemies = DATA["remaining_enemies"]
         self._regenerator_interval = DATA["regenerator_interval"]
+        self._chameleon_interval = DATA["chameleon_interval"]
+        self._smooth_movement = DATA["smooth_movement"]
         self._lives_decrease_button = LIVES_DECREASE_BUTTON
         self._lives_increase_button = LIVES_INCREASE_BUTTON
         self._enemies_decrease_button = ENEMIES_DECREASE_BUTTON
         self._enemies_increase_button = ENEMIES_INCREASE_BUTTON
         self._regenerator_decrease_button = REGENERATOR_DECREASE_BUTTON
         self._regenerator_increase_button = REGENERATOR_INCREASE_BUTTON
+        self._chameleon_decrease_button = CHAMELEON_DECREASE_BUTTON
+        self._chameleon_increase_button = CHAMELEON_INCREASE_BUTTON
 
     @property
     def screen_change_buttons(self):
@@ -121,11 +132,39 @@ class SettingsModel:
     def decrease_regenerator(self):
         if self._regenerator_interval > 1:
             self._regenerator_interval -= 1
+    
+    @property
+    def chameleon_interval(self):
+        return self._chameleon_interval
+
+    @property
+    def chameleon_decrease_button(self):
+        return self._chameleon_decrease_button
+
+    @property
+    def chameleon_increase_button(self):
+        return self._chameleon_increase_button
+
+    def increase_chameleon(self):
+        self._chameleon_interval += 1
+
+    def decrease_chameleon(self):
+        if self._chameleon_interval > 1:
+            self._chameleon_interval -= 1
+    
+    @property
+    def smooth_movement(self):
+        return self._smooth_movement
+    
+    def toggle_smooth_movement(self):
+        self._smooth_movement = not self._smooth_movement
 
     def save(self):
         DATA["remaining_lives"] = self._lives
         DATA["remaining_enemies"] = self._enemies
         DATA["regenerator_interval"] = self._regenerator_interval
+        DATA["chameleon_interval"] = self._chameleon_interval
+        DATA["smooth_movement"] = self._smooth_movement
         with open("settings.json", "w") as f:
             json.dump(DATA, f) # or not ? dapat ba isave sa settings o hnd
     
