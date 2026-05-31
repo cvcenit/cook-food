@@ -6,7 +6,7 @@ from graphics import TextButton, SpriteButton, SpriteInfo
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS
 
 
-NORMAL_MODE_BUTTONS = [TextButton(48, 48, "Back", 1),] # buttons for the pause menu? depende sa implementation ni janella
+NORMAL_MODE_BUTTONS = [TextButton(48, 48, "Back", 1), TextButton(48, 120, "Pause", 1),]
 
 BUTTON_SPRITES = [
     SpriteInfo(1, (0, 0), (96, 32))
@@ -240,6 +240,7 @@ class GameModel:
         self._screen_change_buttons = NORMAL_MODE_BUTTONS
         self._popup_buttons = []
         self._sidebar_buttons = SIDEBAR_BUTTONS
+        self._is_paused = False
 
     @property
     def current_tick(self):
@@ -256,6 +257,13 @@ class GameModel:
     @property
     def sidebar_buttons(self):
         return self._sidebar_buttons
+    
+    @property
+    def is_paused(self):
+        return self._is_paused
+    
+    def toggle_pause(self):
+        self._is_paused = not self._is_paused
 
     # to be implemented by janella
     def pause_popup(self):
@@ -274,5 +282,7 @@ class GameModel:
         self._screen_change_buttons = NORMAL_MODE_BUTTONS
 
     def update(self, clicked_idx):
+        if self._is_paused:
+            return
         self._game_logic.update()
         self._current_tick += 1

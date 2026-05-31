@@ -14,9 +14,12 @@ class GameController:
         self._view = view
 
     def get_clicked_screen_change_button(self):
-        actions = ["campaign_mode"]
+        actions = ["campaign_mode", "pause"]
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         if clicked_btn is not None:
+            if actions[clicked_btn] == "pause":
+                self._model.toggle_pause()
+                return None         
             return actions[clicked_btn]
 
     def get_player_direction(self, pos):
@@ -30,6 +33,10 @@ class GameController:
             pyxel.quit()
 
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
+        
+        if self._model.is_paused:
+            self._model.update(clicked_btn)
+            return
 
         left_clicked = self._view.has_left_clicked()
         right_clicked = self._view.has_right_clicked()
@@ -74,6 +81,10 @@ class GameController:
         self._view.draw_sidebar(self._model.sidebar_buttons, self._model._game_logic.exp, self._model._game_logic.lives, self._model._game_logic.placing_tower, self._model._game_logic.not_enough_exp)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
+
+        if self._model.is_paused:
+            self._view.draw_pause_popup()
+
 
 mode = "campaign"
 
