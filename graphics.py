@@ -62,11 +62,12 @@ class SpriteInfo:
     width_height: tuple[int, int]
 
 class SpriteButton(Button):
-    def __init__(self, x, y, sprite):
-        #TODO: make it possible to use different fonts/font sizes by D.I.?? ang arte tlg ng term
+    def __init__(self, x, y, sprite, scale):
+        # ang x and y ay center ng kalalagyan ng sprite
         self._x, self._y = x, y
         self._is_active = True
         self._sprite = sprite
+        self._scale = scale
 
     def toggle_active(self):
         self._is_active = not self._is_active
@@ -80,7 +81,12 @@ class SpriteButton(Button):
 
     def is_hovered(self):
         if self._is_active:
-            ...
+            x, y = self.current_position
+            width, height = self._sprite.width_height
+            s = self._scale
+
+            return x - (s * width / 2) <= pyxel.mouse_x <= x + (s * width / 2) and \
+            y - (s * height / 2) <= pyxel.mouse_y <= y + (s * height / 2)
 
     def draw_button(self):
         if self._is_active:
@@ -88,16 +94,24 @@ class SpriteButton(Button):
             image_bank = self._sprite.image_bank
             position_x, position_y = self._sprite.position
             width, height = self._sprite.width_height
-            s = 240/width
-
-            pyxel.blt(
-            91, y + height,  # center the sprite
-            image_bank,               # image bank 0
-            position_x, position_y,           # sprite starts at (0, 0)
-            width, height,          # 32x32
-            11,                # transparent color (black)
-            scale=s
-            )
+            if not self.is_hovered():
+                pyxel.blt(
+                x - (width / 2), y - (height / 2),
+                image_bank,
+                position_x, position_y,
+                width, height,
+                11,
+                scale=self._scale
+                )
+            else:
+                pyxel.blt(
+                x - (width / 2), y - (height / 2),  
+                image_bank,
+                0, 32,
+                width, height,
+                11,
+                scale=self._scale
+                )
     @property
     def current_position(self):
         return self._x, self._y

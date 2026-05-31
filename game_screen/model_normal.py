@@ -16,7 +16,7 @@ SIDEBAR_BUTTONS = [
     TextButton(24, 512, "Tower 4", 1, size=48),
     TextButton(24, 800 - 3 * (178 - 98), "Tower 3", 1, size=48),
     TextButton(24, 800 - 178, "Tower 2", 1, size=48),
-    SpriteButton(20, 695, BUTTON_SPRITES[0])
+    SpriteButton(140, 743, BUTTON_SPRITES[0], 240/96)
     ]
 
 
