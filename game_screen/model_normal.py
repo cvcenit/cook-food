@@ -88,6 +88,15 @@ class GameLogic:
         for tower in self._towers:
             result += tower.bullets
         return result + self._player.bullets
+
+    def colors_of_remaining_enemies(self):
+        res = set()
+        for enemy in self._active_enemies:
+            res.add(enemy.color)
+        for enemy in self._spawn_queue:
+            res.add(enemy(self._path).color)
+        print(res)
+        return list(res)
     
     def toggle_placement_mode(self):
         self._placing_tower = not self.placing_tower
@@ -131,7 +140,6 @@ class GameLogic:
             self._load_round(self._round_index)
 
     def update(self):
-        print(self.lives)
         if self._is_game_over:
             return
         

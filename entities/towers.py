@@ -238,8 +238,11 @@ class Chef(Tower):
     def change_color(self, color):
         self._color = color
 
-    def next_bullet_color(self):
-        return choice([2, 9, 11, 7, 10, 4])
+    def next_bullet_color(self, colors):
+        if not colors:
+            return choice([2, 9, 11, 7, 10, 4])
+        else:
+            return choice(colors)
 
     def next_bullet_position(self):
         bx, by = self.screen_position()
@@ -247,9 +250,9 @@ class Chef(Tower):
         by -= (TILE_SIDE_LENGTH) * sin(self.current_direction)
         return bx, by
 
-    def load_next_bullet(self, direction):
+    def load_next_bullet(self, colors):
         if self._next_bullet is None:
-            bullet_color = self.next_bullet_color()
+            bullet_color = self.next_bullet_color(colors)
 
             bullet = Bullet(bullet_color, BULLET_RADIUS, self.next_bullet_position(), (0, 0))
             bullet.initialize_bullet()

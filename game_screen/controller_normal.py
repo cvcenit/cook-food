@@ -33,12 +33,12 @@ class GameController:
         direction = atan2(cardinal_y, cardinal_x)
 
         self._model._game_logic.player_change_direction(direction)
-        self._model._game_logic.player.load_next_bullet(direction)
+        self._model._game_logic.player.load_next_bullet(self._model._game_logic.colors_of_remaining_enemies())
         
         sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
         if sidebar_clicked == 0:
             self._model._game_logic.toggle_placement_mode()
-        elif clicked:
+        if clicked:
             if self._model._game_logic.placing_tower:
                 self._model._game_logic.place_tower(mouse_x, mouse_y)
             else:
@@ -48,10 +48,6 @@ class GameController:
 
     def draw(self):
         self._view.reset_screen()
-        # JOWEE BASAHIN E2
-        # palitan ang laman ng draw_grid, ipass ang level as argument or kahit fields ng level
-        # mag aadd ka rin ng valid tiles at invalid tiles at player tile sa level data 
-        # imatch ung color ng in/valid tower tiles, path tile, player tile
         self._view.draw_grid(self._model._game_logic.grid)
 
         # draw entities
