@@ -2,7 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_VELOCITY_MAGNITUDE, PI, TILE_SIDE_LENGTH, BULLET_RADIUS, FPS
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
-from math import sin, cos
+from math import sin, cos, atan2
 from random import choice
 import pyxel
 
@@ -210,9 +210,9 @@ class Tower(TowerInfo):
         x, y = self.screen_position()
         pyxel.circ(x, y, TILE_SIDE_LENGTH / 2, self.color)
 
-    def end_tick(self):
+    def end_tick(self, enemies = None):
         if self.can_shoot:
-            self.shoot(self.current_direction)
+           self.shoot(self.current_direction)
         self.decrement_reload_time()
         self.remove_inactive_bullets()
 

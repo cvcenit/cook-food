@@ -135,13 +135,20 @@ class Ube(Enemy):
         dy = target_y - self._y_position
         dist = (dx ** 2 + dy ** 2) ** 0.5
 
-        if dist <= self._current_speed:
-            # snap to next tile
-            self._x_position, self._y_position = target_x, target_y
-            self._path_index += 1
+        if DATA.get("smooth_movement", True):
+            if dist <= self._current_speed:
+                # snap to next tile
+                self._x_position, self._y_position = target_x, target_y
+                self._path_index += 1
+            else:
+                self._x_position += self._current_speed * dx / dist
+                self._y_position += self._current_speed * dy / dist
         else:
-            self._x_position += self._current_speed * dx / dist
-            self._y_position += self._current_speed * dy / dist
+            self._tick_counter = getattr(self, "_tick_counter", 0) + 1
+            if self._tick_counter >= 2 * FPS:
+                self._x_position, self._y_position = target_x, target_y
+                self._path_index += 1
+                self._tick_counter = 0
 
     def draw(self):
         x, y = self.position

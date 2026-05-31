@@ -144,7 +144,7 @@ class GameLogic:
                 self._spawn_timer = 0
 
         for tower in self._towers:
-            tower.end_tick()
+            tower.end_tick(self._active_enemies)
 
         for bullet in self.bullets:
             bullet.end_tick()
