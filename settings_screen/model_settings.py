@@ -50,9 +50,9 @@ class SettingsModel:
     def __init__(self):
         self._screen_change_buttons = SETTINGS_BUTTONS
         self._current_tick = 1
-        self._lives = 2
-        self._enemies = 5
-        self._regenerator_interval = 3
+        self._lives = DATA["remaining_lives"]
+        self._enemies = DATA["remaining_enemies"]
+        self._regenerator_interval = DATA["regenerator_interval"]
         self._lives_decrease_button = LIVES_DECREASE_BUTTON
         self._lives_increase_button = LIVES_INCREASE_BUTTON
         self._enemies_decrease_button = ENEMIES_DECREASE_BUTTON
