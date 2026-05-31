@@ -57,18 +57,13 @@ class CampaignMode(Level):
 	def __init__(self, data: dict):
 		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
 		path = [
-			(1, 0), (1, 1),  # goes right
-			(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), # goes down
-			(7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (7, 8), (7, 9), # goes right
-			(6, 9), (5, 9), # goes up
-			(5, 9), (5, 8), (5, 7), # goes left
-			(4, 7), (3, 7), # goes up
-			(3, 7), (3, 8), (3, 9), (3, 10), # goes right
-			(2, 10), (1, 10), # goes up
-			(1, 10), (1, 9), (1, 8), (1, 7), (1, 6), # goes left
-			(2, 6), # goes down
-			(2, 5), # goes left
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
+			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
+			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
 			(3, 5), # goes down
+			(3, 4), (3, 3), # goes left 
+			(2, 3), (1, 3) # goes up
 			]
 		grid = Grid(9, 11, path)
 		enemy_count = data["remaining_enemies"]

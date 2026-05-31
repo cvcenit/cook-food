@@ -95,7 +95,6 @@ class GameLogic:
             res.add(enemy.color)
         for enemy in self._spawn_queue:
             res.add(enemy(self._path).color)
-        print(res)
         return list(res)
     
     def toggle_placement_mode(self):

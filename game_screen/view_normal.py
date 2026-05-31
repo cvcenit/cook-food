@@ -38,7 +38,7 @@ class GameView:
 
     # CHANGED TO GRID DRAW TO COLOR THE TILES GREEN VALID TILES AND RED INVALID TILES
     def draw_grid(self, grid) -> None:
-       grid.draw()
+        grid.draw()
 
     def draw_sidebar(self, buttons, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool):
         pyxel.rect(0, 0, 280, 800, 3)
