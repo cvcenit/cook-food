@@ -9,31 +9,42 @@ class Button(ABC):
         ...
 
     @abstractmethod
-    def is_hovered(self) -> bool:
-        ...
+    def is_hovered(self) -> bool: ...
+
+    @abstractmethod
+    def draw_button(self) -> None: ...
 
 class TextButton(Button):
-    def __init__(self, x, y, text, color):
+    def __init__(self, x, y, text, color, size=HEADER_FONT_SIZE):
     	#TODO: make it possible to use different fonts/font sizes by D.I.?? ang arte tlg ng term
         self._x, self._y, self._text, self._color = x, y, text, color
-        self._text_width = HEADER_FONT.text_width(self._text)
+        self._size = size
+        self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
+        self._text_width = self._font.text_width(self._text)
+        self._is_active = True
 
     @property
     def text_width(self):
         return self._text_width
 
+    def toggle_active(self):
+        self._is_active = not self._is_active
+
     def is_clicked(self) -> bool:
-        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
-            if self.is_hovered():
-                return True
-        return False
+        if self._is_active:
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+                if self.is_hovered():
+                    return True
+            return False
 
     def is_hovered(self):
-        return self._x <= pyxel.mouse_x <= self._x + self._text_width and \
-        self._y + 0.5 * HEADER_FONT_SIZE <= pyxel.mouse_y <= self._y + 1.4 * HEADER_FONT_SIZE
+        if self._is_active:
+            return self._x <= pyxel.mouse_x <= self._x + self._text_width and \
+            self._y + 0.5 * self._size <= pyxel.mouse_y <= self._y + 1.4 * self._size
 
     def draw_button(self):
-        pyxel.text(self._x, self._y, self._text, (8 if self.is_hovered() else self._color), font=HEADER_FONT)
+        if self._is_active:
+            pyxel.text(self._x, self._y, self._text, (8 if self.is_hovered() else self._color), font=self._font)
 
     @property
     def current_position(self):

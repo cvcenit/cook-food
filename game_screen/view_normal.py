@@ -13,10 +13,6 @@ class GameView:
     # OUTPUT METHODS
     # CHANGED DRAW ENEMIES FOR SPRITE TESTING
     def draw_enemies(self, enemies) -> None:
-        # put the draw in the enemy class
-        # for enemy in enemies:
-        #     x,y = enemy.position
-        #     pyxel.circ(x, y, 25, enemy.sprite)
         for enemy in enemies:
             if enemy.is_alive:
                 enemy.draw()

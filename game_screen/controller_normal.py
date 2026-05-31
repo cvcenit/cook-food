@@ -1,7 +1,7 @@
 from __future__ import annotations
 from .model_normal import GameModel
 from .view_normal import GameView
-from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
 from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
 from math import atan2
 from graphics import Screen
@@ -19,28 +19,38 @@ class GameController:
         if clicked_btn is not None:
             return actions[clicked_btn]
 
+    def get_player_direction(self, pos):
+        mouse_x, mouse_y = pos
+        player_x, player_y = self._model._game_logic.player.screen_position()
+        cardinal_x, cardinal_y = (mouse_x - player_x), -(mouse_y - player_y)
+        return atan2(cardinal_y, cardinal_x)
+
     def update(self):
         if self._model._game_logic.is_game_over:
             pyxel.quit()
 
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         clicked = self._view.has_left_clicked()
-
-        # just gets current direction
         mouse_x, mouse_y = self._view.get_mouse_position()
-        player_x, player_y = self._model._game_logic.player.screen_position()
-        cardinal_x, cardinal_y = (mouse_x - player_x), -(mouse_y - player_y)
-        direction = atan2(cardinal_y, cardinal_x)
+
+        direction = self.get_player_direction((mouse_x, mouse_y))
 
         self._model._game_logic.player_change_direction(direction)
         self._model._game_logic.player.load_next_bullet(self._model._game_logic.colors_of_remaining_enemies())
         
         sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
-        if sidebar_clicked == 0:
-            self._model._game_logic.toggle_placement_mode()
+
+        if sidebar_clicked is not None:
+            if sidebar_clicked != 0:
+                self._model._game_logic.toggle_placement_mode()
+            else:
+                ...
+
         if clicked:
             if self._model._game_logic.placing_tower:
                 self._model._game_logic.place_tower(mouse_x, mouse_y)
+            elif (0 <= mouse_x <= GAMEPLAY_X_OFFSET) or (0 <= mouse_y <= GAMEPLAY_Y_OFFSET):
+                ...
             else:
                 self._model._game_logic.player_shoot()
         

@@ -6,13 +6,15 @@ from graphics import TextButton
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS
 
 
-NORMAL_MODE_BUTTONS = [TextButton(48, 48, "Back", 1),]
-SIDEBAR_BUTTONS = [TextButton(10, 192, "Tower 1", 1)]
+NORMAL_MODE_BUTTONS = [] # buttons for the pause menu? depende sa implementation ni janella
+SIDEBAR_BUTTONS = [
+    TextButton(48, 48, "Pause", 1), 
+    TextButton(24, 512, "Tower 4", 1, size=48),
+    TextButton(24, 560, "Tower 3", 1, size=48),
+    TextButton(24, 608, "Tower 2", 1, size=48),
+    TextButton(24, 656, "Tower 1", 1, size=48)
+    ]
 
-# part ni jowee
-# TODO: Load level
-# TODO: Load player
-# TODO: Load grid
 
 class GameLogic:
     def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
@@ -101,6 +103,7 @@ class GameLogic:
         self._placing_tower = not self.placing_tower
 
     def place_tower(self, mouse_x: float, mouse_y: float):
+        # should not be instant (pagkaselect ng tower, tinatry agad to, add a timer)
         col = int((mouse_x - GAMEPLAY_X_OFFSET) / TILE_SIDE_LENGTH)
         row = int((mouse_y - GAMEPLAY_Y_OFFSET) / TILE_SIDE_LENGTH)
 
@@ -112,18 +115,20 @@ class GameLogic:
         for tower in self._towers:
             if tower.grid_position == (row, col):
                 return
+
+        # should depend on the tower cost
         if self._exp >= 5:
             self._exp -= 5
             self._towers.append(Tower(2, (row, col)))
             self._placing_tower = False
-            self._not_enough_exp = False
+            self._not_enough_exp = False # dapat false lang kung exp < tower cost, hindi dahil nag spend false na
         else:
             self._not_enough_exp = True
-    
+
     def defeat_enemy(self, enemy) -> None:
         enemy.receive_hit(enemy.hit_points) 
         self._exp += enemy.points
-    
+
     def lose_life(self) -> None:
         self._lives -= 1
 
@@ -222,6 +227,10 @@ class GameModel:
     @property
     def sidebar_buttons(self):
         return self._sidebar_buttons
+
+    # to be implemented by janella
+    def pause_popup(self):
+        ...
 
     def start_screen(self):
         self._current_tick = 1
