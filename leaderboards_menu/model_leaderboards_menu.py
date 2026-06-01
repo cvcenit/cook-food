@@ -24,10 +24,6 @@ for button in SCREEN_CHANGE_BUTTONS:
     x = (SCREEN_WIDTH / 2) - (button.text_width / 2)
     button.change_position(x, y)
 
-
-# column widths are fixed to:
-# ill add later
-
 COLUMN_WIDTHS = [50, 400, 150, 150, 150]
 X_OFFSETS = [0, 50, 450, 600, 750]
 PLAYERS_PER_PAGE = 10
@@ -59,6 +55,8 @@ class LeaderboardRow:
 
 class LeaderboardsMenuModel:
     def __init__(self):
+        self._sort_by = "total"
+        self._keys = ["name", "campaign_completed_rounds", "endless_highest_rounds", "total"]
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
         self._popup_buttons = POPUP_BUTTONS
         self._data = PLAYER_DATA
@@ -106,7 +104,11 @@ class LeaderboardsMenuModel:
 
     @property
     def players(self):
-        return [p for p in self._data]
+        if self._sort_by == "total":
+            return [p[0] for p in sorted(self._data.items(),
+                    key=lambda x: x[1]["campaign_completed_rounds"] + x[1]["endless_highest_rounds"], reverse=True)]
+        else:
+            return [p[0] for p in sorted(self._data.items(), key=lambda x: x[1][self._sort_by], reverse=True)]
 
     @property
     def current_page(self):
@@ -132,7 +134,7 @@ class LeaderboardsMenuModel:
             upper_bound = starting_player + PLAYERS_PER_PAGE
             rows = []
             for i, player in enumerate(self.players[starting_player:upper_bound]):
-                index = starting_player + i
+                index = starting_player + i + 1
                 player_data = self._data[player]
                 campaign_completed_rounds = player_data["campaign_completed_rounds"]
                 endless_highest_rounds = player_data["endless_highest_rounds"]
@@ -146,10 +148,11 @@ class LeaderboardsMenuModel:
     def update(self, clicked_idx):
         self._current_tick += 1
         if clicked_idx is not None:
-            if clicked_idx == 0:
-                self.previous_page()
-            else:
-                self.next_page()
+            match clicked_idx:
+                case 0:
+                    self.previous_page()
+                case _:
+                    self.next_page()
 
             self._current_rows = self.leaderboard_players()
             self._texts = self.leaderboard_texts
