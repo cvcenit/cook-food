@@ -2,7 +2,7 @@ from __future__ import annotations
 from entities.enemies import Ube
 from entities.towers import Chef, Tower
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
-from graphics import TextButton, SpriteButton, SpriteInfo
+from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS
 
 
@@ -13,10 +13,10 @@ BUTTON_SPRITES = [
 ]
 SIDEBAR_BUTTONS = [
     TextButton(48, 48, "___", 1), 
-    TextButton(24, 512, "Tower 4", 1, size=48),
-    TextButton(24, 800 - 3 * (178 - 98), "Tower 3", 1, size=48),
-    TextButton(24, 800 - 178, "Tower 2", 1, size=48),
-    SpriteButton(140, 743, BUTTON_SPRITES[0], 240/96)
+    SpriteButton(140, 435, BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 535, BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 635, BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 735, BUTTON_SPRITES[0], 240/96)
     ]
 
 
@@ -193,6 +193,10 @@ class GameLogic:
                         break
                 if not bullet.is_active:
                     continue
+
+                # enemy color will now be a list
+                # will change to if bullet color in enemy colors
+                # to account for regenerator (no color)
                 if bullet.color == enemy.color:
                     enemy_tile = self._path[enemy._path_index]
                     if enemy_tile in self._tunnels:
@@ -240,6 +244,8 @@ class GameModel:
         self._screen_change_buttons = NORMAL_MODE_BUTTONS
         self._popup_buttons = []
         self._sidebar_buttons = SIDEBAR_BUTTONS
+
+        self._popup_screens = []
         self._is_paused = False
 
     @property
@@ -262,14 +268,17 @@ class GameModel:
     def is_paused(self):
         return self._is_paused
     
+    @property
+    def popup_screens(self):
+        return self._popup_screens
+
+    @property
+    def game_logic(self):
+        return self._game_logic
+
+
     def toggle_pause(self):
         self._is_paused = not self._is_paused
-
-    # to be implemented by janella
-    def pause_popup(self):
-        # will "activate" the hidden buttons, or ikaw bahala
-        # pauses the game, goodluck
-        ...
 
     def start_screen(self):
         self._current_tick = 1
@@ -284,5 +293,5 @@ class GameModel:
     def update(self, clicked_idx):
         if self._is_paused:
             return
-        self._game_logic.update()
+        self.game_logic.update()
         self._current_tick += 1

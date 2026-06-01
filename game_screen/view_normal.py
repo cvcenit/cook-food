@@ -49,13 +49,10 @@ class GameView:
         for button in buttons:
             button.draw_button()
     
-    def draw_pause_popup(self):
-        pw, ph = 120, 80
-        px = (self._width - pw) // 2
-        py = (self._height - ph) // 2
-
-        pyxel.text(px + pw // 2 - HEADER_FONT.text_width("PAUSED") // 2, py-50, "PAUSED", 6, font=HEADER_FONT)
-        pyxel.text(px + pw // 2 - HEADER_FONT.text_width("Click Pause to resume") // 2, py + 40, "Click Pause to resume", 6, font=HEADER_FONT)
+    def draw_popups(self, popups):
+        for popup in popups:
+            popup.draw_background()
+            popup.draw_popup()
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)

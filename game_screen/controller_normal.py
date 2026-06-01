@@ -24,12 +24,12 @@ class GameController:
 
     def get_player_direction(self, pos):
         mouse_x, mouse_y = pos
-        player_x, player_y = self._model._game_logic.player.screen_position()
+        player_x, player_y = self._model.game_logic.player.screen_position()
         cardinal_x, cardinal_y = (mouse_x - player_x), -(mouse_y - player_y)
         return atan2(cardinal_y, cardinal_x)
 
     def update(self):
-        if self._model._game_logic.is_game_over:
+        if self._model.game_logic.is_game_over:
             pyxel.quit()
 
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
@@ -45,40 +45,41 @@ class GameController:
 
         direction = self.get_player_direction((mouse_x, mouse_y))
 
-        self._model._game_logic.player_change_direction(direction)
-        for i in range(self._model._game_logic.player.tower_level):
-            self._model._game_logic.player.load_next_bullet(i)
+        self._model.game_logic.player_change_direction(direction)
+        for i in range(self._model.game_logic.player.tower_level):
+            self._model.game_logic.player.load_next_bullet(i)
         
         sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
 
         if sidebar_clicked is not None:
             if sidebar_clicked != 0:
-                self._model._game_logic.toggle_placement_mode()
+                self._model.game_logic.toggle_placement_mode()
             else:
                 ...
 
         if left_clicked:
-            if self._model._game_logic.placing_tower:
-                self._model._game_logic.place_tower(mouse_x, mouse_y)
-            elif (0 <= mouse_x <= GAMEPLAY_X_OFFSET) or (0 <= mouse_y <= GAMEPLAY_Y_OFFSET):
+            if (0 <= mouse_x <= GAMEPLAY_X_OFFSET) or (0 <= mouse_y <= GAMEPLAY_Y_OFFSET):
                 ...
+            elif self._model.game_logic.placing_tower:
+                self._model.game_logic.place_tower(mouse_x, mouse_y)
             else:
-                self._model._game_logic.player_shoot()
+                self._model.game_logic.player_shoot()
         
         self._model.update(clicked_btn)
 
     def draw(self):
         self._view.reset_screen()
-        self._view.draw_grid(self._model._game_logic.grid)
+        self._view.draw_grid(self._model.game_logic.grid)
 
         # draw entities
-        self._view.draw_towers(self._model._game_logic.towers)
-        self._view.draw_player(self._model._game_logic.player)
-        self._view.draw_enemies(self._model._game_logic.enemies, self._model._game_logic.tunnels)
-        self._view.draw_bullets(self._model._game_logic.bullets)
+        self._view.draw_towers(self._model.game_logic.towers)
+        self._view.draw_player(self._model.game_logic.player)
+        self._view.draw_enemies(self._model.game_logic.enemies, self._model.game_logic.tunnels)
+        self._view.draw_bullets(self._model.game_logic.bullets)
 
         # draw ui + buttons
-        self._view.draw_sidebar(self._model.sidebar_buttons, self._model._game_logic.exp, self._model._game_logic.lives, self._model._game_logic.placing_tower, self._model._game_logic.not_enough_exp)
+        self._view.draw_sidebar(self._model.sidebar_buttons, self._model.game_logic.exp, self._model.game_logic.lives, self._model.game_logic.placing_tower, self._model.game_logic.not_enough_exp)
+        self._view.draw_popups(self._model.popup_screens)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
 
