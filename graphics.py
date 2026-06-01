@@ -24,6 +24,11 @@ class TextButton(Button):
         self._is_active = True
 
     @property
+    def is_active(self):
+        return self._is_active
+    
+
+    @property
     def text_width(self):
         return self._text_width
 
@@ -68,6 +73,9 @@ class SpriteButton(Button):
         self._sprite = sprite
         self._scale = scale
 
+    @property
+    def is_active(self):
+        return self._is_active
     def toggle_active(self):
         self._is_active = not self._is_active
 
@@ -133,8 +141,8 @@ class TextGraphic:
     def current_position(self):
         return self._x, self._y    
 
-    def change_position(self, pos):
-        self._x, self._y = pos
+    def change_position(self, x, y):
+        self._x, self._y = x, y
 
     def toggle_active(self):
         self._is_active = not self._is_active
@@ -167,7 +175,8 @@ class PopupScreen:
     def toggle_active(self):
         self._is_active = not self._is_active
         for button in self._buttons:
-            button.toggle_active()
+            if not button.is_active:
+                button.toggle_active()
 
     def draw_popup(self):
         if self.is_active:

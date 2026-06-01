@@ -3,5 +3,10 @@
         "campaign_completed_levels": [1, 2, 3],
         "campaign_completed_rounds": 2,
         "endless_completed_rounds": 2
+    },
+    "player_two":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_completed_rounds": 2
     }
 }
