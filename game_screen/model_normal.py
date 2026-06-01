@@ -3,21 +3,37 @@ from entities.enemies import Ube
 from entities.towers import Chef, Tower
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen
-from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS
+from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
 
-
-NORMAL_MODE_BUTTONS = [TextButton(48, 48, "Back", 1), TextButton(48, 120, "Pause", 1),]
 
 BUTTON_SPRITES = [
     SpriteInfo(1, (0, 0), (96, 32))
 ]
 SIDEBAR_BUTTONS = [
-    TextButton(48, 48, "___", 1), 
+    TextButton(0, 0, "Pause", 1, size=24),
     SpriteButton(140, 435, BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 535, BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 635, BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 735, BUTTON_SPRITES[0], 240/96)
     ]
+
+SCREEN_CHANGE_BUTTONS = [
+    TextButton(50, 50, "Back to menu", 1, size=24),
+]
+
+PAUSE_POPUP_BUTTONS = [
+    SCREEN_CHANGE_BUTTONS[0],
+    TextButton(50, 100, "Return to game", 1, size=24)
+]
+
+for button in PAUSE_POPUP_BUTTONS:
+    button.toggle_active()
+
+PAUSE_POPUP_TEXTS = [
+    TextGraphic(50, 150, "Paused", 1, size=24),
+]
+
+pause_popup = PopupScreen(50, 50, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PAUSE_POPUP_BUTTONS, PAUSE_POPUP_TEXTS, 10)
 
 
 class GameLogic:
@@ -241,11 +257,11 @@ class GameModel:
         self._round_over_condition = round_over_condition
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
 
-        self._screen_change_buttons = NORMAL_MODE_BUTTONS
-        self._popup_buttons = []
+        self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
+        self._popup_buttons = PAUSE_POPUP_BUTTONS # add ung tower upgrade buttons later
         self._sidebar_buttons = SIDEBAR_BUTTONS
 
-        self._popup_screens = []
+        self._popup_screens = [pause_popup]
         self._is_paused = False
 
     @property
@@ -276,22 +292,41 @@ class GameModel:
     def game_logic(self):
         return self._game_logic
 
-
     def toggle_pause(self):
         self._is_paused = not self._is_paused
+        self.popup_screens[0].toggle_active()
 
     def start_screen(self):
         self._current_tick = 1
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
-        self._screen_change_buttons = NORMAL_MODE_BUTTONS
+        for screen in self.popup_screens:
+            if screen.is_active:
+                screen.toggle_active()
 
     def reset(self):
         self._current_tick = 1
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
-        self._screen_change_buttons = NORMAL_MODE_BUTTONS
+        if self._is_paused:
+            self.toggle_pause()
+        for screen in self.popup_screens:
+            if screen.is_active:
+                screen.toggle_active()
+
+    def update_from_pause_menu(self, clicked_idx):
+        if clicked_idx == 1:
+            self.toggle_pause()
+        else:
+            ...
+
+    def update_from_sidebar(self, clicked_idx):
+        if clicked_idx == 0:
+            self.toggle_pause()
+        else:
+            # has to know which tower
+            self.game_logic.toggle_placement_mode()
 
     def update(self, clicked_idx):
         if self._is_paused:
             return
-        self.game_logic.update()
         self._current_tick += 1
+        self.game_logic.update()

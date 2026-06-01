@@ -37,6 +37,7 @@ class GameView:
     def draw_grid(self, grid) -> None:
         grid.draw()
 
+    # might change this to another popupscreen
     def draw_sidebar(self, buttons, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool):
         pyxel.rect(0, 0, 280, 800, 3)
         pyxel.text(10, 200, f"EXP: {exp}", 7, font=HEADER_FONT)

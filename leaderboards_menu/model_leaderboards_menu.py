@@ -25,6 +25,9 @@ POPUP_BUTTONS += [
     next_button
 ]
 
+for button in POPUP_BUTTONS:
+    button.toggle_active() # deactivates
+
 popup_main = PopupScreen(140, 50, 1000, 600, POPUP_BUTTONS, [], 1)
 popup_main.toggle_active()
 

@@ -181,8 +181,7 @@ class PopupScreen:
     def toggle_active(self):
         self._is_active = not self._is_active
         for button in self._buttons:
-            if not button.is_active:
-                button.toggle_active()
+            button.toggle_active()
 
     def draw_popup(self):
         if self.is_active:
