@@ -78,7 +78,6 @@ class LeaderboardsMenuModel:
         self._current_rows = self.leaderboard_players()
         self._texts = self.leaderboard_texts
 
-
         self._popup_inside = PopupScreen(165, 75, 950, 475, [], self._texts, 12)
         self._popup_inside.toggle_active()
         self._popup_screens = [popup_main, self._popup_inside]
@@ -142,7 +141,10 @@ class LeaderboardsMenuModel:
             upper_bound = starting_player + PLAYERS_PER_PAGE
             rows = []
             for i, player in enumerate(self.players[starting_player:upper_bound]):
-                index = starting_player + i + 1
+                if self._descending:
+                    index = starting_player + i + 1
+                else:
+                    index = len(self._players) - i - starting_player
                 player_data = self._data[player]
                 campaign_completed_rounds = player_data["campaign_completed_rounds"]
                 endless_highest_rounds = player_data["endless_highest_rounds"]

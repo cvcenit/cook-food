@@ -59,6 +59,7 @@
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
+
     "el":{
         "name": "el",
         "campaign_completed_levels": [1, 2, 3],
