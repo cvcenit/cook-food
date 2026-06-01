@@ -2,11 +2,56 @@
     "player_one":{
         "campaign_completed_levels": [1, 2, 3],
         "campaign_completed_rounds": 2,
-        "endless_completed_rounds": 2
+        "endless_highest_rounds": 2
     },
     "player_two":{
         "campaign_completed_levels": [1, 2, 3],
         "campaign_completed_rounds": 2,
-        "endless_completed_rounds": 2
+        "endless_highest_rounds": 2
+    },
+    "three":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "four":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "five":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "six":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "seven":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "eight":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "nine":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "ten":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
+    },
+    "el":{
+        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_rounds": 2,
+        "endless_highest_rounds": 2
     }
 }

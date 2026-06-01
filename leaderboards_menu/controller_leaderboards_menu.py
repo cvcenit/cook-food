@@ -22,12 +22,12 @@ class LeaderboardsMenuController:
 
     def draw(self):
         self._view.reset_screen()
-        self._view.draw_popup_screens(self._model.popup_screens)
+        self._view.draw_popup_screens(self._model.popup_screens, self._model.leaderboard_rows)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
 
-model = LeaderboardsMenuModel()
+LeaderboardsMenuModelInstance = LeaderboardsMenuModel()
 view = LeaderboardsMenuView(SCREEN_WIDTH, SCREEN_HEIGHT)
-controller = LeaderboardsMenuController(model, view)
+controller = LeaderboardsMenuController(LeaderboardsMenuModelInstance, view)
 
-LeaderboardsMenuScreen = Screen(model, view, controller)
+LeaderboardsMenuScreen = Screen(LeaderboardsMenuModelInstance, view, controller)

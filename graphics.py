@@ -26,7 +26,6 @@ class TextButton(Button):
     @property
     def is_active(self):
         return self._is_active
-    
 
     @property
     def text_width(self):
@@ -128,12 +127,13 @@ class SpriteButton(Button):
         self._y = y
 
 class TextGraphic:
-    def __init__(self, x, y, text, color, font=HEADER_FONT):
+    def __init__(self, x, y, text, color, size=24):
         self._x = x
         self._y = y
         self._text = text
         self._color = color
-        self._font = font
+        self._size = size
+        self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
 
         self._is_active = False
 
@@ -172,6 +172,9 @@ class PopupScreen:
     def is_active(self):
         return self._is_active
 
+    def change_texts(self, new_texts):
+        self._texts = new_texts
+
     def toggle_active(self):
         self._is_active = not self._is_active
         for button in self._buttons:
@@ -180,7 +183,6 @@ class PopupScreen:
 
     def draw_popup(self):
         if self.is_active:
-            self.draw_background()
             for button in self.buttons:
                 button.draw_button()
 

@@ -11,8 +11,11 @@ class LeaderboardsMenuView:
         for button in buttons:
             button.draw_button()
 
-    def draw_popup_screens(self, popup_screens) -> None:
+    def draw_popup_screens(self, popup_screens, rows) -> None:
         for screen in popup_screens:
+            screen.draw_background()
+            for row in rows:
+                row.draw_row()
             screen.draw_popup()
 
     def get_clicked_button(self, buttons) -> int:
