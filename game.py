@@ -4,6 +4,8 @@ from campaign_menu.controller_campaign_menu import CampaignMenuScreen
 from game_screen.controller_normal import LevelMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
 from settings_screen.controller_settings import SettingsScreen
+from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
+
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
 
 import pyxel
@@ -46,6 +48,7 @@ SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
     AppState.CAMPAIGN_MENU: CampaignMenuScreen,
     AppState.GAMEPLAY: LevelMenuScreen,
+    AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
     AppState.MAIN_SETTINGS: SettingsScreen
     }
 
@@ -65,6 +68,10 @@ ROUTES = {
     
     AppState.GAMEPLAY: {
     "campaign_mode": AppState.CAMPAIGN_MENU
+    },
+
+    AppState.MAIN_LEADERBOARDS: {
+    "main_menu": AppState.MAIN_MENU,
     },
 
     AppState.MAIN_SETTINGS: {

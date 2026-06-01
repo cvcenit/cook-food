@@ -6,8 +6,7 @@ import pyxel
 
 class Button(ABC):
     @abstractmethod
-    def is_clicked(self) -> bool:
-        ...
+    def is_clicked(self) -> bool: ...
 
     @abstractmethod
     def is_hovered(self) -> bool: ...
@@ -107,7 +106,7 @@ class SpriteButton(Button):
                 pyxel.blt(
                 x - (width / 2), y - (height / 2),  
                 image_bank,
-                0, 32,
+                0, 32, # to change, need a sprite for all spritebutton that will activate when hovered
                 width, height,
                 11,
                 scale=self._scale
@@ -119,6 +118,69 @@ class SpriteButton(Button):
     def change_position(self, x, y):
         self._x = x
         self._y = y
+
+class TextGraphic:
+    def __init__(self, x, y, text, color, font=HEADER_FONT):
+        self._x = x
+        self._y = y
+        self._text = text
+        self._color = color
+        self._font = font
+
+        self._is_active = False
+
+    @property
+    def current_position(self):
+        return self._x, self._y    
+
+    def change_position(self, pos):
+        self._x, self._y = pos
+
+    def toggle_active(self):
+        self._is_active = not self._is_active
+
+    def draw_text(self):
+        if self._is_active:
+            pyxel.text(self._x, self._y, self._text, self._color, font=self._font)
+
+class PopupScreen:
+    def __init__(self, x, y, width, height, buttons, texts, bg):
+        self._x, self._y, self._width, self._height = x, y, width, height
+        self._buttons = buttons
+        self._texts = texts
+        self._bg = bg
+
+        self._is_active = False
+
+    @property
+    def buttons(self):
+        return self._buttons
+
+    @property
+    def texts(self):
+        return self._texts
+
+    @property
+    def is_active(self):
+        return self._is_active
+
+    def toggle_active(self):
+        self._is_active = not self._is_active
+        for button in self._buttons:
+            button.toggle_active()
+
+    def draw_popup(self):
+        if self.is_active:
+            self.draw_background()
+            for button in self.buttons:
+                button.draw_button()
+
+            for text in self.texts:
+                text.draw_text()
+
+    def draw_background(self):
+        if self.is_active:
+            pyxel.rect(self._x, self._y, self._width, self._height, self._bg)
 
 class Screen:
     def __init__(self, model, view, controller):
