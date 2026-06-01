@@ -58,6 +58,9 @@ class TextButton(Button):
         self._x = x
         self._y = y
 
+    def change_color(self, col):
+        self._color = col
+
 @dataclass
 class SpriteInfo:
     image_bank: int

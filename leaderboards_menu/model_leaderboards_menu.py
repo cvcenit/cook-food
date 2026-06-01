@@ -4,13 +4,23 @@ from math import ceil
 
 import pyxel
 
+COLUMN_WIDTHS = [50, 400, 150, 150, 150]
+X_OFFSETS = [0, 50, 450, 600, 750]
+HEAD_COLUMN = ["Player Name", "Campaign", "Endless", "Total"]
+PLAYERS_PER_PAGE = 10
+
 
 next_button = TextButton(0, 550, "Next", 6, size=48)
 n_x, n_y = next_button.current_position
 n_x += 1115 - next_button.text_width
 next_button.change_position(n_x, n_y)
 
-POPUP_BUTTONS = [
+POPUP_BUTTONS = []
+
+for i, text in enumerate(HEAD_COLUMN):
+    POPUP_BUTTONS += [TextButton(190 + X_OFFSETS[i + 1] + 10, 70, text, 1 if i != 3 else 8, size=24)]
+
+POPUP_BUTTONS += [
     TextButton(175, 550, "Previous", 6, size=48),
     next_button
 ]
@@ -24,9 +34,6 @@ for button in SCREEN_CHANGE_BUTTONS:
     x = (SCREEN_WIDTH / 2) - (button.text_width / 2)
     button.change_position(x, y)
 
-COLUMN_WIDTHS = [50, 400, 150, 150, 150]
-X_OFFSETS = [0, 50, 450, 600, 750]
-PLAYERS_PER_PAGE = 10
 class LeaderboardRow:
     def __init__(self, x, y, column_values, color):
         self._column_widths = COLUMN_WIDTHS
@@ -56,6 +63,7 @@ class LeaderboardRow:
 class LeaderboardsMenuModel:
     def __init__(self):
         self._sort_by = "total"
+        self._descending = True
         self._keys = ["name", "campaign_completed_rounds", "endless_highest_rounds", "total"]
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
         self._popup_buttons = POPUP_BUTTONS
@@ -106,9 +114,9 @@ class LeaderboardsMenuModel:
     def players(self):
         if self._sort_by == "total":
             return [p[0] for p in sorted(self._data.items(),
-                    key=lambda x: x[1]["campaign_completed_rounds"] + x[1]["endless_highest_rounds"], reverse=True)]
+                    key=lambda x: x[1]["campaign_completed_rounds"] + x[1]["endless_highest_rounds"], reverse=self._descending)]
         else:
-            return [p[0] for p in sorted(self._data.items(), key=lambda x: x[1][self._sort_by], reverse=True)]
+            return [p[0] for p in sorted(self._data.items(), key=lambda x: x[1][self._sort_by], reverse=self._descending)]
 
     @property
     def current_page(self):
@@ -129,7 +137,7 @@ class LeaderboardsMenuModel:
         return LeaderboardRow(190, 75, column_values, 12)
 
     def leaderboard_players(self):
-        if self.current_page not in self._row_per_page:
+        if (self.current_page, self._sort_by, self._descending) not in self._row_per_page:
             starting_player = PLAYERS_PER_PAGE * (self.current_page - 1)
             upper_bound = starting_player + PLAYERS_PER_PAGE
             rows = []
@@ -140,19 +148,33 @@ class LeaderboardsMenuModel:
                 endless_highest_rounds = player_data["endless_highest_rounds"]
                 total = campaign_completed_rounds + endless_highest_rounds
                 column_values = [index, player, campaign_completed_rounds, endless_highest_rounds, total]
+
+                # refactor: wag dito mag instantiate ng leaderboard row para di na kailangan
+                # gumawa ng bagong list for reversed (instantiate sa dulo)
                 row = LeaderboardRow(190, 75 + (40 * (i + 1) + (3 * i)), column_values, i + 1)
                 rows += [row]
-            self._row_per_page[self.current_page] = rows
-        return self._row_per_page[self.current_page]
+            self._row_per_page[(self.current_page, self._sort_by, self._descending)] = rows
+        return self._row_per_page[(self.current_page, self._sort_by, self._descending)]
 
     def update(self, clicked_idx):
         self._current_tick += 1
         if clicked_idx is not None:
-            match clicked_idx:
-                case 0:
-                    self.previous_page()
-                case _:
-                    self.next_page()
+            if clicked_idx in (0, 1, 2, 3):
+                if self._sort_by == self._keys[clicked_idx]:
+                    self._descending = not self._descending
+                else:
+                    self._sort_by = self._keys[clicked_idx]
+                    self._descending = True
+                for i in range(4):
+                    if i == clicked_idx:
+                        self._popup_buttons[i].change_color(8)
+                    else:
+                        self._popup_buttons[i].change_color(1)
+
+            elif clicked_idx == 4:
+                self.previous_page()
+            else:
+                self.next_page()
 
             self._current_rows = self.leaderboard_players()
             self._texts = self.leaderboard_texts

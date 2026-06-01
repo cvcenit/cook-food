@@ -14,7 +14,7 @@ class LeaderboardsMenuView:
     def draw_popup_screens(self, popup_screens, rows) -> None:
         for screen in popup_screens:
             screen.draw_background()
-            for row in rows:
+            for row in rows[::-1]:
                 row.draw_row()
             screen.draw_popup()
 
