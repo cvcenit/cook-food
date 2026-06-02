@@ -54,7 +54,7 @@ TOWER_POPUP_BUTTONS = [
 ]
 
 TOWER_POPUP_TEXTS = [
-    TextGraphic(0, 325, "Level 1 Tower at (0, 0)", 6, size=24)
+    TextGraphic(0, 200, "Level 1 Tower at (0, 0)", 6, size=32)
 ]
 
 for button in TOWER_POPUP_BUTTONS:
@@ -410,6 +410,7 @@ class GameModel:
                         if self.game_logic.exp >= t.current_upgrade_cost:
                             if t.upgrade_tower():
                                 self.game_logic.decrement_exp(t.current_upgrade_cost)
+                        self._helper_update(self.game_logic.selected_tower)
                     case 2:
                         if self.popup_screens[2].is_active:
                             self.popup_screens[2].toggle_active()
@@ -420,19 +421,23 @@ class GameModel:
     def update_towers(self, clicked_idx):
         if clicked_idx is not None:
             tower_selected = self.game_logic.towers[clicked_idx]
-            self.game_logic.change_selected_tower(tower_selected)
-            x, y = tower_selected.grid_position
-            screen = self.popup_screens[1]
-            text = screen.texts[0]
-            text.change_text(f"Level {tower_selected.tower_level} Type Tower at ({x - 1}, {y})")
-            x, y = screen.buttons[1].current_position
-            if tower_selected.is_max_level:
-                screen.buttons[1].change_text(f"Max Level (LVL2)")
-            else:
-                screen.buttons[1].change_text(f"Upgrade: {tower_selected.current_upgrade_cost} EXP")
-            screen.buttons[1].change_position(((SCREEN_WIDTH - screen.buttons[1].width)/ 2), y)
-            x, y = text.current_position
-            text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
+            self._helper_update(tower_selected)
+
+    def _helper_update(self, tower_selected):
+        self.game_logic.change_selected_tower(tower_selected)
+        x, y = tower_selected.grid_position
+        screen = self.popup_screens[1]
+        text = screen.texts[0]
+        text.change_text(f"Level {tower_selected.tower_level} Type Tower at ({x - 1}, {y})")
+        x, y = screen.buttons[1].current_position
+        if tower_selected.is_max_level:
+            screen.buttons[1].change_text(f"Max Level (LVL2)")
+        else:
+            screen.buttons[1].change_text(f"Upgrade: {tower_selected.current_upgrade_cost} EXP")
+        screen.buttons[1].change_position(((SCREEN_WIDTH - screen.buttons[1].width)/ 2), y)
+        x, y = text.current_position
+        text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
+        if not screen.is_active:
             screen.toggle_active()
 
     def update_from_sidebar(self, clicked_idx):
