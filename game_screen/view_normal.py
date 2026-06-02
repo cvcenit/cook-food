@@ -39,7 +39,7 @@ class GameView:
 
     # might change this to another popupscreen
     def draw_sidebar(self, buttons, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool):
-        pyxel.rect(0, 0, 280, 800, 3)
+        pyxel.rect(0, 0, 280, 800, 13)
         pyxel.text(10, 200, f"EXP: {exp}", 7, font=HEADER_FONT)
         pyxel.text(10, 264, f"LIVES: {lives}", 7, font=HEADER_FONT)
         if placing_tower:
@@ -72,6 +72,18 @@ class GameView:
 
     def get_mouse_position(self) -> tuple[float, float]:
         return pyxel.mouse_x, pyxel.mouse_y
+
+    def get_tower_direction(self):
+        if pyxel.btnp(pyxel.KEY_W):
+            return "w"
+        elif pyxel.btnp(pyxel.KEY_S):
+            return "s"
+        elif pyxel.btnp(pyxel.KEY_D):
+            return "d"
+        elif pyxel.btnp(pyxel.KEY_A):
+            return "a"
+        else:
+            return None
 
     def has_left_clicked(self) -> bool:
         return pyxel.btnp((pyxel.MOUSE_BUTTON_LEFT))

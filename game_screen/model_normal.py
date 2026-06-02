@@ -10,15 +10,17 @@ BUTTON_SPRITES = [
     SpriteInfo(1, (0, 0), (96, 32)),
     SpriteInfo(1, (0, 32), (96, 32)),
     SpriteInfo(1, (0, 64), (96, 32)),
-    SpriteInfo(1, (0, 96), (96, 32))
+    SpriteInfo(1, (0, 96), (96, 32)),
+    SpriteInfo(1, (0, 128), (96, 32))
 ]
 SIDEBAR_BUTTONS = [
-    TextButton(0, 0, "Pause", 1, size=24),
-    SpriteButton(140, 435, BUTTON_SPRITES[0], BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 535, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 635, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 735, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96)
+    TextButton(90, 20, "Pause", 1, size=24),
+    SpriteButton(140, 435, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 535, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 635, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 735, BUTTON_SPRITES[4], BUTTON_SPRITES[0], 240/96)
     ]
+
 
 SCREEN_CHANGE_BUTTONS = [
     TextButton(0, 325, "Back to menu", 6, size=48),
@@ -30,14 +32,14 @@ PAUSE_POPUP_BUTTONS = [
     TextButton(0, 375, "Restart level", 6, size=56)
 ]
 
+PAUSE_POPUP_TEXTS = [
+    TextGraphic(50, 175, "Paused", 6, size=96),
+]
+
 for button in PAUSE_POPUP_BUTTONS:
     button.toggle_active()
     x, y = button.current_position
     button.change_position(((SCREEN_WIDTH - button.width)/ 2), y)
-
-PAUSE_POPUP_TEXTS = [
-    TextGraphic(50, 175, "Paused", 6, size=96),
-]
 
 for text in PAUSE_POPUP_TEXTS:
     text.toggle_active()
@@ -45,8 +47,47 @@ for text in PAUSE_POPUP_TEXTS:
     text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
 
 
+TOWER_POPUP_BUTTONS = [
+    TextButton(0, 375, "Set direction (WASD)", 6, size=48),
+    TextButton(0, 425, "Upgrade", 6, size=48),
+    TextButton(0, 475, "Cancel", 6, size=48)
+]
+
+TOWER_POPUP_TEXTS = [
+    TextGraphic(0, 325, "Level 1 Tower at (0, 0)", 6, size=24)
+]
+
+for button in TOWER_POPUP_BUTTONS:
+    button.toggle_active()
+    x, y = button.current_position
+    button.change_position(((SCREEN_WIDTH - button.width)/ 2), y)
+
+for text in TOWER_POPUP_TEXTS:
+    text.toggle_active()
+    x, y = text.current_position
+    text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
+
+DIRECTION_POPUP_TEXTS = [
+    TextGraphic(0, 150, "W", 6, size=128),
+    TextGraphic(0, 250, "A", 6, size=128),
+    TextGraphic(0, 400, "S", 6, size=128),
+    TextGraphic(0, 250, "D", 6, size=128)
+]
+
+for text in DIRECTION_POPUP_TEXTS:
+    text.toggle_active()
+    x, y = text.current_position
+    text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
+
+x, y = DIRECTION_POPUP_TEXTS[1].current_position
+DIRECTION_POPUP_TEXTS[1].change_position(x - 200, y)
+
+x, y = DIRECTION_POPUP_TEXTS[3].current_position
+DIRECTION_POPUP_TEXTS[3].change_position(x + 200, y)
+
 pause_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PAUSE_POPUP_BUTTONS, PAUSE_POPUP_TEXTS, 1)
-tower_popup = ...
+tower_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, TOWER_POPUP_BUTTONS, TOWER_POPUP_TEXTS, 1)
+direction_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, [], DIRECTION_POPUP_TEXTS, 1)
 
 class GameLogic:
     def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
@@ -59,6 +100,8 @@ class GameLogic:
         self._placing_tower = False
         self._not_enough_exp = False
         self._towers = []
+
+        self._selected_tower = None
 
         # game data
         self._is_game_over = False
@@ -81,6 +124,13 @@ class GameLogic:
     def is_game_over(self) -> bool:
         return self._is_game_over
 
+    def change_selected_tower(self, tower):
+        self._selected_tower = tower
+
+    @property
+    def selected_tower(self):
+        return self._selected_tower
+    
     @property
     def player(self):
         return self._player
@@ -142,7 +192,7 @@ class GameLogic:
             self._not_enough_exp = False
 
     def place_tower(self, mouse_x: float, mouse_y: float):
-        # should not be instant (pagkaselect ng tower, tinatry agad to, add a timer)
+        # should not be instant (maybe add a timer)
         col = int((mouse_x - GAMEPLAY_X_OFFSET) / TILE_SIDE_LENGTH)
         row = int((mouse_y - GAMEPLAY_Y_OFFSET) / TILE_SIDE_LENGTH)
 
@@ -160,7 +210,7 @@ class GameLogic:
             self._exp -= 5
             self._towers.append(Tower(2, (row, col)))
             self._placing_tower = False
-            self._not_enough_exp = False # dapat false lang kung exp < tower cost, hindi dahil nag spend false na
+            self._not_enough_exp = False # bug, spending doesnt mean not enough exp
         else:
             self._not_enough_exp = True
 
@@ -231,7 +281,7 @@ class GameLogic:
                         continue
                     ex, ey = enemy.position
                     bx, by = bullet.current_position
-                    # fix, dapat pag nagcollide na ung bullet sa square sasabog na
+                    # fix, collision between square and circle
                     distance_square = (bx - ex) ** 2 + (by - ey) ** 2
                     hit_distance = bullet.radius + 25
                     if distance_square <= hit_distance ** 2:
@@ -257,6 +307,9 @@ class GameLogic:
                 self.lose_life()
                 enemy.receive_hit(999)
 
+    def decrement_exp(self, de):
+        self._exp -= de
+
     @property
     def _active_enemies(self):
         return [enemy for enemy in self._enemies if enemy.is_alive]
@@ -270,10 +323,10 @@ class GameModel:
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
 
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
-        self._popup_buttons = PAUSE_POPUP_BUTTONS # add ung tower upgrade buttons later
+        self._popup_buttons = PAUSE_POPUP_BUTTONS + TOWER_POPUP_BUTTONS
         self._sidebar_buttons = SIDEBAR_BUTTONS
 
-        self._popup_screens = [pause_popup]
+        self._popup_screens = [pause_popup, tower_popup, direction_popup]
         self._is_paused = False
 
     @property
@@ -325,23 +378,70 @@ class GameModel:
                 screen.toggle_active()
 
     def update_from_pause_menu(self, clicked_idx):
-        if clicked_idx == 1:
-            self.toggle_pause()
-        elif clicked_idx == 2:
-            self.reset()
-        else:
-            ...
+        if clicked_idx is not None:
+            if clicked_idx == 1:
+                self.toggle_pause()
+            elif clicked_idx == 2:
+                self.reset()
+            else:
+                ...
+
+    def update_from_direction_menu(self, d):
+        if d is not None:
+            direction = d.lower()
+            if self.game_logic.selected_tower is not None:
+                yo = {"w": 0, "d": 1, "s": 2, "a": 3}
+                self.game_logic.selected_tower.change_direction(yo[direction])
+            self.game_logic.change_selected_tower(None)
+            if self.popup_screens[2].is_active:
+                self.popup_screens[2].toggle_active()
+
+    def update_from_tower_menu(self, clicked_idx):
+        if clicked_idx is not None:
+            t = self.game_logic.selected_tower
+            if t is not None:
+                match clicked_idx:
+                    case 0:
+                        # change direction
+                        self.popup_screens[2].toggle_active()
+                        self.popup_screens[1].toggle_active()
+                    case 1:
+                        # upgrade
+                        if self.game_logic.exp >= t.current_upgrade_cost:
+                            if t.upgrade_tower():
+                                self.game_logic.decrement_exp(t.current_upgrade_cost)
+                    case 2:
+                        if self.popup_screens[2].is_active:
+                            self.popup_screens[2].toggle_active()
+                        self.popup_screens[1].toggle_active()
+                    case _:
+                        ...
 
     def update_towers(self, clicked_idx):
         if clicked_idx is not None:
-            self.game_logic.towers[clicked_idx].upgrade_tower()
+            tower_selected = self.game_logic.towers[clicked_idx]
+            self.game_logic.change_selected_tower(tower_selected)
+            x, y = tower_selected.grid_position
+            screen = self.popup_screens[1]
+            text = screen.texts[0]
+            text.change_text(f"Level {tower_selected.tower_level} Type Tower at ({x - 1}, {y})")
+            x, y = screen.buttons[1].current_position
+            if tower_selected.is_max_level:
+                screen.buttons[1].change_text(f"Max Level (LVL2)")
+            else:
+                screen.buttons[1].change_text(f"Upgrade: {tower_selected.current_upgrade_cost} EXP")
+            screen.buttons[1].change_position(((SCREEN_WIDTH - screen.buttons[1].width)/ 2), y)
+            x, y = text.current_position
+            text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
+            screen.toggle_active()
 
     def update_from_sidebar(self, clicked_idx):
-        if clicked_idx == 0:
-            self.toggle_pause()
-        else:
-            # has to know which tower
-            self.game_logic.toggle_placement_mode()
+        if clicked_idx is not None:
+            if clicked_idx == 0:
+                self.toggle_pause()
+            else:
+                # has to know which tower
+                self.game_logic.toggle_placement_mode()
 
     def update(self, clicked_idx):
         if self._is_paused:

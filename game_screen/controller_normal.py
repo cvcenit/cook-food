@@ -32,8 +32,7 @@ class GameController:
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         pause_menu_clicked = self._view.get_clicked_button(self._model.popup_screens[0].buttons)
 
-        if pause_menu_clicked is not None:
-            self._model.update_from_pause_menu(pause_menu_clicked)
+        self._model.update_from_pause_menu(pause_menu_clicked)
         
         if self._model.is_paused:
             self._model.update(clicked_btn)
@@ -51,9 +50,13 @@ class GameController:
             self._model.game_logic.player.load_next_bullet(i)
         
         sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
+        self._model.update_from_sidebar(sidebar_clicked)
 
-        if sidebar_clicked is not None:
-            self._model.update_from_sidebar(sidebar_clicked)
+        tower_menu_clicked = self._view.get_clicked_button(self._model.popup_screens[1].buttons)
+        self._model.update_from_tower_menu(tower_menu_clicked)
+
+        tower_direction = self._view.get_tower_direction()
+        self._model.update_from_direction_menu(tower_direction)
 
         if right_clicked:
             clicked_tower = self._view.get_clicked_tower(self._model.game_logic.towers)

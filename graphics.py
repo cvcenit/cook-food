@@ -58,6 +58,10 @@ class TextButton(Button):
         self._x = x
         self._y = y
 
+    def change_text(self, t):
+        self._text = t
+        self._width = self._font.text_width(self._text)
+
     def change_color(self, col):
         self._color = col
 
@@ -119,7 +123,7 @@ class SpriteButton(Button):
             image_bank,
             position_x, position_y,
             width, height,
-            11,
+            13,
             scale=self._scale
             )
     @property
@@ -159,6 +163,10 @@ class TextGraphic:
     def draw_text(self):
         if self._is_active:
             pyxel.text(self._x, self._y, self._text, self._color, font=self._font)
+
+    def change_text(self, t):
+        self._text = t
+        self._width = self._font.text_width(self._text)
 
 class PopupScreen:
     def __init__(self, x, y, width, height, buttons, texts, bg):
