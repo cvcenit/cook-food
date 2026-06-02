@@ -6,6 +6,7 @@ from math import sin, cos, atan2, hypot
 from random import choice
 import pyxel
 
+
 class TowerInfo(ABC):
     @property
     @abstractmethod
@@ -16,6 +17,57 @@ class TowerInfo(ABC):
     @abstractmethod
     def bullets(self) -> tuple[Bullet]:
         ...
+
+
+class BulletState(ABC):
+    @abstractmethod
+    def end_tick(self, bullet: Bullet) -> None: ...
+
+    @abstractmethod
+    def on_shoot(self, bullet: Bullet) -> None: ...
+
+    @property
+    @abstractmethod
+    def is_active(self) -> bool: ...
+
+
+class InactiveState(BulletState):
+    def end_tick(self, bullet):
+        pass
+
+    def on_shoot(self, bullet):
+        pass
+
+    @property
+    def is_active(self) -> bool:
+        return False
+
+
+class ReadiedState(BulletState):
+    def end_tick(self, bullet):
+        pass
+
+    def on_shoot(self, bullet):
+        bullet.set_state(FlightState())
+    
+    @property
+    def is_active(self) -> bool:
+        return True
+
+
+class FlightState(BulletState):
+    def end_tick(self, bullet):
+        bullet.apply_velocity()
+        if bullet.is_out_of_screen():
+            bullet.set_state(InactiveState())
+
+    def on_shoot(self, bullet):
+        pass
+    
+    @property
+    def is_active(self) -> bool:
+        return True
+
 
 class BulletInfo(ABC):
     @property
@@ -53,6 +105,7 @@ class BulletInfo(ABC):
     def is_active(self) -> bool:
         ...
 
+
 class Bullet(BulletInfo):
     def __init__(self, col, r, initial_pos, initial_vel):
         # Base values
@@ -61,11 +114,12 @@ class Bullet(BulletInfo):
         self._color = col
         self._radius = r
         self._damage = 1 # HP
+        self._is_active = False
 
         # Current values
         self._current_position = self.base_position
         self._current_velocity = self.base_velocity
-        self._is_active = False
+        self._state: BulletState = ReadiedState()
 
     @property
     def base_position(self) -> tuple[float, float]:
@@ -93,7 +147,7 @@ class Bullet(BulletInfo):
 
     @property
     def is_active(self) -> bool:
-        return self._is_active
+        return self._state.is_active
 
     def change_velocity(self, vel):
         self._current_velocity = vel
@@ -103,6 +157,9 @@ class Bullet(BulletInfo):
 
     def change_radius(self, rad):
         self._radius = rad
+    
+    def set_radius_scale(self, scale: float):
+        self._radius = BULLET_RADIUS * scale
 
     def apply_velocity(self):
         vel_x, vel_y = self.current_velocity
@@ -117,24 +174,23 @@ class Bullet(BulletInfo):
         return (x - r >= SCREEN_WIDTH) or (y - r >= SCREEN_HEIGHT) or (y + r <= 0) or (x + r <= 0)
 
     def deactivate(self) -> None:
-        self._is_active = False
+        self.set_state(InactiveState())
 
     def draw_bullet(self):
         (x, y), r = self.current_position, self.radius
         pyxel.circ(x, y, r, self.color)
 
-    def initialize_bullet(self):
-        self._is_active = True
-
     def start_tick(self):
         ...
 
     def end_tick(self):
-        if self.is_active:
-            self.apply_velocity()
-
-        if self.is_out_of_screen():
-            self.deactivate()
+        self._state.end_tick(self)
+    
+    def on_shoot(self):
+        self._state.on_shoot(self)
+    
+    def set_state(self, state: BulletState) -> None:
+        self._state = state
 
 # TODO: Refactor, dapat maganda ung end_tick, i believe merong state kagaya ng moles 
 # (towers ay may active, inactive state, depende sa current tick kung nagreload na ba)
@@ -147,6 +203,7 @@ class Tower(TowerInfo):
         self._base_direction = PI / 2 # 90 degrees, "upwards"
         self._fire_rate = 0.5 # bullets per second
         self._purchase_cost = 5 # exp
+        self._upgrade_cost = 5 # exp
 
         self._radius = TILE_SIDE_LENGTH / 2.5
 
@@ -154,7 +211,6 @@ class Tower(TowerInfo):
         self._current_direction = self.base_direction
         self._color = color
         self._remaining_seconds_to_shoot = self._fire_rate
-        self._upgrade_costs = [0, 5]
 
         self._next_bullets = []
 
@@ -168,14 +224,6 @@ class Tower(TowerInfo):
     @property
     def tower_level(self):
         return self._tower_level
-
-    @property
-    def max_level(self):
-        return self._max_level
-
-    @property
-    def is_max_level(self):
-        return self.tower_level == self._max_level
     
     @property
     def current_direction(self):
@@ -196,12 +244,6 @@ class Tower(TowerInfo):
     @property
     def bullets(self):
         return self._bullets
-
-    @property
-    def current_upgrade_cost(self):
-        if len(self._upgrade_costs) > (self.tower_level):
-            return self._upgrade_costs[self.tower_level]
-        return 0
 
     @property
     def can_shoot(self):
@@ -233,22 +275,16 @@ class Tower(TowerInfo):
         return x, y
 
     def upgrade_tower(self):
-        if self._tower_level == self._max_level:
-            return False
         for bullet in self._next_bullets:
             bullet.deactivate()
         self._next_bullets = []
         temp = min(self._max_level, self.tower_level + 1)
         self._tower_level = temp
-        return True
 
     def bullet_velocity(self, direction) -> tuple[float, float]:
         return BULLET_VELOCITY_MAGNITUDE * cos(direction), BULLET_VELOCITY_MAGNITUDE * sin(direction)
 
     def change_direction(self, direction) -> None:
-        for bullet in self._next_bullets:
-            bullet.deactivate()
-        self._next_bullets = []
         cardinal_directions = (PI / 2, 0, 3 * PI / 2, PI)
         self._current_direction = cardinal_directions[direction]
 
@@ -260,13 +296,7 @@ class Tower(TowerInfo):
         self._color = color
 
     def next_bullet_color(self):
-        dont_choose = []
-        for bullet in self.next_bullets:
-            dont_choose += [bullet.color]
-        chosen = choice(ENEMY_COLORS)
-        while chosen in dont_choose:
-            chosen = choice(ENEMY_COLORS)
-        return chosen
+        return choice(ENEMY_COLORS)
 
     def next_bullet_position(self, bullet_index):
         bullets_are_odd = self._tower_level % 2
@@ -301,7 +331,6 @@ class Tower(TowerInfo):
 
             bullet = Bullet(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(bullet_index), (0, 0))
 
-            bullet.initialize_bullet()
             self._bullets.append(bullet)
             self._next_bullets.append(bullet)
 
@@ -310,6 +339,7 @@ class Tower(TowerInfo):
             if self.can_shoot:
                 for bullet in self._next_bullets:
                     bullet.change_velocity(self.bullet_velocity(self.current_direction))
+                    bullet.set_state(FlightState())
                 self._remaining_seconds_to_shoot = self._fire_rate
                 self._next_bullets = []
 
@@ -320,45 +350,54 @@ class Tower(TowerInfo):
         x, y = self.screen_position()
         pyxel.circ(x, y, self._radius, self.color)
 
-    def end_tick(self):
+    def _load_next_bullet(self):
         for i in range(self._tower_level):
             self.load_next_bullet(i)
+    
+    @property
+    def _radius_scale(self) -> float:
+        return 1 - 1.9 * self._remaining_seconds_to_shoot
+
+    def _update_next_bullet_radius(self):
+        for bullet in self._next_bullets:
+            bullet.set_radius_scale(self._radius_scale)
+            
+    def end_tick(self):
+        self._load_next_bullet()
 
         if self.can_shoot and self._remaining_seconds_to_shoot != 0:
             self._remaining_seconds_to_shoot = 0
-
-        if self.can_shoot:
-           self.shoot()
+            self.shoot()
 
         self.decrement_reload_time()
         self.remove_inactive_bullets()
-
-        for bullet in self._next_bullets:
-            bullet.change_radius(BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot))
+        self._update_next_bullet_radius()
 
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
+
 
 class Chef(Tower):
     def __init__(self, color, grid_position):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9
-        self._tower_level = 2
+        self._tower_level = 5
+
+    @property
+    def _radius_scale(self) -> float:
+        return 1 - self._remaining_seconds_to_shoot
 
     def change_direction(self, direction) -> None:
         self._current_direction = direction
         for i, bullet in enumerate(self._next_bullets):
             bullet.change_position((self.next_bullet_position(i)))
-
+    
     def end_tick(self):
-        for i in range(self._tower_level):
-            self.load_next_bullet(i)
+        self._load_next_bullet()
 
         if self.can_shoot and self._remaining_seconds_to_shoot != 0:
             self._remaining_seconds_to_shoot = 0
 
         self.decrement_reload_time()
         self.remove_inactive_bullets()
-
-        for bullet in self._next_bullets:
-            bullet.change_radius(BULLET_RADIUS * (1 - self._remaining_seconds_to_shoot))
+        self._update_next_bullet_radius()

@@ -4,6 +4,79 @@ from random import choice
 
 import pyxel
 
+
+class EnemyState(ABC):
+    @abstractmethod
+    def start_tick(self, enemy: GenericEnemy) -> None: ...
+
+    @abstractmethod
+    def end_tick(self, enemy: GenericEnemy) -> None: ...
+
+    @abstractmethod
+    def receive_hit(self, enemy: GenericEnemy, damage: int) -> None: ...
+
+
+class InactiveState(EnemyState):
+    def start_tick(self, enemy):
+        pass
+
+    def end_tick(self, enemy):
+        pass
+
+    def receive_hit(self, enemy, damage):
+        pass
+
+
+class ActiveState(EnemyState):
+    def start_tick(self, enemy):
+        pass
+    
+    def end_tick(self, enemy):
+        if not enemy.is_alive:
+            enemy.set_state(InactiveState())
+            return
+        if enemy._path_index >= len(enemy._path) - 1:
+            enemy.set_state(InactiveState())
+            return # reached end of path
+
+        # move toward next tile
+        target_x, target_y = enemy._tile_to_screen(enemy._path[enemy._path_index + 1])
+        dx = target_x - enemy._x_position
+        dy = target_y - enemy._y_position
+        dist = (dx ** 2 + dy ** 2) ** 0.5
+
+        if DATA.get("smooth_movement", True):
+            if dist <= enemy._current_speed:
+                # snap to next tile
+                enemy._x_position, enemy._y_position = target_x, target_y
+                enemy._path_index += 1
+            else:
+                enemy._x_position += enemy._current_speed * dx / dist
+                enemy._y_position += enemy._current_speed * dy / dist
+        else:
+            enemy._tick_counter += 1
+            if enemy._tick_counter >= 2 * FPS:
+                enemy._x_position, enemy._y_position = target_x, target_y
+                enemy._path_index += 1
+                enemy._tick_counter = 0
+
+    def receive_hit(self, enemy, damage):
+        enemy._hit_points -= damage
+        enemy.set_state(HitState())
+
+
+class HitState(EnemyState):
+    def start_tick(self, enemy):
+        enemy.set_state(ActiveState())
+    
+    def end_tick(self, enemy):
+        if not enemy.is_alive:
+            enemy.set_state(InactiveState())
+
+    def receive_hit(self, enemy, damage):
+        enemy._hit_points -= damage
+
+
 class EnemyInfo(ABC):
     @property
     @abstractmethod
@@ -41,6 +114,11 @@ class EnemyInfo(ABC):
     @abstractmethod
     def position(self) -> tuple[float, float]: ...
 
+    @property
+    @abstractmethod
+    def state(self) -> EnemyState: ...
+
+
 class Enemy(EnemyInfo):
     @abstractmethod
     def receive_hit(self, damage: int) -> None:
@@ -54,6 +132,7 @@ class Enemy(EnemyInfo):
     def end_tick(self) -> None:
         ...
 
+
 class GenericEnemy(Enemy):
     def __init__(self, path):
         super().__init__()
@@ -64,6 +143,15 @@ class GenericEnemy(Enemy):
         # start at first tile of path
         self._x_position, self._y_position = self._tile_to_screen(path[0])
         self._tick_counter = 0
+        # self._base_color = 2 
+        # base color ay di pwedeng baguhin pero yung color pwede. this is for the 
+        # purpose nung chameleon _change_color method. we assign the color sa base but 
+        # chameleon can change _color attribute  
+        self._color = 2
+        self._state: EnemyState = ActiveState()
+    
+    def set_state(self, state: EnemyState) -> None:
+        self._state = state
 
     def _tile_to_screen(self, tile) -> tuple[float, float]:
         row, col = tile
@@ -79,7 +167,7 @@ class GenericEnemy(Enemy):
     # diff
     @property
     def color(self):
-        return 2
+        return self._color
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -123,50 +211,29 @@ class GenericEnemy(Enemy):
     def position(self) -> tuple[float, float]:
         return self._x_position, self._y_position
 
+    @property
+    def state(self) -> EnemyState:
+        return self._state
+
     def receive_hit(self, damage: int) -> None:
-        self._hit_points -= damage
+        self._state.receive_hit(self, damage)
 
     def start_tick(self) -> None:
-        ...
+        self._state.start_tick(self)
 
     def end_tick(self) -> None:
-        if not self.is_alive:
-            return
-        if self._path_index >= len(self._path) - 1:
-            return  # reached end of path
+        self._state.end_tick(self)
 
-        # move toward next tile
-        target_x, target_y = self._tile_to_screen(self._path[self._path_index + 1])
-        dx = target_x - self._x_position
-        dy = target_y - self._y_position
-        dist = (dx ** 2 + dy ** 2) ** 0.5
-
-        if DATA.get("smooth_movement", True):
-            if dist <= self._current_speed:
-                # snap to next tile
-                self._x_position, self._y_position = target_x, target_y
-                self._path_index += 1
-            else:
-                self._x_position += self._current_speed * dx / dist
-                self._y_position += self._current_speed * dy / dist
-        else:
-            self._tick_counter += 1
-            if self._tick_counter >= 2 * FPS:
-                self._x_position, self._y_position = target_x, target_y
-                self._path_index += 1
-                self._tick_counter = 0
 
 class Ube(GenericEnemy):
     def __init__(self, path):
         super().__init__(path)
 
+
 class Kutsinta(GenericEnemy):
     def __init__(self, path):
         super().__init__(path)
-
-    @property
-    def color(self):
-        return 9
+        self._color = 9
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -182,13 +249,11 @@ class Kutsinta(GenericEnemy):
             scale=TILE_SIDE_LENGTH/32
         )
 
+
 class Gulaman(GenericEnemy):
     def __init__(self, path):
         super().__init__(path)
-
-    @property
-    def color(self):
-        return 11
+        self._color = 11
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -204,13 +269,11 @@ class Gulaman(GenericEnemy):
             scale=TILE_SIDE_LENGTH/32
         )
 
+
 class Palitaw(GenericEnemy):
     def __init__(self, path):
         super().__init__(path)
-
-    @property
-    def color(self):
-        return 7
+        self._color = 7
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -229,10 +292,7 @@ class Palitaw(GenericEnemy):
 class Lecheflan(GenericEnemy):
     def __init__(self, path):
         super().__init__(path)
-
-    @property
-    def color(self):
-        return 10
+        self._color = 10
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -248,13 +308,15 @@ class Lecheflan(GenericEnemy):
             scale=TILE_SIDE_LENGTH/32
         )
 
+
 class Champorado(GenericEnemy):
     def __init__(self, path):
         super().__init__(path)
+        self._color = 4
 
-    @property
-    def color(self):
-        return 4
+    # @property
+    # def color(self):
+    #     return 4
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -270,7 +332,7 @@ class Champorado(GenericEnemy):
             scale=TILE_SIDE_LENGTH/32
         )
 
-# refactor, mas maganda siguro kung may color nalang sila na argument para genericenemy iinherit maybe
+
 class RegeneratorMixin:
     def __init__(self, *args, regen_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -287,9 +349,11 @@ class RegeneratorMixin:
                 self._hit_points += 1 
         self._last_path_index = self._path_index
 
+
 class RegeneratorUbe(RegeneratorMixin, Ube):
     def __init__(self, path, regen_interval: int = None):
         super().__init__(path, regen_interval=regen_interval)
+
 
 class ChameleonMixin:
     def __init__(self, *args, chameleon_interval: int = None, **kwargs):
@@ -302,6 +366,9 @@ class ChameleonMixin:
         if not self.is_alive:
             return
         self._ticks_since_color_change += 1
+        self._handle_change_color()
+
+    def _handle_change_color(self):
         if self._ticks_since_color_change >= self._chameleon_interval:
             self._change_color()
             self._ticks_since_color_change = 0
@@ -310,9 +377,11 @@ class ChameleonMixin:
         available = [c for c in ENEMY_COLORS if c != self._color]
         self._color = choice(available)
 
+
 class ChameleonUbe(ChameleonMixin, Ube):
     def __init__(self, path, chameleon_interval: int = None):
         super().__init__(path, chameleon_interval=chameleon_interval)
+
 
 class RegeneratorChameleonUbe(RegeneratorMixin, ChameleonMixin, Ube):
     def __init__(self, path, regen_interval=None, chameleon_interval=None):
