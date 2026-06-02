@@ -134,6 +134,48 @@ class SpriteButton(Button):
         self._x = x
         self._y = y
 
+class TextInput:
+    def __init__(self, x, y, color, size=24):
+        self._x, self._y, self._color, self._size = x, y, color, size
+        self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
+        self._text = "Enter your name"
+        self._width = self._font.text_width(self._text)
+
+        self._is_active = True
+
+    @property
+    def width(self):
+        return self._width
+
+    def listen(self):
+        for i in range(97, 123):
+            if pyxel.btnp(i):
+                if self._text == "Enter your name":
+                    self._text = ""
+                self.change_text(self._text + chr(i))
+        if pyxel.btnp(pyxel.KEY_BACKSPACE, repeat=3):
+            if self._text == "Enter your name":
+                self._text = ""
+            self.change_text(self._text[:-1])
+
+    @property
+    def current_position(self):
+        return self._x, self._y    
+
+    def change_position(self, x, y):
+        self._x, self._y = x, y
+
+    def toggle_active(self):
+        self._is_active = not self._is_active
+
+    def draw_text(self):
+        if self._is_active:
+            pyxel.text(self._x, self._y, self._text, self._color, font=self._font)
+
+    def change_text(self, t):
+        self._text = t
+        self._width = self._font.text_width(self._text)
+
 class TextGraphic:
     def __init__(self, x, y, text, color, size=24):
         self._x = x

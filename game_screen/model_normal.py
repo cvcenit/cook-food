@@ -2,7 +2,7 @@ from __future__ import annotations
 from entities.enemies import Ube
 from entities.towers import Chef, Tower
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
-from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen
+from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
@@ -85,7 +85,7 @@ DIRECTION_POPUP_TEXTS[1].change_position(x - 200, y)
 x, y = DIRECTION_POPUP_TEXTS[3].current_position
 DIRECTION_POPUP_TEXTS[3].change_position(x + 200, y)
 
-
+#
 GAME_OVER_POPUP_BUTTONS = [
     SCREEN_CHANGE_BUTTONS[0],
     TextButton(0, 375, "Restart level", 6, size=56),
@@ -94,6 +94,7 @@ GAME_OVER_POPUP_BUTTONS = [
 
 GAME_OVER_POPUP_TEXTS = [
     TextGraphic(50, 175, "Game over!", 6, size=96),
+    TextInput(0, 500, 6, size=24)
 ]
 
 for button in GAME_OVER_POPUP_BUTTONS[1:]:
@@ -398,6 +399,15 @@ class GameModel:
         for screen in self.popup_screens:
             if screen.is_active:
                 screen.toggle_active()
+
+    def update_game_over(self):
+        game_over_popup = self.popup_screens[-1]
+        if not game_over_popup.is_active:
+            game_over_popup.toggle_active()
+        input_text = game_over_popup.texts[1]
+        input_text.listen()
+        _, y = input_text.current_position
+        input_text.change_position(((SCREEN_WIDTH - input_text.width)/ 2), y)
 
     def update_from_pause_menu(self, clicked_idx):
         if clicked_idx is not None:

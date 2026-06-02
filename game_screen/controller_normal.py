@@ -71,8 +71,7 @@ class GameController:
             
             self._model.update(clicked_btn)
         else:
-            if not self._model.popup_screens[-1].is_active:
-                self._model.popup_screens[-1].toggle_active()
+            self._model.update_game_over()
 
     def draw(self):
         self._view.reset_screen()
