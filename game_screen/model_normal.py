@@ -71,6 +71,7 @@ DIRECTION_POPUP_TEXTS = [
     TextGraphic(0, 250, "A", 6, size=128),
     TextGraphic(0, 400, "S", 6, size=128),
     TextGraphic(0, 250, "D", 6, size=128)
+]
 
 for text in DIRECTION_POPUP_TEXTS:
     text.toggle_active()

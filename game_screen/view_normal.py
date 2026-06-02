@@ -73,7 +73,7 @@ class GameView:
     def get_mouse_position(self) -> tuple[float, float]:
         return pyxel.mouse_x, pyxel.mouse_y
 
-       def get_tower_direction(self):
+    def get_tower_direction(self):
         if pyxel.btnp(pyxel.KEY_W):
             return "w"
         elif pyxel.btnp(pyxel.KEY_S):
