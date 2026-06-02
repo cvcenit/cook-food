@@ -170,6 +170,10 @@ class Tower(TowerInfo):
         return self._tower_level
 
     @property
+    def max_level(self):
+        return self._max_level
+
+    @property
     def is_max_level(self):
         return self.tower_level == self._max_level
     

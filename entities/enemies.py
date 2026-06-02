@@ -97,7 +97,7 @@ class GenericEnemy(Enemy):
 
     @property
     def base_speed(self) -> int:
-        return TILE_SIDE_LENGTH / (2 * FPS)  # 1 tile per 2 seconds
+        return TILE_SIDE_LENGTH / (0.5 * FPS)  # 1 tile per 2 seconds
 
     @property
     def current_speed(self) -> int:

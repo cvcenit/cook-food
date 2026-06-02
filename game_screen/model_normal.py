@@ -85,9 +85,31 @@ DIRECTION_POPUP_TEXTS[1].change_position(x - 200, y)
 x, y = DIRECTION_POPUP_TEXTS[3].current_position
 DIRECTION_POPUP_TEXTS[3].change_position(x + 200, y)
 
+
+GAME_OVER_POPUP_BUTTONS = [
+    SCREEN_CHANGE_BUTTONS[0],
+    TextButton(0, 375, "Restart level", 6, size=56),
+    TextButton(0, 475, "Register: ", 6, size=24),
+]
+
+GAME_OVER_POPUP_TEXTS = [
+    TextGraphic(50, 175, "Game over!", 6, size=96),
+]
+
+for button in GAME_OVER_POPUP_BUTTONS[1:]:
+    button.toggle_active()
+    x, y = button.current_position
+    button.change_position(((SCREEN_WIDTH - button.width)/ 2), y)
+
+for text in GAME_OVER_POPUP_TEXTS:
+    text.toggle_active()
+    x, y = text.current_position
+    text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
+
 pause_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PAUSE_POPUP_BUTTONS, PAUSE_POPUP_TEXTS, 1)
 tower_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, TOWER_POPUP_BUTTONS, TOWER_POPUP_TEXTS, 1)
 direction_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, [], DIRECTION_POPUP_TEXTS, 1)
+game_over_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, GAME_OVER_POPUP_BUTTONS, GAME_OVER_POPUP_TEXTS, 1)
 
 class GameLogic:
     def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
@@ -323,10 +345,10 @@ class GameModel:
         self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
 
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
-        self._popup_buttons = PAUSE_POPUP_BUTTONS + TOWER_POPUP_BUTTONS
+        self._popup_buttons = PAUSE_POPUP_BUTTONS + TOWER_POPUP_BUTTONS + GAME_OVER_POPUP_BUTTONS
         self._sidebar_buttons = SIDEBAR_BUTTONS
 
-        self._popup_screens = [pause_popup, tower_popup, direction_popup]
+        self._popup_screens = [pause_popup, tower_popup, direction_popup, game_over_popup]
         self._is_paused = False
 
     @property
@@ -391,7 +413,7 @@ class GameModel:
             direction = d.lower()
             if self.game_logic.selected_tower is not None:
                 yo = {"w": 0, "d": 1, "s": 2, "a": 3}
-                self.game_logic.selected_tower.change_direction(yo[direction])
+                self.game_logic.selected_tower.change_direction(yo.get(direction, 0))
             self.game_logic.change_selected_tower(None)
             if self.popup_screens[2].is_active:
                 self.popup_screens[2].toggle_active()
@@ -406,10 +428,10 @@ class GameModel:
                         self.popup_screens[2].toggle_active()
                         self.popup_screens[1].toggle_active()
                     case 1:
-                        # upgrade
-                        if self.game_logic.exp >= t.current_upgrade_cost:
+                        cost = t.current_upgrade_cost
+                        if self.game_logic.exp >= cost:
                             if t.upgrade_tower():
-                                self.game_logic.decrement_exp(t.current_upgrade_cost)
+                                self.game_logic.decrement_exp(cost)
                         self._helper_update(self.game_logic.selected_tower)
                     case 2:
                         if self.popup_screens[2].is_active:
@@ -431,7 +453,7 @@ class GameModel:
         text.change_text(f"Level {tower_selected.tower_level} Type Tower at ({x - 1}, {y})")
         x, y = screen.buttons[1].current_position
         if tower_selected.is_max_level:
-            screen.buttons[1].change_text(f"Max Level (LVL2)")
+            screen.buttons[1].change_text(f"Max Level (LVL{tower_selected.max_level})")
         else:
             screen.buttons[1].change_text(f"Upgrade: {tower_selected.current_upgrade_cost} EXP")
         screen.buttons[1].change_position(((SCREEN_WIDTH - screen.buttons[1].width)/ 2), y)
