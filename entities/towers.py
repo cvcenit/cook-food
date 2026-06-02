@@ -256,7 +256,13 @@ class Tower(TowerInfo):
         self._color = color
 
     def next_bullet_color(self):
-        return choice(ENEMY_COLORS)
+        dont_choose = []
+        for bullet in self.next_bullets:
+            dont_choose += [bullet.color]
+        chosen = choice(ENEMY_COLORS)
+        while chosen in dont_choose:
+            chosen = choice(ENEMY_COLORS)
+        return chosen
 
     def next_bullet_position(self, bullet_index):
         bullets_are_odd = self._tower_level % 2
@@ -333,7 +339,7 @@ class Chef(Tower):
     def __init__(self, color, grid_position):
         super().__init__(color, grid_position)
         self._fire_rate = 0.9
-        self._tower_level = 5
+        self._tower_level = 2
 
     def change_direction(self, direction) -> None:
         self._current_direction = direction
