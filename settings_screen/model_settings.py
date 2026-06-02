@@ -32,7 +32,7 @@ ARROW_BUTTONS = [
 SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2
 for button in SETTINGS_BUTTONS + ARROW_BUTTONS:
     _, y = button.current_position
-    button.change_position(SCREEN_WIDTH_HALF - (button.text_width / 2), y)
+    button.change_position(SCREEN_WIDTH_HALF - (button.width / 2), y)
 
 
 lives_width = HEADER_FONT.text_width("Lives:  _")

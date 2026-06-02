@@ -14,13 +14,13 @@ class LeaderboardsMenuView:
     def draw_popup_screens(self, popup_screens, rows) -> None:
         for screen in popup_screens:
             screen.draw_background()
-            for row in rows[::-1]:
+            for row in rows:
                 row.draw_row()
             screen.draw_popup()
 
     def get_clicked_button(self, buttons) -> int:
         for i, button in enumerate(buttons):
-            if button.is_clicked():
+            if button.is_left_clicked():
                 return i
 
     def reset_screen(self) -> None:

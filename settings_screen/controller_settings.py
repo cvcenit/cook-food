@@ -27,27 +27,27 @@ class SettingsController:
         self._model.update(clicked_idx)
 
     def _update_lives(self):
-        if self._model.lives_decrease_button.is_clicked():
+        if self._model.lives_decrease_button.is_left_clicked():
             self._model.decrease_lives()
-        if self._model.lives_increase_button.is_clicked():
+        if self._model.lives_increase_button.is_left_clicked():
             self._model.increase_lives()
     
     def _update_enemies(self):
-        if self._model.enemies_decrease_button.is_clicked():
+        if self._model.enemies_decrease_button.is_left_clicked():
             self._model.decrease_enemies()
-        if self._model.enemies_increase_button.is_clicked():
+        if self._model.enemies_increase_button.is_left_clicked():
             self._model.increase_enemies()
     
     def _update_regenerator(self):
-        if self._model.regenerator_decrease_button.is_clicked():
+        if self._model.regenerator_decrease_button.is_left_clicked():
             self._model.decrease_regenerator()
-        if self._model.regenerator_increase_button.is_clicked():
+        if self._model.regenerator_increase_button.is_left_clicked():
             self._model.increase_regenerator()
     
     def _update_chameleon(self):
-        if self._model.chameleon_decrease_button.is_clicked():
+        if self._model.chameleon_decrease_button.is_left_clicked():
             self._model.decrease_chameleon()
-        if self._model.chameleon_increase_button.is_clicked():
+        if self._model.chameleon_increase_button.is_left_clicked():
             self._model.increase_chameleon()
     
     def _update_smooth_movement(self):

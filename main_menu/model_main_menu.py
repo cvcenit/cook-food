@@ -12,7 +12,7 @@ MAIN_MENU_BUTTONS = [
 SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2
 for button in MAIN_MENU_BUTTONS:
     _, y = button.current_position
-    button.change_position(SCREEN_WIDTH_HALF - (button.text_width / 2), y)
+    button.change_position(SCREEN_WIDTH_HALF - (button.width / 2), y)
 
 class MainMenuModel:
     def __init__(self):

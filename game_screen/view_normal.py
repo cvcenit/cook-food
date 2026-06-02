@@ -62,7 +62,12 @@ class GameView:
     # "INPUT" METHODS
     def get_clicked_button(self, buttons) -> None | int:
         for i, button in enumerate(buttons):
-            if button.is_clicked():
+            if button.is_left_clicked():
+                return i
+
+    def get_clicked_tower(self, towers) -> None | int:
+        for i, tower in enumerate(towers):
+            if tower.is_right_clicked():
                 return i
 
     def get_mouse_position(self) -> tuple[float, float]:

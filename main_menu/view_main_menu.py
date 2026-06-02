@@ -13,7 +13,7 @@ class MainMenuView:
 
     def get_clicked_button(self, buttons) -> None | int:
         for i, button in enumerate(buttons):
-            if button.is_clicked():
+            if button.is_left_clicked():
                 return i
 
     def reset_screen(self) -> None:

@@ -14,7 +14,7 @@ class SettingsView:
 
     def get_clicked_button(self, buttons):
         for i, button in enumerate(buttons):
-            if button.is_clicked():
+            if button.is_left_clicked():
                 return i
 
     def draw_lives_label(self, lives):

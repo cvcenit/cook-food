@@ -12,7 +12,7 @@ PLAYERS_PER_PAGE = 10
 
 next_button = TextButton(0, 550, "Next", 6, size=48)
 n_x, n_y = next_button.current_position
-n_x += 1115 - next_button.text_width
+n_x += 1115 - next_button.width
 next_button.change_position(n_x, n_y)
 
 POPUP_BUTTONS = []
@@ -34,7 +34,7 @@ popup_main.toggle_active()
 SCREEN_CHANGE_BUTTONS = [TextButton(0, 678, "Back", 1, size=48)]
 for button in SCREEN_CHANGE_BUTTONS:
     x, y = button.current_position
-    x = (SCREEN_WIDTH / 2) - (button.text_width / 2)
+    x = (SCREEN_WIDTH / 2) - (button.width / 2)
     button.change_position(x, y)
 
 class LeaderboardRow:
@@ -57,7 +57,6 @@ class LeaderboardRow:
         for i, val in enumerate(self._column_values):
             text = str(val)
             c = TextGraphic(self._x + self._x_offsets[i] + 10, self._y - 5, text, 0, size=24)
-            c.toggle_active()
             self._texts += [c]
 
     def draw_row(self):
@@ -83,6 +82,8 @@ class LeaderboardsMenuModel:
 
         self._popup_inside = PopupScreen(165, 75, 950, 475, [], self._texts, 12)
         self._popup_inside.toggle_active()
+        for text in self._popup_inside.texts:
+            text.toggle_active()
         self._popup_screens = [popup_main, self._popup_inside]
 
     @property

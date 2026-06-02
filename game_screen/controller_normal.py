@@ -55,6 +55,10 @@ class GameController:
         if sidebar_clicked is not None:
             self._model.update_from_sidebar(sidebar_clicked)
 
+        if right_clicked:
+            clicked_tower = self._view.get_clicked_tower(self._model.game_logic.towers)
+            self._model.update_towers(clicked_tower)
+
         if left_clicked:
             if (0 <= mouse_x <= GAMEPLAY_X_OFFSET) or (0 <= mouse_y <= GAMEPLAY_Y_OFFSET):
                 ...

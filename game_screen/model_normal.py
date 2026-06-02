@@ -7,34 +7,46 @@ from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, S
 
 
 BUTTON_SPRITES = [
-    SpriteInfo(1, (0, 0), (96, 32))
+    SpriteInfo(1, (0, 0), (96, 32)),
+    SpriteInfo(1, (0, 32), (96, 32)),
+    SpriteInfo(1, (0, 64), (96, 32)),
+    SpriteInfo(1, (0, 96), (96, 32))
 ]
 SIDEBAR_BUTTONS = [
     TextButton(0, 0, "Pause", 1, size=24),
-    SpriteButton(140, 435, BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 535, BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 635, BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 735, BUTTON_SPRITES[0], 240/96)
+    SpriteButton(140, 435, BUTTON_SPRITES[0], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 535, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 635, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 735, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96)
     ]
 
 SCREEN_CHANGE_BUTTONS = [
-    TextButton(50, 50, "Back to menu", 1, size=24),
+    TextButton(0, 325, "Back to menu", 6, size=48),
 ]
 
 PAUSE_POPUP_BUTTONS = [
     SCREEN_CHANGE_BUTTONS[0],
-    TextButton(50, 100, "Return to game", 1, size=24)
+    TextButton(0, 475, "Return to game", 6, size=60),
+    TextButton(0, 375, "Restart level", 6, size=56)
 ]
 
 for button in PAUSE_POPUP_BUTTONS:
     button.toggle_active()
+    x, y = button.current_position
+    button.change_position(((SCREEN_WIDTH - button.width)/ 2), y)
 
 PAUSE_POPUP_TEXTS = [
-    TextGraphic(50, 150, "Paused", 1, size=24),
+    TextGraphic(50, 175, "Paused", 6, size=96),
 ]
 
-pause_popup = PopupScreen(50, 50, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PAUSE_POPUP_BUTTONS, PAUSE_POPUP_TEXTS, 10)
+for text in PAUSE_POPUP_TEXTS:
+    text.toggle_active()
+    x, y = text.current_position
+    text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
 
+
+pause_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PAUSE_POPUP_BUTTONS, PAUSE_POPUP_TEXTS, 1)
+tower_popup = ...
 
 class GameLogic:
     def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
@@ -315,8 +327,14 @@ class GameModel:
     def update_from_pause_menu(self, clicked_idx):
         if clicked_idx == 1:
             self.toggle_pause()
+        elif clicked_idx == 2:
+            self.reset()
         else:
             ...
+
+    def update_towers(self, clicked_idx):
+        if clicked_idx is not None:
+            self.game_logic.towers[clicked_idx].upgrade_tower()
 
     def update_from_sidebar(self, clicked_idx):
         if clicked_idx == 0:

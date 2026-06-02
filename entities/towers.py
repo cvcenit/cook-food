@@ -149,6 +149,8 @@ class Tower(TowerInfo):
         self._purchase_cost = 5 # exp
         self._upgrade_cost = 5 # exp
 
+        self._radius = TILE_SIDE_LENGTH / 2.5
+
         self._bullets = []
         self._current_direction = self.base_direction
         self._color = color
@@ -156,7 +158,8 @@ class Tower(TowerInfo):
 
         self._next_bullets = []
 
-        self._tower_level = 2
+        self._tower_level = 1
+        self._max_level = 2
 
     @property
     def color(self):
@@ -166,7 +169,6 @@ class Tower(TowerInfo):
     def tower_level(self):
         return self._tower_level
     
-
     @property
     def current_direction(self):
         return self._current_direction
@@ -190,14 +192,38 @@ class Tower(TowerInfo):
     @property
     def can_shoot(self):
         return self._remaining_seconds_to_shoot <= 0
+
+    def is_left_clicked(self) -> bool:
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+            if self.is_hovered():
+                return True
+        return False
+
+    def is_right_clicked(self) -> bool:
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_RIGHT):
+            if self.is_hovered():
+                return True
+        return False
+
+    def is_hovered(self):
+        x, y = self.screen_position()
+        return x - self._radius <= pyxel.mouse_x <= x + self._radius and \
+        y - self._radius <= pyxel.mouse_y <= y + self._radius
     
     def screen_position(self) -> tuple[float, float]:
         i, j = self.grid_position
-        x_screen_offset = GAMEPLAY_X_OFFSET # will change kapag finalized na
-        y_screen_offset = GAMEPLAY_Y_OFFSET # will change kapag finalized na
+        x_screen_offset = GAMEPLAY_X_OFFSET
+        y_screen_offset = GAMEPLAY_Y_OFFSET
         x = (j * TILE_SIDE_LENGTH) + x_screen_offset + (TILE_SIDE_LENGTH / 2)
         y = (i * TILE_SIDE_LENGTH) + y_screen_offset + (TILE_SIDE_LENGTH / 2)
         return x, y
+
+    def upgrade_tower(self):
+        for bullet in self._next_bullets:
+            bullet.deactivate()
+        self._next_bullets = []
+        temp = min(self._max_level, self.tower_level + 1)
+        self._tower_level = temp
 
     def bullet_velocity(self, direction) -> tuple[float, float]:
         return BULLET_VELOCITY_MAGNITUDE * cos(direction), BULLET_VELOCITY_MAGNITUDE * sin(direction)
@@ -266,7 +292,7 @@ class Tower(TowerInfo):
 
     def draw_tower(self):
         x, y = self.screen_position()
-        pyxel.circ(x, y, TILE_SIDE_LENGTH / 2.5, self.color)
+        pyxel.circ(x, y, self._radius, self.color)
 
     def end_tick(self):
         for i in range(self._tower_level):

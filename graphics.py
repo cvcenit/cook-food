@@ -6,7 +6,7 @@ import pyxel
 
 class Button(ABC):
     @abstractmethod
-    def is_clicked(self) -> bool: ...
+    def is_left_clicked(self) -> bool: ...
 
     @abstractmethod
     def is_hovered(self) -> bool: ...
@@ -20,7 +20,7 @@ class TextButton(Button):
         self._x, self._y, self._text, self._color = x, y, text, color
         self._size = size
         self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
-        self._text_width = self._font.text_width(self._text)
+        self._width = self._font.text_width(self._text)
         self._is_active = True
 
     @property
@@ -28,13 +28,13 @@ class TextButton(Button):
         return self._is_active
 
     @property
-    def text_width(self):
-        return self._text_width
+    def width(self):
+        return self._width
 
     def toggle_active(self):
         self._is_active = not self._is_active
 
-    def is_clicked(self) -> bool:
+    def is_left_clicked(self) -> bool:
         if self._is_active:
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
                 if self.is_hovered():
@@ -43,7 +43,7 @@ class TextButton(Button):
 
     def is_hovered(self):
         if self._is_active:
-            return self._x <= pyxel.mouse_x <= self._x + self._text_width and \
+            return self._x <= pyxel.mouse_x <= self._x + self._width and \
             self._y + 0.5 * self._size <= pyxel.mouse_y <= self._y + 1.4 * self._size
 
     def draw_button(self):
@@ -68,20 +68,26 @@ class SpriteInfo:
     width_height: tuple[int, int]
 
 class SpriteButton(Button):
-    def __init__(self, x, y, sprite, scale):
+    def __init__(self, x, y, sprite, hover_sprite, scale):
         # ang x and y ay center ng kalalagyan ng sprite
         self._x, self._y = x, y
         self._is_active = True
         self._sprite = sprite
         self._scale = scale
+        self._hover_sprite = hover_sprite
 
     @property
     def is_active(self):
         return self._is_active
+
     def toggle_active(self):
         self._is_active = not self._is_active
 
-    def is_clicked(self) -> bool:
+    @property
+    def width(self):
+        return self._sprite.width_height[0]
+
+    def is_left_clicked(self) -> bool:
         if self._is_active:
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
                 if self.is_hovered():
@@ -100,27 +106,22 @@ class SpriteButton(Button):
     def draw_button(self):
         if self._is_active:
             x, y = self.current_position
-            image_bank = self._sprite.image_bank
-            position_x, position_y = self._sprite.position
-            width, height = self._sprite.width_height
             if not self.is_hovered():
-                pyxel.blt(
-                x - (width / 2), y - (height / 2),
-                image_bank,
-                position_x, position_y,
-                width, height,
-                11,
-                scale=self._scale
-                )
+                image_bank = self._sprite.image_bank
+                position_x, position_y = self._sprite.position
+                width, height = self._sprite.width_height
             else:
-                pyxel.blt(
-                x - (width / 2), y - (height / 2),  
-                image_bank,
-                0, 32, # to change, need a sprite for all spritebutton that will activate when hovered
-                width, height,
-                11,
-                scale=self._scale
-                )
+                image_bank = self._hover_sprite.image_bank
+                position_x, position_y = self._hover_sprite.position
+                width, height = self._hover_sprite.width_height
+            pyxel.blt(
+            x - (width / 2), y - (height / 2),
+            image_bank,
+            position_x, position_y,
+            width, height,
+            11,
+            scale=self._scale
+            )
     @property
     def current_position(self):
         return self._x, self._y
@@ -137,8 +138,13 @@ class TextGraphic:
         self._color = color
         self._size = size
         self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
+        self._width = self._font.text_width(self._text)
 
-        self._is_active = False
+        self._is_active = True
+
+    @property
+    def width(self):
+        return self._width
 
     @property
     def current_position(self):
@@ -182,6 +188,8 @@ class PopupScreen:
         self._is_active = not self._is_active
         for button in self._buttons:
             button.toggle_active()
+        for text in self._texts:
+            text.toggle_active()
 
     def draw_popup(self):
         if self.is_active:
