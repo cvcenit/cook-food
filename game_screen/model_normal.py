@@ -5,6 +5,8 @@ from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
 
+import pyxel
+
 
 BUTTON_SPRITES = [
     SpriteInfo(1, (0, 0), (96, 32)),
@@ -239,6 +241,7 @@ class GameLogic:
     def defeat_enemy(self, enemy) -> None:
         enemy.receive_hit(enemy.hit_points) 
         self._exp += enemy.points
+        pyxel.play(1, 1)
 
     def lose_life(self) -> None:
         self._lives -= 1
@@ -310,6 +313,7 @@ class GameLogic:
                         bullet.deactivate()
                         if not enemy.is_alive:
                             self._exp += enemy.points
+                            pyxel.play(1, 1)
         
         for enemy in self._active_enemies:
             if enemy._path_index >= len(enemy._path) - 1:
@@ -322,6 +326,7 @@ class GameLogic:
         
         if self._game_over_condition.is_game_over(len(self._active_enemies), self._lives, self.rounds_left):
             self._is_game_over = True
+            pyxel.play(2, 2)
 
         for enemy in self._active_enemies:
             if enemy._path_index >= len(enemy._path) - 1:
