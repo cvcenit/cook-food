@@ -131,7 +131,7 @@ class GameLogic:
         self._round_over_condition = round_over_condition
 
     def _load_round(self, index: int):
-        round_config = self._level.rounds[index]
+        round_config = self._level.get_round(index)
         self._path = round_config.path
         self._grid = round_config.grid
         self._enemy_factories = round_config.enemies
@@ -251,8 +251,7 @@ class GameLogic:
 
     def advance_round(self) -> None:
         self._round_index += 1
-        if self._round_index < len(self._level.rounds):
-            self._load_round(self._round_index)
+        self._load_round(self._round_index)
 
     def update(self):
         if self._is_game_over:

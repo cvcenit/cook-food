@@ -55,7 +55,7 @@ SCREENS = {
 ROUTES = {
     AppState.MAIN_MENU: {
     "campaign_mode": AppState.CAMPAIGN_MENU,
-    "endless_mode": AppState.ENDLESS_MENU,
+    "endless_mode": AppState.GAMEPLAY,
     "main_settings": AppState.MAIN_SETTINGS,
     "main_leaderboards": AppState.MAIN_LEADERBOARDS,
     "main_quit": AppState.MAIN_QUIT
@@ -67,7 +67,8 @@ ROUTES = {
     },
     
     AppState.GAMEPLAY: {
-    "campaign_mode": AppState.CAMPAIGN_MENU
+    "campaign_mode": AppState.CAMPAIGN_MENU,
+    "endless_mode": AppState.MAIN_MENU
     },
 
     AppState.MAIN_LEADERBOARDS: {

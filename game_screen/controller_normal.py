@@ -30,44 +30,44 @@ class GameController:
             clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
             pause_menu_clicked = self._view.get_clicked_button(self._model.popup_screens[0].buttons)
 
-        self._model.update_from_pause_menu(pause_menu_clicked)
+            self._model.update_from_pause_menu(pause_menu_clicked)
+                
+            if self._model.is_paused:
+                self._model.update(clicked_btn)
+                return
+
+            left_clicked = self._view.has_left_clicked()
+            right_clicked = self._view.has_right_clicked()
             
-        if self._model.is_paused:
-            self._model.update(clicked_btn)
-            return
+            mouse_x, mouse_y = self._view.get_mouse_position()
 
-        left_clicked = self._view.has_left_clicked()
-        right_clicked = self._view.has_right_clicked()
-        
-        mouse_x, mouse_y = self._view.get_mouse_position()
+            direction = self.get_player_direction((mouse_x, mouse_y))
 
-        direction = self.get_player_direction((mouse_x, mouse_y))
+            self._model.game_logic.player_change_direction(direction)
+            for i in range(self._model.game_logic.player.tower_level):
+                self._model.game_logic.player.load_next_bullet(i)
+                
+            sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
+            self._model.update_from_sidebar(sidebar_clicked)
 
-        self._model.game_logic.player_change_direction(direction)
-        for i in range(self._model.game_logic.player.tower_level):
-            self._model.game_logic.player.load_next_bullet(i)
+            tower_menu_clicked = self._view.get_clicked_button(self._model.popup_screens[1].buttons)
+            self._model.update_from_tower_menu(tower_menu_clicked)
+
+            tower_direction = self._view.get_tower_direction()
+            self._model.update_from_direction_menu(tower_direction)
             
-        sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
-        self._model.update_from_sidebar(sidebar_clicked)
+            if right_clicked:
+                clicked_tower = self._view.get_clicked_tower(self._model.game_logic.towers)
+                self._model.update_towers(clicked_tower)
 
-        tower_menu_clicked = self._view.get_clicked_button(self._model.popup_screens[1].buttons)
-        self._model.update_from_tower_menu(tower_menu_clicked)
-
-        tower_direction = self._view.get_tower_direction()
-        self._model.update_from_direction_menu(tower_direction)
-        
-        if right_clicked:
-            clicked_tower = self._view.get_clicked_tower(self._model.game_logic.towers)
-            self._model.update_towers(clicked_tower)
-
-        if left_clicked:
-            if (0 <= mouse_x <= GAMEPLAY_X_OFFSET) or (0 <= mouse_y <= GAMEPLAY_Y_OFFSET):
-                ...
-            elif self._model.game_logic.placing_tower:
-                self._model.game_logic.place_tower(mouse_x, mouse_y)
-            else:
-                self._model.game_logic.player_shoot()
-            
+            if left_clicked:
+                if (0 <= mouse_x <= GAMEPLAY_X_OFFSET) or (0 <= mouse_y <= GAMEPLAY_Y_OFFSET):
+                    ...
+                elif self._model.game_logic.placing_tower:
+                    self._model.game_logic.place_tower(mouse_x, mouse_y)
+                else:
+                    self._model.game_logic.player_shoot()
+                    
             self._model.update(clicked_btn)
         else:
             self._model.update_game_over()

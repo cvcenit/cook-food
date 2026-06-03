@@ -39,10 +39,9 @@ def make_spiral_path(rows=8, cols=10, row_offset=1):
     return path
 
 class Level(ABC):
-	@property
-	@abstractmethod
-	def rounds(self) -> list[RoundConfig]:
-		...
+	#@abstractmethod
+	#def get_round(self, index: int) -> RoundConfig:
+	#	...
 	
 	@property
 	@abstractmethod
@@ -131,6 +130,10 @@ class CampaignMode(Level):
 	@property
 	def initial_exp(self) -> int:
 		return 10
+	
+	def get_round(self, index: int) -> RoundConfig:
+		return self._rounds[index]
+	
 
 class EndlessMode(Level):
 	def __init__(self, data: dict):
@@ -140,10 +143,27 @@ class EndlessMode(Level):
 		
 	def get_round(self, round_num: int) -> RoundConfig:
 		count = self._base_count + round_num + 2
+		path = [
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
+			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
+			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
+			(3, 5), # goes down
+			(3, 4), (3, 3), # goes left 
+			(2, 3), (1, 3) # goes up
+			]
+		
+		tunnels = [(3, 1), (4, 1),
+			 	   (6, 4), (6, 5), (6, 6)
+				   ]
+		
+		grid = Grid(9, 11, path, tunnels)
 		return RoundConfig(
 			enemies=[lambda p, cls=Ube: cls(p) for _ in range(count)],
 			path=self._path,
 			player_start=(5, 5),
+			grid=grid,
+			tunnels=tunnels
 		)
 	
 	@property
