@@ -39,3 +39,4 @@ class AppState(StrEnum):
     GAMEPLAY = "gameplay"
     MAIN_QUIT = "main_quit"
     SETTINGS = "main_settings"
+    MAIN_ACHIEVEMENTS = "main_achievements"

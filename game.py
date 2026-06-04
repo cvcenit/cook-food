@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from achievements import AchievementManager
+from achievements_menu.controller_achievements import make_achievements_screen
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
-from game_screen.controller_normal import LevelMenuScreen
+from game_screen.controller_normal import make_level_screen
 from main_menu.controller_main_menu import MainMenuScreen
 from settings_screen.controller_settings import SettingsScreen
 from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
@@ -9,6 +11,8 @@ from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScree
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
 
 import pyxel
+
+shared_achievements = AchievementManager()
 
 class Game:
     def __init__(self, screens: dict[AppState, Screen], routes: dict[AppState, dict[str, AppState]]):
@@ -47,9 +51,10 @@ class Game:
 SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
     AppState.CAMPAIGN_MENU: CampaignMenuScreen,
-    AppState.GAMEPLAY: LevelMenuScreen,
+    AppState.GAMEPLAY: make_level_screen(shared_achievements),
     AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
-    AppState.MAIN_SETTINGS: SettingsScreen
+    AppState.MAIN_SETTINGS: SettingsScreen,
+    AppState.MAIN_ACHIEVEMENTS: make_achievements_screen(shared_achievements),
     }
 
 ROUTES = {
@@ -57,6 +62,7 @@ ROUTES = {
     "campaign_mode": AppState.CAMPAIGN_MENU,
     "endless_mode": AppState.GAMEPLAY,
     "main_settings": AppState.MAIN_SETTINGS,
+    "main_achievements": AppState.MAIN_ACHIEVEMENTS,
     "main_leaderboards": AppState.MAIN_LEADERBOARDS,
     "main_quit": AppState.MAIN_QUIT
     },
@@ -78,7 +84,12 @@ ROUTES = {
     AppState.MAIN_SETTINGS: {
         "main_menu": AppState.MAIN_MENU,
         "save": AppState.MAIN_MENU
-    }
+    },
+
+    AppState.MAIN_ACHIEVEMENTS: {
+        "main_menu": AppState.MAIN_MENU,
+    },
+    
 }
 
 g = Game(SCREENS, ROUTES)

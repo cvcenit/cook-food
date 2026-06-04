@@ -1,4 +1,5 @@
 from __future__ import annotations
+from achievements import AchievementManager
 from entities.enemies import Ube
 from entities.towers import Chef, Tower
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
@@ -114,7 +115,7 @@ direction_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH 
 game_over_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, GAME_OVER_POPUP_BUTTONS, GAME_OVER_POPUP_TEXTS, 1)
 
 class GameLogic:
-    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
+    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition, achievements: AchievementManager):
         self._level = level
         self._round_index = 0
 
@@ -131,6 +132,11 @@ class GameLogic:
         self._is_game_over = False
         self._game_over_condition = game_over_condition
         self._round_over_condition = round_over_condition
+
+        self._achievements = achievements
+        self._game_started = False
+        self._achievement_display_timer = 0
+        self._current_achievement_display = None
 
     def _load_round(self, index: int):
         round_config = self._level.get_round(index)
@@ -198,6 +204,10 @@ class GameLogic:
     @property
     def tunnels(self):
         return self._tunnels
+    
+    @property
+    def achievements(self):
+        return self._achievements
 
     @property
     def bullets(self):
@@ -239,6 +249,7 @@ class GameLogic:
             self._towers.append(Tower(2, (row, col)))
             self._placing_tower = False
             self._not_enough_exp = False # bug, spending doesnt mean not enough exp
+            self._achievements.on_tower_placed()
         else:
             self._not_enough_exp = True
 
@@ -249,6 +260,7 @@ class GameLogic:
 
     def lose_life(self) -> None:
         self._lives -= 1
+        self._lives_lost_this_round = True
 
     def player_change_direction(self, direction):
         self._player.change_direction(direction)
@@ -257,6 +269,8 @@ class GameLogic:
         self._player.shoot()
 
     def advance_round(self) -> None:
+        self._achievements.on_round_complete(self._lives_lost_this_round)
+        self._lives_lost_this_round = False
         self._round_index += 1
         self._load_round(self._round_index)
 
@@ -317,6 +331,7 @@ class GameLogic:
                         bullet.deactivate()
                         if not enemy.is_alive:
                             self._exp += enemy.points
+                            self._achievements.on_enemy_killed()
                             pyxel.play(1, 1)
         
         for enemy in self._active_enemies:
@@ -331,11 +346,24 @@ class GameLogic:
         if self._game_over_condition.is_game_over(len(self._active_enemies), self._lives, self.rounds_left):
             self._is_game_over = True
             pyxel.play(2, 2)
+        
+        if self._achievements.unlocked and self._current_achievement_display is None:
+            self._current_achievement_display = self._achievements.pop_unlocked()
+            self._achievement_display_timer = 5 * FPS  # show for 5 seconds
+
+        if self._current_achievement_display:
+            self._achievement_display_timer -= 1
+            if self._achievement_display_timer <= 0:
+                self._current_achievement_display = None
 
         for enemy in self._active_enemies:
             if enemy._path_index >= len(enemy._path) - 1:
                 self.lose_life()
                 enemy.receive_hit(999)
+
+        if not self._game_started:
+            self._game_started = True
+            self._achievements.on_game_start()
 
     def decrement_exp(self, de):
         self._exp -= de
@@ -344,13 +372,18 @@ class GameLogic:
     def _active_enemies(self):
         return [enemy for enemy in self._enemies if enemy.is_alive]
 
+    @property
+    def current_achievement_display(self):
+        return self._current_achievement_display
+
 class GameModel:
-    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition):
+    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition, achievements: AchievementManager):
         self._current_tick = 1
         self._level = level
         self._game_over_condition = game_over_condition
         self._round_over_condition = round_over_condition
-        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
+        self._achievements = achievements
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements)
 
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
         self._popup_buttons = PAUSE_POPUP_BUTTONS + TOWER_POPUP_BUTTONS + GAME_OVER_POPUP_BUTTONS
@@ -392,14 +425,14 @@ class GameModel:
 
     def start_screen(self):
         self._current_tick = 1
-        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements)
         for screen in self.popup_screens:
             if screen.is_active:
                 screen.toggle_active()
 
     def reset(self):
         self._current_tick = 1
-        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition)
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements)
         if self._is_paused:
             self.toggle_pause()
         for screen in self.popup_screens:

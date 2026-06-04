@@ -1,6 +1,7 @@
 from __future__ import annotations
 from .model_normal import GameModel
 from .view_normal import GameView
+from achievements import AchievementManager
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
 from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
 from math import atan2
@@ -87,18 +88,19 @@ class GameController:
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_popups(self._model.popup_screens)
 
+        self._view.draw_achievement_popup(self._model.game_logic.current_achievement_display)
 
-mode = "endless" # hardcoded; turn into factory pattern ?
+mode = "endless"
 
-if mode == "campaign":
-    level = CampaignMode(DATA)
-    game_over = CampaignModeGameOverCondition()
-else:
-    level = EndlessMode(DATA)
-    game_over = EndlessModeGameOverCondition()
+def make_level_screen(shared_achievements: AchievementManager):
+    if mode == "endless":
+        level = EndlessMode(DATA)
+        game_over = EndlessModeGameOverCondition()
+    else:
+        level = CampaignMode(DATA)
+        game_over = CampaignModeGameOverCondition()
 
-model = GameModel(level, game_over, NoEnemiesRoundOverCondition())
-view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
-controller = GameController(model, view)
-
-LevelMenuScreen = Screen(model, view, controller)
+    model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements)
+    view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
+    controller = GameController(model, view)
+    return Screen(model, view, controller)
