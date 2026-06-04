@@ -335,7 +335,7 @@ class Champorado(GenericEnemy):
 
 
 class RegeneratorMixin:
-    def __init__(self, *args, regen_interval: int = None, **kwargs):
+    def __init__(self, *args, speed_multiplier = 1.0, regen_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)
         self._regen_interval = regen_interval if regen_interval is not None else DATA.get("regenerator_interval", 3)
         self._cells_moved = 0
@@ -352,12 +352,12 @@ class RegeneratorMixin:
 
 
 class RegeneratorUbe(RegeneratorMixin, Ube):
-    def __init__(self, path, regen_interval: int = None):
-        super().__init__(path, regen_interval=regen_interval)
+    def __init__(self, path, speed_multiplier = 1.0, regen_interval: int = None):
+        super().__init__(path, speed_multiplier = 1.0, regen_interval=regen_interval)
 
 
 class ChameleonMixin:
-    def __init__(self, *args, chameleon_interval: int = None, **kwargs):
+    def __init__(self, *args, speed_multiplier = 1.0, chameleon_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)
         self._chameleon_interval = chameleon_interval if chameleon_interval is not None else DATA.get("chameleon_interval", 60)
         self._ticks_since_color_change = 0
@@ -381,9 +381,9 @@ class ChameleonMixin:
 
 class ChameleonUbe(ChameleonMixin, Ube):
     def __init__(self, path, chameleon_interval: int = None):
-        super().__init__(path, chameleon_interval=chameleon_interval)
+        super().__init__(path, speed_multiplier = 1.0, chameleon_interval=chameleon_interval)
 
 
 class RegeneratorChameleonUbe(RegeneratorMixin, ChameleonMixin, Ube):
-    def __init__(self, path, regen_interval=None, chameleon_interval=None):
-        super().__init__(path, regen_interval=regen_interval, chameleon_interval=chameleon_interval)
+    def __init__(self, path, speed_multiplier = 1.0, regen_interval=None, chameleon_interval=None):
+        super().__init__(path, speed_multiplier = 1.0, regen_interval=regen_interval, chameleon_interval=chameleon_interval)

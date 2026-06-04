@@ -90,15 +90,21 @@ class GameController:
 
 mode = "endless" # hardcoded; turn into factory pattern ?
 
-if mode == "campaign":
-    level = CampaignMode(DATA)
-    game_over = CampaignModeGameOverCondition()
-else:
-    level = EndlessMode(DATA)
-    game_over = EndlessModeGameOverCondition()
+campaign_level = CampaignMode(DATA)
+campaign_game_over = CampaignModeGameOverCondition()
 
-model = GameModel(level, game_over, NoEnemiesRoundOverCondition())
-view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
-controller = GameController(model, view)
+campaign_model = GameModel(campaign_level, campaign_game_over, NoEnemiesRoundOverCondition())
+campaign_view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
+campaign_controller = GameController(campaign_model, campaign_view)
 
-LevelMenuScreen = Screen(model, view, controller)
+CampaignMenuScreen = Screen(campaign_model, campaign_view, campaign_controller)
+
+
+endless_level = EndlessMode(DATA)
+endless_game_over = EndlessModeGameOverCondition()
+
+endless_model = GameModel(endless_level, endless_game_over, NoEnemiesRoundOverCondition())
+endless_view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
+endless_controller = GameController(endless_model, endless_view)
+
+EndlessMenuScreen = Screen(endless_model, endless_view, endless_controller)

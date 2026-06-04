@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
-from game_screen.controller_normal import LevelMenuScreen
+from game_screen.controller_normal import CampaignMenuScreen, EndlessMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
 from settings_screen.controller_settings import SettingsScreen
 from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
@@ -47,15 +47,16 @@ class Game:
 SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
     AppState.CAMPAIGN_MENU: CampaignMenuScreen,
-    AppState.GAMEPLAY: LevelMenuScreen,
+    AppState.GAMEPLAY: CampaignMenuScreen,
     AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
-    AppState.MAIN_SETTINGS: SettingsScreen
+    AppState.MAIN_SETTINGS: SettingsScreen,
+    AppState.ENDLESS_MENU: EndlessMenuScreen
     }
 
 ROUTES = {
     AppState.MAIN_MENU: {
     "campaign_mode": AppState.CAMPAIGN_MENU,
-    "endless_mode": AppState.GAMEPLAY,
+    "endless_mode": AppState.ENDLESS_MENU,
     "main_settings": AppState.MAIN_SETTINGS,
     "main_leaderboards": AppState.MAIN_LEADERBOARDS,
     "main_quit": AppState.MAIN_QUIT
@@ -68,10 +69,14 @@ ROUTES = {
     
     AppState.GAMEPLAY: {
     "campaign_mode": AppState.CAMPAIGN_MENU,
-    "endless_mode": AppState.MAIN_MENU
+    "main_menu": AppState.MAIN_MENU
     },
 
     AppState.MAIN_LEADERBOARDS: {
+    "main_menu": AppState.MAIN_MENU,
+    },
+
+    AppState.ENDLESS_MENU: {
     "main_menu": AppState.MAIN_MENU,
     },
 

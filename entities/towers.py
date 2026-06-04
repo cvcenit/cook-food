@@ -203,7 +203,7 @@ class Tower(TowerInfo):
         self._base_direction = PI / 2 # 90 degrees, "upwards"
         self._fire_rate = 0.5 # bullets per second
         self._purchase_cost = 5 # exp
-        self._upgrade_cost = 5 # exp
+        self._upgrade_costs = [0, 5] # exp
 
         self._radius = TILE_SIDE_LENGTH / 2.5
 
@@ -220,6 +220,20 @@ class Tower(TowerInfo):
     @property
     def color(self):
         return self._color
+
+    @property
+    def max_level(self):
+        return self._max_level
+    
+    @property
+    def is_max_level(self):
+        return self._max_level == self._tower_level
+
+    @property
+    def current_upgrade_cost(self):
+        if len(self._upgrade_costs) > self._tower_level:
+            return self._upgrade_costs[self._tower_level]
+        return 0
 
     @property
     def tower_level(self):
@@ -285,6 +299,7 @@ class Tower(TowerInfo):
         return BULLET_VELOCITY_MAGNITUDE * cos(direction), BULLET_VELOCITY_MAGNITUDE * sin(direction)
 
     def change_direction(self, direction) -> None:
+        
         cardinal_directions = (PI / 2, 0, 3 * PI / 2, PI)
         self._current_direction = cardinal_directions[direction]
 
