@@ -83,12 +83,12 @@ class GameController:
         self._view.draw_bullets(self._model.game_logic.bullets)
 
         # draw ui + buttons
-        self._view.draw_sidebar(self._model.sidebar_buttons, self._model.game_logic.exp, self._model.game_logic.lives, self._model.game_logic.placing_tower, self._model.game_logic.not_enough_exp)
+        self._view.draw_sidebar(self._model.sidebar_buttons, self._model.game_logic.round_index, self._model.game_logic.exp, self._model.game_logic.lives, self._model.game_logic.placing_tower, self._model.game_logic.not_enough_exp)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_popups(self._model.popup_screens)
 
 
-mode = "campaign"
+mode = "endless" # hardcoded; turn into factory pattern ?
 
 if mode == "campaign":
     level = CampaignMode(DATA)

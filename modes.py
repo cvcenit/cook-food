@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado
 from grid import Grid
+from random import choice
 
 
 @dataclass
@@ -139,33 +140,43 @@ class EndlessMode(Level):
 	def __init__(self, data: dict):
 		self._base_count = data["remaining_enemies"]
 		self._initial_lives = data["remaining_lives"]
-		self._path = [(5, col) for col in range(10)]
+		self._path = [
+            (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
+            (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
+            (5, 9), (4, 9), (3, 9), (2, 9),
+            (2, 8), (2, 7), (2, 6), (2, 5),
+            (3, 5), (3, 4), (3, 3),
+            (2, 3), (1, 3)
+			]
+		tunnels = [(3, 1), (4, 1), (6, 4), (6, 5), (6, 6)]
+		self._grid = Grid(9, 11, self._path, tunnels)
+		self._tunnels = tunnels
 		
 	def get_round(self, round_num: int) -> RoundConfig:
-		count = self._base_count + round_num + 2
-		path = [
-			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
-			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
-			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
-			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
-			(3, 5), # goes down
-			(3, 4), (3, 3), # goes left 
-			(2, 3), (1, 3) # goes up
-			]
+		enemies = self._generate_round_enemies(round_num)
 		
-		tunnels = [(3, 1), (4, 1),
-			 	   (6, 4), (6, 5), (6, 6)
-				   ]
-		
-		grid = Grid(9, 11, path, tunnels)
 		return RoundConfig(
-			enemies=[lambda p, cls=Ube: cls(p) for _ in range(count)],
+			enemies=enemies,
 			path=self._path,
-			player_start=(5, 5),
-			grid=grid,
-			tunnels=tunnels
+			player_start=(4, 5),
+			grid=self._grid,
+			tunnels=self._tunnels
 		)
 	
+	def _generate_round_enemies(self, round_num: int):
+		enemy_types = [Ube, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado, ChameleonUbe, RegeneratorUbe, RegeneratorChameleonUbe]
+		# TODO: more special enemies for higher rounds
+
+		count = 3 + round_num // 2  # 3, 3, 4, 4, 5, 5, 6, 6
+		speed_multiplier = 1.0 + (0.25 * round_num)
+
+		enemies = [
+			lambda p, cls=choice(enemy_types), spd=speed_multiplier: cls(p, speed_multiplier=spd)
+			for _ in range(count)
+		]
+
+		return enemies
+
 	@property
 	def rounds(self) -> list[RoundConfig]:
 		return []

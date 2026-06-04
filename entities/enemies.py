@@ -135,12 +135,12 @@ class Enemy(EnemyInfo):
 
 
 class GenericEnemy(Enemy):
-    def __init__(self, path):
+    def __init__(self, path, speed_multiplier = 1.0):
         super().__init__()
         self._path = path
         self._path_index = 0
         self._hit_points = self.base_hit_points
-        self._current_speed = self.base_speed
+        self._current_speed = self.base_speed * speed_multiplier
         # start at first tile of path
         self._x_position, self._y_position = self._tile_to_screen(path[0])
         self._tick_counter = 0
@@ -227,13 +227,13 @@ class GenericEnemy(Enemy):
 
 
 class Ube(GenericEnemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, speed_multiplier = 1.0):
+        super().__init__(path, speed_multiplier=speed_multiplier)
 
 
 class Kutsinta(GenericEnemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, speed_multiplier = 1.0):
+        super().__init__(path, speed_multiplier=speed_multiplier)
         self._color = 9
 
     # diff
@@ -252,8 +252,8 @@ class Kutsinta(GenericEnemy):
 
 
 class Gulaman(GenericEnemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, speed_multiplier = 1.0):
+        super().__init__(path, speed_multiplier=speed_multiplier)
         self._color = 11
 
     # diff
@@ -272,8 +272,8 @@ class Gulaman(GenericEnemy):
 
 
 class Palitaw(GenericEnemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, speed_multiplier = 1.0):
+        super().__init__(path, speed_multiplier=speed_multiplier)
         self._color = 7
 
     # diff
@@ -291,8 +291,8 @@ class Palitaw(GenericEnemy):
         )
 
 class Lecheflan(GenericEnemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, speed_multiplier = 1.0):
+        super().__init__(path, speed_multiplier=speed_multiplier)
         self._color = 10
 
     # diff
@@ -311,8 +311,8 @@ class Lecheflan(GenericEnemy):
 
 
 class Champorado(GenericEnemy):
-    def __init__(self, path):
-        super().__init__(path)
+    def __init__(self, path, speed_multiplier = 1.0):
+        super().__init__(path, speed_multiplier=speed_multiplier)
         self._color = 4
 
     # @property

@@ -180,6 +180,10 @@ class GameLogic:
         return len(self._level.rounds) - self._round_index
     
     @property
+    def round_index(self) -> int:
+        return self._round_index
+    
+    @property
     def grid(self):
         return self._grid
     
