@@ -380,7 +380,7 @@ class ChameleonMixin:
 
 
 class ChameleonUbe(ChameleonMixin, Ube):
-    def __init__(self, path, chameleon_interval: int = None):
+    def __init__(self, path, speed_multiplier = 1.0, chameleon_interval: int = None):
         super().__init__(path, speed_multiplier = 1.0, chameleon_interval=chameleon_interval)
 
 
