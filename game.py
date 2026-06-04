@@ -60,7 +60,7 @@ SCREENS = {
 ROUTES = {
     AppState.MAIN_MENU: {
     "campaign_mode": AppState.CAMPAIGN_MENU,
-    "endless_mode": AppState.GAMEPLAY,
+    "endless_mode": AppState.ENDLESS_MENU,
     "main_settings": AppState.MAIN_SETTINGS,
     "main_achievements": AppState.MAIN_ACHIEVEMENTS,
     "main_leaderboards": AppState.MAIN_LEADERBOARDS,
@@ -74,10 +74,14 @@ ROUTES = {
     
     AppState.GAMEPLAY: {
     "campaign_mode": AppState.CAMPAIGN_MENU,
-    "endless_mode": AppState.MAIN_MENU
+    "main_menu": AppState.MAIN_MENU
     },
 
     AppState.MAIN_LEADERBOARDS: {
+    "main_menu": AppState.MAIN_MENU,
+    },
+
+    AppState.ENDLESS_MENU: {
     "main_menu": AppState.MAIN_MENU,
     },
 

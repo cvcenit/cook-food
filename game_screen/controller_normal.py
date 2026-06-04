@@ -28,6 +28,7 @@ class GameController:
 
     def update(self):
         if not self._model.game_logic.is_game_over:
+            self._model.game_logic._is_game_over = True
             clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
             pause_menu_clicked = self._view.get_clicked_button(self._model.popup_screens[0].buttons)
 

@@ -203,7 +203,7 @@ class Tower(TowerInfo):
         self._base_direction = PI / 2 # 90 degrees, "upwards"
         self._fire_rate = 0.5 # bullets per second
         self._purchase_cost = 5 # exp
-        self._upgrade_cost = 5 # exp
+        self._upgrade_costs = [0, 5] # exp
 
         self._radius = TILE_SIDE_LENGTH / 2.5
 
@@ -220,6 +220,20 @@ class Tower(TowerInfo):
     @property
     def color(self):
         return self._color
+
+    @property
+    def max_level(self):
+        return self._max_level
+    
+    @property
+    def is_max_level(self):
+        return self._max_level == self._tower_level
+
+    @property
+    def current_upgrade_cost(self):
+        if len(self._upgrade_costs) > self._tower_level:
+            return self._upgrade_costs[self._tower_level]
+        return 0
 
     @property
     def tower_level(self):
@@ -275,16 +289,22 @@ class Tower(TowerInfo):
         return x, y
 
     def upgrade_tower(self):
+        if self._tower_level == self._max_level:
+            return False
         for bullet in self._next_bullets:
             bullet.deactivate()
         self._next_bullets = []
         temp = min(self._max_level, self.tower_level + 1)
         self._tower_level = temp
+        return True
 
     def bullet_velocity(self, direction) -> tuple[float, float]:
         return BULLET_VELOCITY_MAGNITUDE * cos(direction), BULLET_VELOCITY_MAGNITUDE * sin(direction)
 
     def change_direction(self, direction) -> None:
+        for bullet in self._next_bullets:
+            bullet.deactivate()
+        self._next_bullets = []
         cardinal_directions = (PI / 2, 0, 3 * PI / 2, PI)
         self._current_direction = cardinal_directions[direction]
 
@@ -296,7 +316,13 @@ class Tower(TowerInfo):
         self._color = color
 
     def next_bullet_color(self):
-        return choice(ENEMY_COLORS)
+        colors = []
+        for bullet in self._next_bullets:
+            colors += [bullet.color]
+        current = choice(ENEMY_COLORS)
+        while current in colors:
+            current = choice(ENEMY_COLORS)
+        return current
 
     def next_bullet_position(self, bullet_index):
         bullets_are_odd = self._tower_level % 2
