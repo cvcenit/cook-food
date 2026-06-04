@@ -269,7 +269,7 @@ class GameLogic:
         self._player.shoot()
 
     def advance_round(self) -> None:
-        self._achievements.on_round_complete(self._lives_lost_this_round)
+        self._achievements.on_round_complete()
         self._lives_lost_this_round = False
         self._round_index += 1
         self._load_round(self._round_index)

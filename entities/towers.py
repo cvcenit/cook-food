@@ -427,3 +427,15 @@ class Chef(Tower):
         self.decrement_reload_time()
         self.remove_inactive_bullets()
         self._update_next_bullet_radius()
+
+    def draw_tower(self):
+        x, y = self.screen_position()
+        pyxel.blt(
+            x - 16,
+            y - 16,
+            1,
+            96, 0,
+            32, 32,
+            0,
+            scale=TILE_SIDE_LENGTH/32
+        )
