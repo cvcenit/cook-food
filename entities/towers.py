@@ -316,7 +316,13 @@ class Tower(TowerInfo):
         self._color = color
 
     def next_bullet_color(self):
-        return choice(ENEMY_COLORS)
+        colors = []
+        for bullet in self._next_bullets:
+            colors += [bullet.color]
+        current = choice(ENEMY_COLORS)
+        while current in colors:
+            current = choice(ENEMY_COLORS)
+        return current
 
     def next_bullet_position(self, bullet_index):
         bullets_are_odd = self._tower_level % 2

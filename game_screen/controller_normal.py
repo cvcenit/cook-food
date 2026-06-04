@@ -27,6 +27,7 @@ class GameController:
 
     def update(self):
         if not self._model.game_logic.is_game_over:
+            self._model.game_logic._is_game_over = True
             clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
             pause_menu_clicked = self._view.get_clicked_button(self._model.popup_screens[0].buttons)
 
@@ -88,8 +89,6 @@ class GameController:
         self._view.draw_popups(self._model.popup_screens)
 
 
-mode = "endless" # hardcoded; turn into factory pattern ?
-
 campaign_level = CampaignMode(DATA)
 campaign_game_over = CampaignModeGameOverCondition()
 
@@ -97,7 +96,7 @@ campaign_model = GameModel(campaign_level, campaign_game_over, NoEnemiesRoundOve
 campaign_view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
 campaign_controller = GameController(campaign_model, campaign_view)
 
-CampaignMenuScreen = Screen(campaign_model, campaign_view, campaign_controller)
+NormalMenuScreen = Screen(campaign_model, campaign_view, campaign_controller)
 
 
 endless_level = EndlessMode(DATA)

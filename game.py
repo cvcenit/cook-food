@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
-from game_screen.controller_normal import CampaignMenuScreen, EndlessMenuScreen
+from game_screen.controller_normal import NormalMenuScreen, EndlessMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
 from settings_screen.controller_settings import SettingsScreen
 from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
@@ -47,7 +47,7 @@ class Game:
 SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
     AppState.CAMPAIGN_MENU: CampaignMenuScreen,
-    AppState.GAMEPLAY: CampaignMenuScreen,
+    AppState.GAMEPLAY: NormalMenuScreen,
     AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
     AppState.MAIN_SETTINGS: SettingsScreen,
     AppState.ENDLESS_MENU: EndlessMenuScreen
