@@ -289,17 +289,22 @@ class Tower(TowerInfo):
         return x, y
 
     def upgrade_tower(self):
+        if self._tower_level == self._max_level:
+            return False
         for bullet in self._next_bullets:
             bullet.deactivate()
         self._next_bullets = []
         temp = min(self._max_level, self.tower_level + 1)
         self._tower_level = temp
+        return True
 
     def bullet_velocity(self, direction) -> tuple[float, float]:
         return BULLET_VELOCITY_MAGNITUDE * cos(direction), BULLET_VELOCITY_MAGNITUDE * sin(direction)
 
     def change_direction(self, direction) -> None:
-        
+        for bullet in self._next_bullets:
+            bullet.deactivate()
+        self._next_bullets = []
         cardinal_directions = (PI / 2, 0, 3 * PI / 2, PI)
         self._current_direction = cardinal_directions[direction]
 
