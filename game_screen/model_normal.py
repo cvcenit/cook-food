@@ -1,13 +1,17 @@
 from __future__ import annotations
 from achievements import AchievementManager
 from entities.enemies import Ube
-from entities.towers import Chef, Tower
+from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
 
 import pyxel
 
+LEVEL_ONE_AVAILABLE_TOWERS = [Taho,]
+LEVEL_TWO_AVAILABLE_TOWERS = LEVEL_ONE_AVAILABLE_TOWERS + [Ihaw]
+LEVEL_THREE_AVAILABLE_TOWERS = LEVEL_TWO_AVAILABLE_TOWERS + [Sorbetes]
+LEVEL_FOUR_AVAILABLE_TOWERS = LEVEL_THREE_AVAILABLE_TOWERS + [Pandesal]
 
 BUTTON_SPRITES = [
     SpriteInfo(1, (0, 0), (96, 32)),
@@ -18,9 +22,9 @@ BUTTON_SPRITES = [
 ]
 SIDEBAR_BUTTONS = [
     TextButton(90, 20, "Pause", 1, size=24),
-    SpriteButton(140, 435, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 535, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
-    SpriteButton(140, 635, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 435, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 535, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96),
+    SpriteButton(140, 635, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 735, BUTTON_SPRITES[4], BUTTON_SPRITES[0], 240/96)
     ]
 
@@ -145,6 +149,8 @@ class GameLogic:
         self._placing_tower = False
         self._not_enough_exp = False
         self._towers = []
+        self._available_towers = self._level.available_towers
+        self._selected_tower_type = None
 
         self._selected_tower = None        
 
@@ -168,7 +174,7 @@ class GameLogic:
         self._spawn_interval = 2 * FPS
         self._spawn_timer = 0
         self._enemies = [] # [factory(round_config.path) for factory in round_config.enemies]
-        self._player = Chef(7, round_config.player_start)
+        self._player = Chef(round_config.player_start)
         self._tunnels = set(round_config.tunnels or [])
 
     @property
@@ -248,11 +254,15 @@ class GameLogic:
         for enemy in self._spawn_queue:
             res.add(enemy(self._path).color)
         return list(res)
-    
-    def toggle_placement_mode(self):
+
+    def toggle_placement_mode(self, tower_idx):
         self._placing_tower = not self.placing_tower
         if not self._placing_tower:
             self._not_enough_exp = False
+        if self._placing_tower:
+            self._selected_tower_type = self._available_towers[tower_idx]
+        else:
+            self._selected_tower_type = None
 
     def place_tower(self, mouse_x: float, mouse_y: float):
         # should not be instant (maybe add a timer)
@@ -268,10 +278,11 @@ class GameLogic:
             if tower.grid_position == (row, col):
                 return
 
+        t = self._selected_tower_type((row, col))
         # should depend on the tower cost
-        if self._exp >= 5:
-            self._exp -= 5
-            self._towers.append(Tower(2, (row, col)))
+        if self._exp >= t.purchase_cost:
+            self._exp -= t.purchase_cost
+            self._towers.append(t)
             self._placing_tower = False
             self._not_enough_exp = False # bug, spending doesnt mean not enough exp
             self._achievements.on_tower_placed()
@@ -414,6 +425,9 @@ class GameModel:
         self._popup_screens = [pause_popup, tower_popup, direction_popup, game_over_popup, win_popup]
         self._is_paused = False
 
+        while len(self._sidebar_buttons) - 1 > len(self.game_logic._available_towers):
+            self._sidebar_buttons.pop()
+
     @property
     def current_tick(self):
         return self._current_tick
@@ -545,7 +559,7 @@ class GameModel:
                 self.toggle_pause()
             else:
                 # has to know which tower
-                self.game_logic.toggle_placement_mode()
+                self.game_logic.toggle_placement_mode(clicked_idx - 1)
 
     def update(self, clicked_idx):
         if self._is_paused:

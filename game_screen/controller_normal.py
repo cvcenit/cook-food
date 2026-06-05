@@ -1,6 +1,7 @@
 from __future__ import annotations
 from .model_normal import GameModel
 from .view_normal import GameView
+from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from achievements import AchievementManager
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
 from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
@@ -109,12 +110,19 @@ class GameController:
 
         self._view.draw_achievement_popup(self._model.game_logic.current_achievement_display)
 
+LEVEL_ONE_AVAILABLE_TOWERS = [Taho,]
+LEVEL_TWO_AVAILABLE_TOWERS = LEVEL_ONE_AVAILABLE_TOWERS + [Ihaw]
+LEVEL_THREE_AVAILABLE_TOWERS = LEVEL_TWO_AVAILABLE_TOWERS + [Sorbetes]
+LEVEL_FOUR_AVAILABLE_TOWERS = LEVEL_THREE_AVAILABLE_TOWERS + [Pandesal]
+
+
+# todo: make five different levels
 def make_level_screen(shared_achievements: AchievementManager, mode):
     if mode == "endless":
-        level = EndlessMode(DATA)
+        level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
         game_over = EndlessModeGameOverCondition()
     else:
-        level = CampaignMode(DATA)
+        level = CampaignMode(DATA, LEVEL_TWO_AVAILABLE_TOWERS)
         game_over = CampaignModeGameOverCondition()
 
     model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements)

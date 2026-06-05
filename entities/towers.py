@@ -198,7 +198,7 @@ class Bullet(BulletInfo):
 # lowkey, need neto dahil merong "readied state" ang bullet, different from "shot state", at "inactive state"
 
 class Tower(TowerInfo):
-    def __init__(self, color, grid_position):
+    def __init__(self, grid_position):
         self._grid_position = grid_position
         self._base_direction = PI / 2 # 90 degrees, "upwards"
         self._fire_rate = 0.5 # bullets per second
@@ -209,7 +209,7 @@ class Tower(TowerInfo):
 
         self._bullets = []
         self._current_direction = self.base_direction
-        self._color = color
+        self._color = 7
         self._remaining_seconds_to_shoot = self._fire_rate
 
         self._next_bullets = []
@@ -239,6 +239,10 @@ class Tower(TowerInfo):
     def tower_level(self):
         return self._tower_level
     
+    @property
+    def purchase_cost(self):
+        return self._purchase_cost
+
     @property
     def current_direction(self):
         return self._current_direction
@@ -402,10 +406,75 @@ class Tower(TowerInfo):
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
 
+class Sorbetes(Tower):
+    def __init__(self, grid_position):
+        super().__init__(grid_position)
+        self._purchase_cost = 10
+
+    def draw_tower(self):
+        x, y = self.screen_position()
+        pyxel.blt(
+            x - 16,
+            y - 16,
+            1,
+            96, 32,
+            32, 32,
+            0,
+            scale=TILE_SIDE_LENGTH/32
+        )
+
+class Taho(Tower):
+    def __init__(self, grid_position):
+        super().__init__(grid_position)
+
+    def draw_tower(self):
+        x, y = self.screen_position()
+        pyxel.blt(
+            x - 16,
+            y - 16,
+            1,
+            96, 64,
+            32, 32,
+            0,
+            scale=TILE_SIDE_LENGTH/32
+        )
+
+class Ihaw(Tower):
+    def __init__(self, grid_position):
+        super().__init__(grid_position)
+
+    def draw_tower(self):
+        x, y = self.screen_position()
+        pyxel.blt(
+            x - 16,
+            y - 16,
+            1,
+            96, 96,
+            32, 32,
+            0,
+            scale=TILE_SIDE_LENGTH/32
+        )
+
+class Pandesal(Tower):
+    def __init__(self, grid_position):
+        super().__init__(grid_position)
+        self._purchase_cost = 10
+
+    def draw_tower(self):
+        x, y = self.screen_position()
+        pyxel.blt(
+            x - 16,
+            y - 16,
+            1,
+            96, 128,
+            32, 32,
+            0,
+            scale=TILE_SIDE_LENGTH/32
+        )
 
 class Chef(Tower):
-    def __init__(self, color, grid_position):
-        super().__init__(color, grid_position)
+    def __init__(self, grid_position):
+        super().__init__(grid_position)
         self._fire_rate = 0.9
         self._tower_level = 5
 

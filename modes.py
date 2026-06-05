@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado
+from entities.towers import Tower
 from grid import Grid
 from random import choice
 
@@ -55,7 +56,7 @@ class Level(ABC):
 		...
 
 class CampaignMode(Level):
-	def __init__(self, data: dict):
+	def __init__(self, data: dict, available_towers: list[Tower]):
 		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
 		path = [
 			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
@@ -119,6 +120,7 @@ class CampaignMode(Level):
 			),
 		]
 		self._initial_lives = data["remaining_lives"]
+		self._available_towers = available_towers
 	
 	@property
 	def rounds(self) -> list[RoundConfig]:
@@ -130,14 +132,19 @@ class CampaignMode(Level):
 	
 	@property
 	def initial_exp(self) -> int:
-		return 10
+		return 30
+
+	@property
+	def available_towers(self):
+		return self._available_towers
 	
+
 	def get_round(self, index: int) -> RoundConfig:
 		return self._rounds[index]
 	
 
 class EndlessMode(Level):
-	def __init__(self, data: dict):
+	def __init__(self, data: dict, available_towers: list[Tower]):
 		self._base_count = data["remaining_enemies"]
 		self._initial_lives = data["remaining_lives"]
 		self._path = [
@@ -151,6 +158,7 @@ class EndlessMode(Level):
 		tunnels = [(3, 1), (4, 1), (6, 4), (6, 5), (6, 6)]
 		self._grid = Grid(9, 11, self._path, tunnels)
 		self._tunnels = tunnels
+		self._available_towers = available_towers
 		
 	def get_round(self, round_num: int) -> RoundConfig:
 		enemies = self._generate_round_enemies(round_num)
@@ -184,7 +192,11 @@ class EndlessMode(Level):
 	@property
 	def initial_lives(self) -> int:
 		return self._initial_lives
-	
+
+	@property
+	def available_towers(self):
+		return self._available_towers
+
 	@property
 	def initial_exp(self) -> int:
 		return 0
