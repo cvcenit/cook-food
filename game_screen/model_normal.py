@@ -487,6 +487,8 @@ class GameModel:
         for screen in self.popup_screens:
             if screen.is_active:
                 screen.toggle_active()
+            else:
+                pyxel.play(0, 0, loop=True)
 
     def reset(self):
         self._current_tick = 1
@@ -499,6 +501,7 @@ class GameModel:
         self._register_message = None
 
     def update_game_over(self):
+        pyxel.stop(0)
         if self._game_logic.is_game_won:
             win_popup = self.popup_screens[4]
             if not win_popup.is_active:
@@ -523,7 +526,7 @@ class GameModel:
             elif clicked_idx == 2:
                 self.reset()
             else:
-                ...
+                pyxel.stop(0)
 
     def update_from_direction_menu(self, d):
         if d is not None:
