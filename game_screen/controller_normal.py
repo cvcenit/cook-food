@@ -88,10 +88,14 @@ class GameController:
                 win_clicked = self._view.get_clicked_button(self._model.popup_screens[4].buttons)
                 if win_clicked == 1:
                     self._model.reset()
-                else:
-                    game_over_clicked = self._view.get_clicked_button(self._model.popup_screens[3].buttons)
-                    if game_over_clicked == 1:
-                        self._model.reset()
+                elif win_clicked == 2:
+                    self._model.handle_register(4, "campaign")
+            else:
+                game_over_clicked = self._view.get_clicked_button(self._model.popup_screens[3].buttons)
+                if game_over_clicked == 1:
+                    self._model.reset()
+                elif game_over_clicked == 2:
+                    self._model.handle_register(3, "endless")
 
     def draw(self):
         self._view.reset_screen()
@@ -109,6 +113,7 @@ class GameController:
         self._view.draw_popups(self._model.popup_screens)
 
         self._view.draw_achievement_popup(self._model.game_logic.current_achievement_display)
+        self._view.draw_register_message(self._model.register_message)
 
 LEVEL_ONE_AVAILABLE_TOWERS = [Taho,]
 LEVEL_TWO_AVAILABLE_TOWERS = LEVEL_ONE_AVAILABLE_TOWERS + [Ihaw]

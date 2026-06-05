@@ -2,6 +2,7 @@ from __future__ import annotations
 from achievements import AchievementManager
 from entities.enemies import Ube
 from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
+from leaderboards import register_player
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
@@ -167,7 +168,8 @@ class GameLogic:
 
     def _load_round(self, index: int):
         round_config = self._level.get_round(index)
-        self._path = round_config.path
+        self._paths = round_config.paths
+        self._path = round_config.paths[0]
         self._grid = round_config.grid
         self._enemy_factories = round_config.enemies
         self._spawn_queue = list(round_config.enemies)
@@ -251,8 +253,8 @@ class GameLogic:
         res = set()
         for enemy in self._active_enemies:
             res.add(enemy.color)
-        for enemy in self._spawn_queue:
-            res.add(enemy(self._path).color)
+        for factory, path in self._spawn_queue:
+            res.add(factory(path).color)
         return list(res)
 
     def toggle_placement_mode(self, tower_idx):
@@ -321,8 +323,8 @@ class GameLogic:
         if self._spawn_queue:
             self._spawn_timer += 1
             if self._spawn_timer >= self._spawn_interval:
-                factory = self._spawn_queue.pop(0)
-                self._enemies.append(factory(self._path))
+                factory, path = self._spawn_queue.pop(0)
+                self._enemies.append(factory(path))
                 self._spawn_timer = 0
 
         for tower in self._towers:
@@ -357,7 +359,7 @@ class GameLogic:
                 # will change to if bullet color in enemy colors
                 # to account for regenerator (no color)
                 if bullet.color == enemy.color:
-                    enemy_tile = self._path[enemy._path_index]
+                    enemy_tile = enemy._path[enemy._path_index]
                     if enemy_tile in self._tunnels:
                         continue
                     ex, ey = enemy.position
@@ -424,6 +426,7 @@ class GameModel:
         self._sidebar_buttons = SIDEBAR_BUTTONS
         self._popup_screens = [pause_popup, tower_popup, direction_popup, game_over_popup, win_popup]
         self._is_paused = False
+        self._register_message = None
 
         while len(self._sidebar_buttons) - 1 > len(self.game_logic._available_towers):
             self._sidebar_buttons.pop()
@@ -455,6 +458,14 @@ class GameModel:
     @property
     def game_logic(self):
         return self._game_logic
+    
+    @property
+    def register_message(self):
+        return self._register_message
+    
+    def handle_register(self, popup_idx: int, mode: str):
+        name = self.popup_screens[popup_idx].texts[1]._text
+        self._register_message = register_player(name, self._game_logic.round_index, mode)
 
     def toggle_pause(self):
         self._is_paused = not self._is_paused
@@ -475,12 +486,17 @@ class GameModel:
         for screen in self.popup_screens:
             if screen.is_active:
                 screen.toggle_active()
+        self._register_message = None
 
     def update_game_over(self):
         if self._game_logic.is_game_won:
             win_popup = self.popup_screens[4]
             if not win_popup.is_active:
                 win_popup.toggle_active()
+            input_text = win_popup.texts[1]
+            input_text.listen()
+            _, y = input_text.current_position
+            input_text.change_position(((SCREEN_WIDTH - input_text.width) / 2), y)
         else:
             game_over_popup = self.popup_screens[3]
             if not game_over_popup.is_active:

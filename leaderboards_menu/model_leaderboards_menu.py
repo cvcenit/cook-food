@@ -1,5 +1,6 @@
 from graphics import TextButton, TextGraphic, PopupScreen
 from utils import HEADER_FONT_SIZE, PLAYER_DATA, SCREEN_WIDTH
+from leaderboards import load_data
 from math import ceil
 
 import pyxel
@@ -69,7 +70,7 @@ class LeaderboardsMenuModel:
         self._keys = ["name", "campaign_completed_rounds", "endless_highest_rounds", "total"]
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
         self._popup_buttons = POPUP_BUTTONS
-        self._data = PLAYER_DATA
+        self._data = load_data()
         self._current_tick = 1
         self._current_page = 1
 
@@ -189,6 +190,10 @@ class LeaderboardsMenuModel:
     def start_screen(self):
         self._current_tick = 1
         self._current_page = 1
+        self._data = load_data()
+        self._players = self.players
+        self._last_page = ceil(len(self._players) / PLAYERS_PER_PAGE)
+        self._row_per_page = {}
         self._current_rows = self.leaderboard_players()
         self._texts = self.leaderboard_texts
         self._popup_inside.change_texts(self._texts)
