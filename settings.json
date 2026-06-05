@@ -1,1 +1,1 @@
-{"remaining_enemies": 5, "remaining_lives": 5, "regenerator_interval": 15, "chameleon_interval": 5, "smooth_movement": false}
+{"remaining_enemies": 5, "remaining_lives": 1, "regenerator_interval": 15, "chameleon_interval": 5, "smooth_movement": true}
