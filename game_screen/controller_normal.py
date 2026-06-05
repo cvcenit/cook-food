@@ -142,11 +142,7 @@ def make_level_screen(shared_achievements: AchievementManager, mode):
         level = Level5(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
         game_over = CampaignModeGameOverCondition()
     else:
-<<<<<<< HEAD
-        level = CampaignMode(DATA, LEVEL_THREE_AVAILABLE_TOWERS)
-=======
         level = Level1(DATA, LEVEL_ONE_AVAILABLE_TOWERS)
->>>>>>> refs/remotes/origin/main
         game_over = CampaignModeGameOverCondition()
 
     model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements)
