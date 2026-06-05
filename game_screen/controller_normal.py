@@ -127,7 +127,7 @@ def make_level_screen(shared_achievements: AchievementManager, mode):
         level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
         game_over = EndlessModeGameOverCondition()
     else:
-        level = CampaignMode(DATA, LEVEL_TWO_AVAILABLE_TOWERS)
+        level = CampaignMode(DATA, LEVEL_THREE_AVAILABLE_TOWERS)
         game_over = CampaignModeGameOverCondition()
 
     model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements)

@@ -192,10 +192,9 @@ class Bullet(BulletInfo):
     def set_state(self, state: BulletState) -> None:
         self._state = state
 
-# TODO: Refactor, dapat maganda ung end_tick, i believe merong state kagaya ng moles 
-# (towers ay may active, inactive state, depende sa current tick kung nagreload na ba)
-# enemies, nasa kabilang file, meron ding hit state, active state, at inactive state
-# lowkey, need neto dahil merong "readied state" ang bullet, different from "shot state", at "inactive state"
+class PiercingBullet(Bullet):
+    def __init__(self, col, r, initial_pos, initial_vel):
+        super().__init__(col, r, initial_pos, initial_vel)
 
 class Tower(TowerInfo):
     def __init__(self, grid_position):
@@ -406,23 +405,6 @@ class Tower(TowerInfo):
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
 
-class Sorbetes(Tower):
-    def __init__(self, grid_position):
-        super().__init__(grid_position)
-        self._purchase_cost = 10
-
-    def draw_tower(self):
-        x, y = self.screen_position()
-        pyxel.blt(
-            x - 16,
-            y - 16,
-            1,
-            96, 32,
-            32, 32,
-            0,
-            scale=TILE_SIDE_LENGTH/32
-        )
-
 class Taho(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
@@ -450,6 +432,23 @@ class Ihaw(Tower):
             y - 16,
             1,
             96, 96,
+            32, 32,
+            0,
+            scale=TILE_SIDE_LENGTH/32
+        )
+
+class Sorbetes(Tower):
+    def __init__(self, grid_position):
+        super().__init__(grid_position)
+        self._purchase_cost = 10
+
+    def draw_tower(self):
+        x, y = self.screen_position()
+        pyxel.blt(
+            x - 16,
+            y - 16,
+            1,
+            96, 32,
             32, 32,
             0,
             scale=TILE_SIDE_LENGTH/32
