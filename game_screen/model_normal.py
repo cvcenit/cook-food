@@ -162,7 +162,8 @@ class GameLogic:
 
     def _load_round(self, index: int):
         round_config = self._level.get_round(index)
-        self._path = round_config.path
+        self._paths = round_config.paths
+        self._path = round_config.paths[0]
         self._grid = round_config.grid
         self._enemy_factories = round_config.enemies
         self._spawn_queue = list(round_config.enemies)
@@ -246,8 +247,8 @@ class GameLogic:
         res = set()
         for enemy in self._active_enemies:
             res.add(enemy.color)
-        for enemy in self._spawn_queue:
-            res.add(enemy(self._path).color)
+        for factory, path in self._spawn_queue:
+            res.add(factory(path).color)
         return list(res)
     
     def toggle_placement_mode(self):
@@ -311,8 +312,8 @@ class GameLogic:
         if self._spawn_queue:
             self._spawn_timer += 1
             if self._spawn_timer >= self._spawn_interval:
-                factory = self._spawn_queue.pop(0)
-                self._enemies.append(factory(self._path))
+                factory, path = self._spawn_queue.pop(0)
+                self._enemies.append(factory(path))
                 self._spawn_timer = 0
 
         for tower in self._towers:
@@ -347,7 +348,7 @@ class GameLogic:
                 # will change to if bullet color in enemy colors
                 # to account for regenerator (no color)
                 if bullet.color == enemy.color:
-                    enemy_tile = self._path[enemy._path_index]
+                    enemy_tile = enemy._path[enemy._path_index]
                     if enemy_tile in self._tunnels:
                         continue
                     ex, ey = enemy.position

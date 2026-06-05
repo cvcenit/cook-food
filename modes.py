@@ -8,7 +8,7 @@ from random import choice
 @dataclass
 class RoundConfig:
 	enemies: list # list of callables
-	path: list
+	paths: list
 	player_start: tuple
 	grid: Grid # added grid in round config
 	tunnels: list[tuple[int, int]] = None
@@ -57,7 +57,7 @@ class Level(ABC):
 class CampaignMode(Level):
 	def __init__(self, data: dict):
 		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
-		path = [
+		path1 = [
 			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
 			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
 			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
@@ -67,52 +67,61 @@ class CampaignMode(Level):
 			(2, 3), (1, 3) # goes up
 			]
 		
+		path2 = [
+			(7, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7),
+			(2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3),
+		]
+		
 		tunnels = [(3, 1), (4, 1),
 			 	   (6, 4), (6, 5), (6, 6)
 				   ]
 		
-		grid = Grid(9, 11, path, tunnels)
+		tiles = list(set(path1 + path2))
+		grid = Grid(9, 11, tiles, tunnels)
 		enemy_count = data["remaining_enemies"]
 
 		self._rounds = [
 			RoundConfig(
-				enemies=[lambda p, cls=Ube: cls(p) for _ in range(enemy_count)],
-				path=path,
+				enemies=[(lambda p, cls=Ube: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
 				player_start=(4, 5),
 				grid=grid,
 				tunnels=tunnels,
 			),
 			RoundConfig(
-				enemies=[lambda p, cls=Kutsinta: cls(p) for _ in range(enemy_count)],
-				path=path,
+				enemies=[(lambda p, cls=Kutsinta: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
 				player_start=(4, 5),
 				grid=grid,
 				tunnels=tunnels,
 			),
 			RoundConfig(
-				enemies=[lambda p, cls=Gulaman: cls(p) for _ in range(enemy_count)],
-				path=path,
+				enemies=[(lambda p, cls=Gulaman: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
 				player_start=(4, 5),
 				grid=grid,
 				tunnels=tunnels,
 			),
 			RoundConfig(
-				enemies=[lambda p, cls=Palitaw: cls(p) for _ in range(enemy_count)],
-				path=path,
+				enemies=[(lambda p, cls=Palitaw: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
 				player_start=(4, 5),
 				grid=grid,
 				tunnels=tunnels,
 			),
 			RoundConfig(
-				enemies=[lambda p, cls=Lecheflan: cls(p) for _ in range(enemy_count)],
-				path=path,
+				enemies=[(lambda p, cls=Lecheflan: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
 				player_start=(4, 5),
 				grid=grid,
 				tunnels=tunnels,
 			),
 			RoundConfig(
-				enemies=[lambda p, cls=Champorado: cls(p) for _ in range(enemy_count)],
-				path=path,
+				enemies=[(lambda p, cls=Champorado: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
 				player_start=(4, 5),
 				grid=grid,
 				tunnels=tunnels,
@@ -157,7 +166,7 @@ class EndlessMode(Level):
 		
 		return RoundConfig(
 			enemies=enemies,
-			path=self._path,
+			paths=[self._path],
 			player_start=(4, 5),
 			grid=self._grid,
 			tunnels=self._tunnels
@@ -171,7 +180,7 @@ class EndlessMode(Level):
 		speed_multiplier = 1.0 + (0.25 * round_num)
 
 		enemies = [
-			lambda p, cls=choice(enemy_types), spd=speed_multiplier: cls(p, speed_multiplier=spd)
+			(lambda p, cls=choice(enemy_types), spd=speed_multiplier: cls(p, speed_multiplier=spd), self._path)
 			for _ in range(count)
 		]
 
