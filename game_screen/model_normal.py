@@ -340,7 +340,9 @@ class GameLogic:
 
         # pls refactor
         active_bullets = [b for b in self.bullets if b.is_active]
+        active_enemies_not_in_tunnel = [e for e in self._active_enemies if not (e._path[e._path_index] in self._tunnels)]
         for bullet in active_bullets:
+            bullet.process_enemies(active_enemies_not_in_tunnel)
             for enemy in self._active_enemies:
                 if not bullet.is_active:
                     continue
@@ -355,25 +357,21 @@ class GameLogic:
                 if not bullet.is_active:
                     continue
 
-                # enemy color will now be a list
-                # will change to if bullet color in enemy colors
-                # to account for regenerator (no color)
-                if bullet.color == enemy.color:
-                    enemy_tile = enemy._path[enemy._path_index]
-                    if enemy_tile in self._tunnels:
-                        continue
-                    ex, ey = enemy.position
-                    bx, by = bullet.current_position
-                    # fix, collision between square and circle
-                    distance_square = (bx - ex) ** 2 + (by - ey) ** 2
-                    hit_distance = bullet.radius + 25
-                    if distance_square <= hit_distance ** 2:
-                        enemy.receive_hit(1)
-                        bullet.deactivate()
-                        if not enemy.is_alive:
-                            self._exp += enemy.points
-                            self._achievements.on_enemy_killed()
-                            pyxel.play(1, 1)
+                enemy_tile = enemy._path[enemy._path_index]
+                if enemy_tile in self._tunnels:
+                    continue
+                else:
+                    if bullet.collide_with(enemy):
+                        adj = self.adjacent_enemies_not_in_tunnel(enemy)
+                        bullet.affect_nearby_enemies(adj)
+                        tot = adj + [enemy]
+                        for e in tot:
+                            if not e.is_alive:
+                                self._exp += e.points
+                                self._achievements.on_enemy_killed()
+                                pyxel.play(1, 1)
+
+
         
         for enemy in self._active_enemies:
             if enemy._path_index >= len(enemy._path) - 1:
@@ -400,6 +398,16 @@ class GameLogic:
         if not self._game_started:
             self._game_started = True
             self._achievements.on_game_start()
+
+    def adjacent_enemies_not_in_tunnel(self, enemy):
+        ia, ja = enemy.grid_position
+        res = []
+        for e in self._active_enemies:
+            ib, jb = e.grid_position
+            if not (e._path[e._path_index] in self._tunnels):
+                if abs(ia - ib) <= 1 and abs(ja - jb) <= 1:
+                    res += [e]
+        return res
 
     def decrement_exp(self, de):
         self._exp -= de

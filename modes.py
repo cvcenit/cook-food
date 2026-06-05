@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from entities.enemies import Ube, RegeneratorUbe, ChameleonUbe, RegeneratorChameleonUbe, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado
+from entities.enemies import Ube, Chameleon, Regenerator, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado
 from entities.towers import Tower
 from grid import Grid
 from random import choice
@@ -525,7 +525,7 @@ class Level5(Level):
 	
 	@property
 	def initial_exp(self):
-		return 10
+		return 20
 	
 	@property
 	def available_towers(self):
@@ -563,7 +563,7 @@ class EndlessMode(Level):
 		)
 	
 	def _generate_round_enemies(self, round_num: int):
-		enemy_types = [Ube, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado, ChameleonUbe, RegeneratorUbe, RegeneratorChameleonUbe]
+		enemy_types = [Ube, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado, Chameleon, Regenerator]
 		# TODO: more special enemies for higher rounds
 
 		count = 3 + round_num // 2  # 3, 3, 4, 4, 5, 5, 6, 6

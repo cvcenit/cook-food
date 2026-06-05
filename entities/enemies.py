@@ -106,7 +106,7 @@ class EnemyInfo(ABC):
 
     @property
     @abstractmethod
-    def color(self) -> int: ...
+    def colors(self) -> list[int]: ...
 
     @property
     @abstractmethod
@@ -145,16 +145,16 @@ class GenericEnemy(Enemy):
         # start at first tile of path
         self._x_position, self._y_position = self._tile_to_screen(path[0])
         self._tick_counter = 0
-        # self._base_color = 2 
-        # base color ay di pwedeng baguhin pero yung color pwede. this is for the 
-        # purpose nung chameleon _change_color method. we assign the color sa base but 
-        # chameleon can change _color attribute  
-        self._color = 2
+        self._colors = [2]
         self._state: EnemyState = ActiveState()
     
     def set_state(self, state: EnemyState) -> None:
         self._state = state
 
+    @property
+    def grid_position(self):
+        return self._path[self._path_index]
+    
     def _tile_to_screen(self, tile) -> tuple[float, float]:
         row, col = tile
         x = GAMEPLAY_X_OFFSET + col * TILE_SIDE_LENGTH + TILE_SIDE_LENGTH / 2
@@ -168,8 +168,8 @@ class GenericEnemy(Enemy):
 
     # diff
     @property
-    def color(self):
-        return self._color
+    def colors(self):
+        return self._colors
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -181,7 +181,7 @@ class GenericEnemy(Enemy):
             0,               # image bank 0
             0, 0,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0,                # transparent color (black)
+            0,                # transparent colors (black)
             scale=TILE_SIDE_LENGTH/32
         )
 
@@ -235,7 +235,7 @@ class Ube(GenericEnemy):
 class Kutsinta(GenericEnemy):
     def __init__(self, path, speed_multiplier = 1.0):
         super().__init__(path, speed_multiplier=speed_multiplier)
-        self._color = 9
+        self._colors = [9]
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -247,7 +247,7 @@ class Kutsinta(GenericEnemy):
             0,               # image bank 0
             32, 0,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0,                # transparent color (black)
+            0,                # transparent colors (black)
             scale=TILE_SIDE_LENGTH/32
         )
 
@@ -255,7 +255,7 @@ class Kutsinta(GenericEnemy):
 class Gulaman(GenericEnemy):
     def __init__(self, path, speed_multiplier = 1.0):
         super().__init__(path, speed_multiplier=speed_multiplier)
-        self._color = 11
+        self._colors = [11]
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -267,7 +267,7 @@ class Gulaman(GenericEnemy):
             0,               # image bank 0
             0, 32,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0,                # transparent color (black)
+            0,                # transparent colors (black)
             scale=TILE_SIDE_LENGTH/32
         )
 
@@ -275,7 +275,7 @@ class Gulaman(GenericEnemy):
 class Palitaw(GenericEnemy):
     def __init__(self, path, speed_multiplier = 1.0):
         super().__init__(path, speed_multiplier=speed_multiplier)
-        self._color = 7
+        self._colors = [7]
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -287,14 +287,14 @@ class Palitaw(GenericEnemy):
             0,               # image bank 0
             0, 64,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0,                # transparent color (black)
+            0,                # transparent colors (black)
             scale=TILE_SIDE_LENGTH/32
         )
 
 class Lecheflan(GenericEnemy):
     def __init__(self, path, speed_multiplier = 1.0):
         super().__init__(path, speed_multiplier=speed_multiplier)
-        self._color = 10
+        self._colors = [10]
 
     # diff
     def draw(self, in_tunnel: bool = False):
@@ -306,7 +306,7 @@ class Lecheflan(GenericEnemy):
             0,               # image bank 0
             32, 32,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0,                # transparent color (black)
+            0,                # transparent colors (black)
             scale=TILE_SIDE_LENGTH/32
         )
 
@@ -314,10 +314,10 @@ class Lecheflan(GenericEnemy):
 class Champorado(GenericEnemy):
     def __init__(self, path, speed_multiplier = 1.0):
         super().__init__(path, speed_multiplier=speed_multiplier)
-        self._color = 4
+        self._colors = [4]
 
     # @property
-    # def color(self):
+    # def colors(self):
     #     return 4
 
     # diff
@@ -330,17 +330,18 @@ class Champorado(GenericEnemy):
             0,               # image bank 0
             32, 64,            # sprite starts at (0, 0)
             32, 32,          # 32x32
-            0,                # transparent color (black)
+            0,                # transparent colors (black)
             scale=TILE_SIDE_LENGTH/32
         )
 
 
-class RegeneratorMixin:
+class Regenerator(GenericEnemy):
     def __init__(self, *args, speed_multiplier = 1.0, regen_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)
         self._regen_interval = regen_interval if regen_interval is not None else DATA.get("regenerator_interval", 3)
         self._cells_moved = 0
         self._last_path_index = 0  
+        self._colors = ENEMY_COLORS
 
     def end_tick(self):
         super().end_tick()
@@ -351,40 +352,60 @@ class RegeneratorMixin:
                 self._hit_points += 1 
         self._last_path_index = self._path_index
 
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            0, 160,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0,                # transparent colors (black)
+            scale=TILE_SIDE_LENGTH/32
+        )
 
-class RegeneratorUbe(RegeneratorMixin, Ube):
-    def __init__(self, path, speed_multiplier = 1.0, regen_interval: int = None):
-        super().__init__(path, speed_multiplier = 1.0, regen_interval=regen_interval)
-
-
-class ChameleonMixin:
+class Chameleon(GenericEnemy):
     def __init__(self, *args, speed_multiplier = 1.0, chameleon_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)
         self._chameleon_interval = chameleon_interval if chameleon_interval is not None else DATA.get("chameleon_interval", 60)
-        self._ticks_since_color_change = 0
+        self._ticks_since_colors_change = 0
 
     def end_tick(self):
         super().end_tick()
         if not self.is_alive:
             return
-        self._ticks_since_color_change += 1
-        self._handle_change_color()
+        self._ticks_since_colors_change += 1
+        self._handle_change_colors()
 
-    def _handle_change_color(self):
-        if self._ticks_since_color_change >= self._chameleon_interval:
-            self._change_color()
-            self._ticks_since_color_change = 0
+    def _handle_change_colors(self):
+        if self._ticks_since_colors_change >= self._chameleon_interval:
+            self._change_colors()
+            self._ticks_since_colors_change = 0
 
-    def _change_color(self):
-        available = [c for c in ENEMY_COLORS if c != self._color]
-        self._color = choice(available)
+    def _change_colors(self):
+        available = [c for c in ENEMY_COLORS if not (c in self._colors)]
+        self._colors = [choice(available)]
 
+    def draw(self, in_tunnel: bool = False):
+        if in_tunnel:
+            return
+        sx, sy = self.get_sprite()
+        x, y = self.position
+        pyxel.blt(
+            x - 16, y - 16,  # center the sprite
+            0,               # image bank 0
+            sx, sy,            # sprite starts at (0, 0)
+            32, 32,          # 32x32
+            0,                # transparent colors (black)
+            scale=TILE_SIDE_LENGTH/32
+        )
 
-class ChameleonUbe(ChameleonMixin, Ube):
-    def __init__(self, path, speed_multiplier = 1.0, chameleon_interval: int = None):
-        super().__init__(path, speed_multiplier = 1.0, chameleon_interval=chameleon_interval)
-
-
-class RegeneratorChameleonUbe(RegeneratorMixin, ChameleonMixin, Ube):
-    def __init__(self, path, speed_multiplier = 1.0, regen_interval=None, chameleon_interval=None):
-        super().__init__(path, speed_multiplier = 1.0, regen_interval=regen_interval, chameleon_interval=chameleon_interval)
+    def get_sprite(self):
+        pairs = [
+        (0, 96), (32, 96), (64, 96),
+        (0, 128), (32, 128), (64, 128)
+        ]
+        for i, col in enumerate([2, 9, 11, 10, 7, 4]):
+            if col in self._colors:
+                return pairs[i]

@@ -106,7 +106,7 @@ class BulletInfo(ABC):
         ...
 
 
-class Bullet(BulletInfo):
+class GenericBullet(BulletInfo):
     def __init__(self, col, r, initial_pos, initial_vel):
         # Base values
         self._base_velocity = initial_vel
@@ -176,9 +176,30 @@ class Bullet(BulletInfo):
     def deactivate(self) -> None:
         self.set_state(InactiveState())
 
+    def collide_with(self, enemy):
+        if self.color in enemy.colors:
+            half_tile = TILE_SIDE_LENGTH / 2
+            ex, ey = enemy.position
+            bx, by = self.current_position
+            px = max((ex - half_tile), min(bx, ex + half_tile))
+            py = max((ey - half_tile), min(by, ey + half_tile))
+
+            distance_square = (bx - px) ** 2 + (by - py) ** 2
+            if distance_square <= self.radius ** 2:
+                enemy.receive_hit(1)
+                self.deactivate()
+                return True
+        return False
+
     def draw_bullet(self):
         (x, y), r = self.current_position, self.radius
         pyxel.circ(x, y, r, self.color)
+
+    def process_enemies(self, enemies):
+        ...
+
+    def affect_nearby_enemies(self, enemies):
+        ...
 
     def start_tick(self):
         ...
@@ -192,7 +213,99 @@ class Bullet(BulletInfo):
     def set_state(self, state: BulletState) -> None:
         self._state = state
 
-class PiercingBullet(Bullet):
+class Bullet(GenericBullet):
+    def __init__(self, col, r, initial_pos, initial_vel):
+        super().__init__(col, r, initial_pos, initial_vel)
+
+class PiercingBullet(GenericBullet):
+    def __init__(self, col, r, initial_pos, initial_vel, collision_amount):
+        super().__init__(col, r, initial_pos, initial_vel)
+        self._remaining_collision_amount = collision_amount
+
+    @property
+    def remaining_collision_amount(self):
+        return self._remaining_collision_amount
+
+    def collide_with(self, enemy):
+        if self.remaining_collision_amount > 0:
+            if self.color in enemy.colors:
+                self._remaining_collision_amount -= 1
+                half_tile = TILE_SIDE_LENGTH / 2
+                ex, ey = enemy.position
+                bx, by = self.current_position
+                px = max((ex - half_tile), min(bx, ex + half_tile))
+                py = max((ey - half_tile), min(by, ey + half_tile))
+
+                distance_square = (bx - px) ** 2 + (by - py) ** 2
+                if distance_square <= self.radius ** 2:
+                    enemy.receive_hit(1)
+                    return True
+        return False
+
+    def end_tick(self):
+        if self._remaining_collision_amount <= 0:
+            self.deactivate()
+        super().end_tick()
+
+class HomingBullet(GenericBullet):
+    def __init__(self, col, r, initial_pos, initial_vel):
+        super().__init__(col, r, initial_pos, initial_vel)
+        self._nearest_enemy = None
+        self._last_direction = None
+
+    def process_enemies(self, enemies):
+        nearest_e = None
+        if not enemies:
+            return None
+
+        half_tile = TILE_SIDE_LENGTH / 2
+        bx, by = self.current_position
+
+        for i, enemy in enumerate(enemies):
+            ex, ey = enemy.position
+            px = max((ex - half_tile), min(bx, ex + half_tile))
+            py = max((ey - half_tile), min(by, ey + half_tile))
+
+            distance_square = (bx - px) ** 2 + (by - py) ** 2
+            if i == 0:
+                nearest_e = enemy
+                nearest_dist = distance_square
+            else:
+                if distance_square < nearest_dist:
+                    nearest_e = enemy
+                    nearest_dist = distance_square
+
+        self._nearest_enemy = nearest_e
+
+    def generate_velocity_to_nearest_enemy(self):
+        vel = 2 * BULLET_VELOCITY_MAGNITUDE
+        if self._nearest_enemy is not None and self.color in self._nearest_enemy.colors:
+                half_tile = TILE_SIDE_LENGTH / 2
+                bx, by = self.current_position
+                ex, ey = self._nearest_enemy.position
+                px = max((ex - half_tile), min(bx, ex + half_tile))
+                py = max((ey - half_tile), min(by, ey + half_tile))
+                direction = atan2(by - ey, -bx + ex)
+                self._last_direction = direction
+        else:
+            x, y = self.current_velocity
+            self._last_direction = atan2(y, x)
+        return vel * cos(self._last_direction), vel * sin(self._last_direction)
+
+    def end_tick(self):
+        if self._nearest_enemy is not None:
+            self.change_velocity(self.generate_velocity_to_nearest_enemy())
+        super().end_tick()
+
+class ExplodingBullet(GenericBullet):
+    def __init__(self, col, r, initial_pos, initial_vel):
+        super().__init__(col, r, initial_pos, initial_vel)
+
+    def affect_nearby_enemies(self, enemies):
+        for e in enemies:
+            e.receive_hit(1)
+
+class PandesalBullet(HomingBullet, ExplodingBullet):
     def __init__(self, col, r, initial_pos, initial_vel):
         super().__init__(col, r, initial_pos, initial_vel)
 
@@ -203,6 +316,8 @@ class Tower(TowerInfo):
         self._fire_rate = 0.5 # bullets per second
         self._purchase_cost = 5 # exp
         self._upgrade_costs = [0, 5] # exp
+
+        self._bullet_type = Bullet
 
         self._radius = TILE_SIDE_LENGTH / 2.5
 
@@ -358,7 +473,7 @@ class Tower(TowerInfo):
         if len(self._next_bullets) < self._tower_level:
             bullet_color = self.next_bullet_color()
 
-            bullet = Bullet(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(bullet_index), (0, 0))
+            bullet = self._bullet_type(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(bullet_index), (0, 0))
 
             self._bullets.append(bullet)
             self._next_bullets.append(bullet)
@@ -385,7 +500,7 @@ class Tower(TowerInfo):
     
     @property
     def _radius_scale(self) -> float:
-        return 1 - 1.9 * self._remaining_seconds_to_shoot
+        return (1 - (self._remaining_seconds_to_shoot / self._fire_rate))
 
     def _update_next_bullet_radius(self):
         for bullet in self._next_bullets:
@@ -424,6 +539,22 @@ class Taho(Tower):
 class Ihaw(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
+        self._bullet_type = PiercingBullet
+
+    def load_next_bullet(self, bullet_index):
+        if len(self._next_bullets) < self._tower_level:
+            bullet_color = self.next_bullet_color()
+
+            bullet = self._bullet_type(
+            bullet_color, 
+            BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), 
+            self.next_bullet_position(bullet_index), 
+            (0, 0),
+            999 if self.is_max_level else 1
+            )
+
+            self._bullets.append(bullet)
+            self._next_bullets.append(bullet)
 
     def draw_tower(self):
         x, y = self.screen_position()
@@ -458,6 +589,17 @@ class Pandesal(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
         self._purchase_cost = 10
+        self._bullet_type = HomingBullet
+        self._fire_rate = 2
+
+    def upgrade_tower(self):
+        super().upgrade_tower()
+        if self.tower_level == 2:
+            self._bullet_type = PandesalBullet
+
+    def bullet_velocity(self, direction):
+        vel = 2 * BULLET_VELOCITY_MAGNITUDE
+        return vel * cos(direction), vel * sin(direction)
 
     def draw_tower(self):
         x, y = self.screen_position()
@@ -476,10 +618,6 @@ class Chef(Tower):
         super().__init__(grid_position)
         self._fire_rate = 0.9
         self._tower_level = 5
-
-    @property
-    def _radius_scale(self) -> float:
-        return 1 - self._remaining_seconds_to_shoot
 
     def change_direction(self, direction) -> None:
         self._current_direction = direction
