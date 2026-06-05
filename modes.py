@@ -146,11 +146,393 @@ class CampaignMode(Level):
 	@property
 	def available_towers(self):
 		return self._available_towers
-	
 
 	def get_round(self, index: int) -> RoundConfig:
 		return self._rounds[index]
+
+class Level1(CampaignMode):
+	def __init__(self, data: dict, available_towers: list[Tower]):
+			super().__init__(data, available_towers)
+
+class Level2(Level):
+	def __init__(self, data: dict, available_towers: list[Tower]):
+		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
+		path1 = [
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
+			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
+			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
+			(3, 5), # goes down
+			(3, 4), (3, 3), # goes left 
+			(2, 3), (1, 3) # goes up
+			]
+		
+		path2 = [
+			(7, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7),
+			(2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3),
+		]
+		
+		tunnels = [(3, 1), (4, 1),
+			 	   (6, 4), (6, 5), (6, 6)
+				   ]
+		
+		tiles = list(set(path1 + path2))
+		grid = Grid(9, 11, tiles, tunnels)
+		enemy_count = data["remaining_enemies"]
+		self._available_towers = available_towers
+
+		self._rounds = [
+			RoundConfig(
+				enemies=[(lambda p, cls=Ube: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Kutsinta: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Gulaman: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Palitaw: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Lecheflan: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Champorado: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+		]
+		self._initial_lives = data["remaining_lives"]
+
+	@property
+	def rounds(self):
+		return self._rounds
 	
+	@property
+	def initial_lives(self):
+		return self._initial_lives
+	
+	@property
+	def initial_exp(self):
+		return 10
+	
+	@property
+	def available_towers(self):
+		return self._available_towers
+	
+	def get_round(self, index):
+		return self._rounds[index]
+	
+class Level3(Level):
+	def __init__(self, data: dict, available_towers: list[Tower]):
+		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
+		path1 = [
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
+			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
+			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
+			(3, 5), # goes down
+			(3, 4), (3, 3), # goes left 
+			(2, 3), (1, 3) # goes up
+			]
+		
+		path2 = [
+			(7, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7),
+			(2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3),
+		]
+		
+		tunnels = [(3, 1), (4, 1),
+			 	   (6, 4), (6, 5), (6, 6)
+				   ]
+		
+		tiles = list(set(path1 + path2))
+		grid = Grid(9, 11, tiles, tunnels)
+		enemy_count = data["remaining_enemies"]
+		self._available_towers = available_towers
+
+		self._rounds = [
+			RoundConfig(
+				enemies=[(lambda p, cls=Ube: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Kutsinta: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Gulaman: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Palitaw: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Lecheflan: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Champorado: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+		]
+		self._initial_lives = data["remaining_lives"]
+
+	@property
+	def rounds(self):
+		return self._rounds
+	
+	@property
+	def initial_lives(self):
+		return self._initial_lives
+	
+	@property
+	def initial_exp(self):
+		return 10
+	
+	@property
+	def available_towers(self):
+		return self._available_towers
+	
+	def get_round(self, index):
+		return self._rounds[index]
+
+class Level4(Level):
+	def __init__(self, data: dict, available_towers: list[Tower]):
+		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
+		path1 = [
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
+			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
+			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
+			(3, 5), # goes down
+			(3, 4), (3, 3), # goes left 
+			(2, 3), (1, 3) # goes up
+			]
+		
+		path2 = [
+			(7, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7),
+			(2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3),
+		]
+		
+		tunnels = [(3, 1), (4, 1),
+			 	   (6, 4), (6, 5), (6, 6)
+				   ]
+		
+		tiles = list(set(path1 + path2))
+		grid = Grid(9, 11, tiles, tunnels)
+		enemy_count = data["remaining_enemies"]
+		self._available_towers = available_towers
+
+		self._rounds = [
+			RoundConfig(
+				enemies=[(lambda p, cls=Ube: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Kutsinta: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Gulaman: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Palitaw: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Lecheflan: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Champorado: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+		]
+		self._initial_lives = data["remaining_lives"]
+
+	@property
+	def rounds(self):
+		return self._rounds
+	
+	@property
+	def initial_lives(self):
+		return self._initial_lives
+	
+	@property
+	def initial_exp(self):
+		return 10
+	
+	@property
+	def available_towers(self):
+		return self._available_towers
+	
+	def get_round(self, index):
+		return self._rounds[index]
+
+class Level5(Level):
+	def __init__(self, data: dict, available_towers: list[Tower]):
+		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
+		path1 = [
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
+			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
+			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
+			(3, 5), # goes down
+			(3, 4), (3, 3), # goes left 
+			(2, 3), (1, 3) # goes up
+			]
+		
+		path2 = [
+			(7, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7),
+			(2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3),
+		]
+		
+		tunnels = [(3, 1), (4, 1),
+			 	   (6, 4), (6, 5), (6, 6)
+				   ]
+		
+		tiles = list(set(path1 + path2))
+		grid = Grid(9, 11, tiles, tunnels)
+		enemy_count = data["remaining_enemies"]
+		self._available_towers = available_towers
+
+		self._rounds = [
+			RoundConfig(
+				enemies=[(lambda p, cls=Ube: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Kutsinta: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Gulaman: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Palitaw: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Lecheflan: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Champorado: cls(p), choice([path1, path2])) for _ in range(enemy_count)],
+				paths=[path1, path2],
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+		]
+		self._initial_lives = data["remaining_lives"]
+
+	@property
+	def rounds(self):
+		return self._rounds
+	
+	@property
+	def initial_lives(self):
+		return self._initial_lives
+	
+	@property
+	def initial_exp(self):
+		return 10
+	
+	@property
+	def available_towers(self):
+		return self._available_towers
+	
+	def get_round(self, index):
+		return self._rounds[index]
 
 class EndlessMode(Level):
 	def __init__(self, data: dict, available_towers: list[Tower]):
