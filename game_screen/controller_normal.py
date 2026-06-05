@@ -4,7 +4,7 @@ from .view_normal import GameView
 from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from achievements import AchievementManager
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
-from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition
+from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition, Level1, Level2, Level3, Level4, Level5
 from math import atan2
 from graphics import Screen
 
@@ -126,8 +126,23 @@ def make_level_screen(shared_achievements: AchievementManager, mode):
     if mode == "endless":
         level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
         game_over = EndlessModeGameOverCondition()
+    elif mode == "level1":
+        level = Level1(DATA, LEVEL_ONE_AVAILABLE_TOWERS)
+        game_over = CampaignModeGameOverCondition()
+    elif mode == "level2":
+        level = Level2(DATA, LEVEL_TWO_AVAILABLE_TOWERS)
+        game_over = CampaignModeGameOverCondition()
+    elif mode == "level3":
+        level = Level3(DATA, LEVEL_THREE_AVAILABLE_TOWERS)
+        game_over = CampaignModeGameOverCondition()
+    elif mode == "level4":
+        level = Level4(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
+        game_over = CampaignModeGameOverCondition()
+    elif mode == "level5":
+        level = Level5(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
+        game_over = CampaignModeGameOverCondition()
     else:
-        level = CampaignMode(DATA, LEVEL_TWO_AVAILABLE_TOWERS)
+        level = Level1(DATA, LEVEL_ONE_AVAILABLE_TOWERS)
         game_over = CampaignModeGameOverCondition()
 
     model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements)

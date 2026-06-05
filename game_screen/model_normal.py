@@ -423,7 +423,7 @@ class GameModel:
 
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
         self._popup_buttons = PAUSE_POPUP_BUTTONS + TOWER_POPUP_BUTTONS + GAME_OVER_POPUP_BUTTONS
-        self._sidebar_buttons = SIDEBAR_BUTTONS
+        self._sidebar_buttons = list(SIDEBAR_BUTTONS)
         self._popup_screens = [pause_popup, tower_popup, direction_popup, game_over_popup, win_popup]
         self._is_paused = False
         self._register_message = None
