@@ -37,6 +37,18 @@ class GameView:
     def draw_grid(self, grid) -> None:
         grid.draw()
 
+    def draw_craters(self, craters):
+        for x, y in craters:
+            pyxel.blt(
+            x - 16,
+            y - 16,
+            2,
+            64, 32,
+            32, 32,
+            0,
+            scale=TILE_SIDE_LENGTH/32
+            )
+
     # might change this to another popupscreen
     def draw_sidebar(self, buttons, round: int, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool):
         pyxel.rect(0, 0, 280, 800, 13)

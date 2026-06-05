@@ -315,6 +315,13 @@ class GameLogic:
             self._is_game_won = True
             self._is_game_over = True
 
+    @property
+    def craters(self):
+        res = []
+        for t in self.towers:
+            res += t.craters
+        return res
+
     def update(self):
         if self._is_game_over:
             return

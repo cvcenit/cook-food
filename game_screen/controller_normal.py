@@ -106,6 +106,7 @@ class GameController:
         self._view.draw_player(self._model.game_logic.player)
         self._view.draw_enemies(self._model.game_logic.enemies, self._model.game_logic.tunnels)
         self._view.draw_bullets(self._model.game_logic.bullets)
+        self._view.draw_craters(self._model.game_logic.craters)
 
         # draw ui + buttons
         self._view.draw_sidebar(self._model.sidebar_buttons, self._model.game_logic.round_index, self._model.game_logic.exp, self._model.game_logic.lives, self._model.game_logic.placing_tower, self._model.game_logic.not_enough_exp)
