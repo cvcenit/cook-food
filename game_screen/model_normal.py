@@ -2,6 +2,7 @@ from __future__ import annotations
 from achievements import AchievementManager
 from entities.enemies import Ube
 from entities.towers import Chef, Tower
+from leaderboards import register_player
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
@@ -413,6 +414,7 @@ class GameModel:
         self._sidebar_buttons = SIDEBAR_BUTTONS
         self._popup_screens = [pause_popup, tower_popup, direction_popup, game_over_popup, win_popup]
         self._is_paused = False
+        self._register_message = None
 
     @property
     def current_tick(self):
@@ -441,6 +443,14 @@ class GameModel:
     @property
     def game_logic(self):
         return self._game_logic
+    
+    @property
+    def register_message(self):
+        return self._register_message
+    
+    def handle_register(self, popup_idx: int, mode: str):
+        name = self.popup_screens[popup_idx].texts[1]._text
+        self._register_message = register_player(name, self._game_logic.round_index, mode)
 
     def toggle_pause(self):
         self._is_paused = not self._is_paused
@@ -461,12 +471,17 @@ class GameModel:
         for screen in self.popup_screens:
             if screen.is_active:
                 screen.toggle_active()
+        self._register_message = None
 
     def update_game_over(self):
         if self._game_logic.is_game_won:
             win_popup = self.popup_screens[4]
             if not win_popup.is_active:
                 win_popup.toggle_active()
+            input_text = win_popup.texts[1]
+            input_text.listen()
+            _, y = input_text.current_position
+            input_text.change_position(((SCREEN_WIDTH - input_text.width) / 2), y)
         else:
             game_over_popup = self.popup_screens[3]
             if not game_over_popup.is_active:

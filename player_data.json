@@ -1,69 +1,118 @@
 {
-    "player_one":{
+    "player_one": {
         "name": "player_one",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-    "player_two":{
+    "player_two": {
         "name": "player_two",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-    "three":{
+    "three": {
         "name": "three",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 5
     },
-    "four":{
+    "four": {
         "name": "four",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 5,
         "endless_highest_rounds": 2
     },
-    "five":{
+    "five": {
         "name": "five",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-    "six":{
+    "six": {
         "name": "six",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-    "seven":{
+    "seven": {
         "name": "seven",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-    "eight":{
+    "eight": {
         "name": "eight",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-    "nine":{
+    "nine": {
         "name": "nine",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-    "ten":{
+    "ten": {
         "name": "ten",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
     },
-
-    "el":{
+    "el": {
         "name": "el",
-        "campaign_completed_levels": [1, 2, 3],
+        "campaign_completed_levels": [
+            1,
+            2,
+            3
+        ],
         "campaign_completed_rounds": 2,
         "endless_highest_rounds": 2
+    },
+    "jowee": {
+        "name": "jowee",
+        "campaign_completed_levels": [],
+        "campaign_completed_rounds": 6,
+        "endless_highest_rounds": 0
     }
 }

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, HEADER_FONT
+from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, HEADER_FONT, SCREEN_WIDTH
 import pyxel
 
 class GameView:
@@ -62,6 +62,16 @@ class GameView:
             pyxel.rectb(400, 10, 500, 70, 7)
             pyxel.text(410, 20, "ACHIEVEMENT UNLOCKED!", 10, font=HEADER_FONT)
             pyxel.text(410, 50, achievement.title, 7, font=HEADER_FONT)
+
+    def draw_register_message(self, message):
+        if message:
+            pyxel.text(
+                (SCREEN_WIDTH - HEADER_FONT.text_width(message)) // 2,
+                600,
+                message,
+                10,
+                font=HEADER_FONT
+            )
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)
