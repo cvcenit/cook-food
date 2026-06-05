@@ -109,10 +109,32 @@ for text in GAME_OVER_POPUP_TEXTS:
     x, y = text.current_position
     text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
 
+WIN_POPUP_BUTTONS = [
+    TextButton(0, 325, "Back to menu", 6, size=48),
+    TextButton(0, 375, "Restart level", 6, size=56),
+    TextButton(0, 475, "Register: ", 6, size=24),
+]
+
+WIN_POPUP_TEXTS = [
+    TextGraphic(50, 175, "You Win!", 10, size=96),
+    TextInput(0, 500, 6, size=24)
+]
+for button in WIN_POPUP_BUTTONS:
+    button.toggle_active()
+    x, y = button.current_position
+    button.change_position(((SCREEN_WIDTH - button.width) / 2), y)
+for text in WIN_POPUP_TEXTS:
+    text.toggle_active()
+    x, y = text.current_position
+    text.change_position(((SCREEN_WIDTH - text.width) / 2), y)
+
+win_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, WIN_POPUP_BUTTONS, WIN_POPUP_TEXTS, 1)
+
 pause_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PAUSE_POPUP_BUTTONS, PAUSE_POPUP_TEXTS, 1)
 tower_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, TOWER_POPUP_BUTTONS, TOWER_POPUP_TEXTS, 1)
 direction_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, [], DIRECTION_POPUP_TEXTS, 1)
 game_over_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, GAME_OVER_POPUP_BUTTONS, GAME_OVER_POPUP_TEXTS, 1)
+win_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, WIN_POPUP_BUTTONS, WIN_POPUP_TEXTS, 1)
 
 class GameLogic:
     def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition, achievements: AchievementManager):
@@ -130,6 +152,7 @@ class GameLogic:
 
         # game data
         self._is_game_over = False
+        self._is_game_won = False
         self._game_over_condition = game_over_condition
         self._round_over_condition = round_over_condition
 
@@ -208,6 +231,10 @@ class GameLogic:
     @property
     def achievements(self):
         return self._achievements
+    
+    @property
+    def is_game_won(self) -> bool:
+        return self._is_game_won
 
     @property
     def bullets(self):
@@ -270,9 +297,12 @@ class GameLogic:
 
     def advance_round(self) -> None:
         self._achievements.on_round_complete()
-        self._lives_lost_this_round = False
         self._round_index += 1
-        self._load_round(self._round_index)
+        if self._round_index < len(self._level.rounds):
+            self._load_round(self._round_index)
+        else:
+            self._is_game_won = True
+            self._is_game_over = True
 
     def update(self):
         if self._is_game_over:
@@ -356,11 +386,6 @@ class GameLogic:
             if self._achievement_display_timer <= 0:
                 self._current_achievement_display = None
 
-        for enemy in self._active_enemies:
-            if enemy._path_index >= len(enemy._path) - 1:
-                self.lose_life()
-                enemy.receive_hit(999)
-
         if not self._game_started:
             self._game_started = True
             self._achievements.on_game_start()
@@ -388,7 +413,7 @@ class GameModel:
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
         self._popup_buttons = PAUSE_POPUP_BUTTONS + TOWER_POPUP_BUTTONS + GAME_OVER_POPUP_BUTTONS
         self._sidebar_buttons = SIDEBAR_BUTTONS
-        self._popup_screens = [pause_popup, tower_popup, direction_popup, game_over_popup]
+        self._popup_screens = [pause_popup, tower_popup, direction_popup, game_over_popup, win_popup]
         self._is_paused = False
 
     @property
@@ -440,14 +465,19 @@ class GameModel:
                 screen.toggle_active()
 
     def update_game_over(self):
-        game_over_popup = self.popup_screens[-1]
-        if not game_over_popup.is_active:
-            game_over_popup.toggle_active()
-        input_text = game_over_popup.texts[1]
-        input_text.listen()
-        _, y = input_text.current_position
-        input_text.change_position(((SCREEN_WIDTH - input_text.width)/ 2), y)
-        
+        if self._game_logic.is_game_won:
+            win_popup = self.popup_screens[4]
+            if not win_popup.is_active:
+                win_popup.toggle_active()
+        else:
+            game_over_popup = self.popup_screens[3]
+            if not game_over_popup.is_active:
+                game_over_popup.toggle_active()
+            input_text = game_over_popup.texts[1]
+            input_text.listen()
+            _, y = input_text.current_position
+            input_text.change_position(((SCREEN_WIDTH - input_text.width)/ 2), y)
+            
     def update_from_pause_menu(self, clicked_idx):
         if clicked_idx is not None:
             if clicked_idx == 1:

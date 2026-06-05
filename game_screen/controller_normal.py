@@ -19,6 +19,16 @@ class GameController:
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         if clicked_btn is not None: 
             return actions[clicked_btn]
+        
+        if self._model.game_logic.is_game_over:
+            if self._model.game_logic.is_game_won:
+                clicked = self._view.get_clicked_button(self._model.popup_screens[4].buttons)
+                if clicked == 0:
+                    return "main_menu"
+            else:
+                clicked = self._view.get_clicked_button(self._model.popup_screens[3].buttons)
+                if clicked == 0:
+                    return "main_menu"
 
     def get_player_direction(self, pos):
         mouse_x, mouse_y = pos
@@ -72,6 +82,15 @@ class GameController:
             self._model.update(clicked_btn)
         else:
             self._model.update_game_over()
+
+            if self._model.game_logic.is_game_won:
+                win_clicked = self._view.get_clicked_button(self._model.popup_screens[4].buttons)
+                if win_clicked == 1:
+                    self._model.reset()
+                else:
+                    game_over_clicked = self._view.get_clicked_button(self._model.popup_screens[3].buttons)
+                    if game_over_clicked == 1:
+                        self._model.reset()
 
     def draw(self):
         self._view.reset_screen()
