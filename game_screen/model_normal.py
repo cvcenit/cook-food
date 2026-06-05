@@ -128,8 +128,6 @@ for text in WIN_POPUP_TEXTS:
     x, y = text.current_position
     text.change_position(((SCREEN_WIDTH - text.width) / 2), y)
 
-win_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, WIN_POPUP_BUTTONS, WIN_POPUP_TEXTS, 1)
-
 pause_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PAUSE_POPUP_BUTTONS, PAUSE_POPUP_TEXTS, 1)
 tower_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, TOWER_POPUP_BUTTONS, TOWER_POPUP_TEXTS, 1)
 direction_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, [], DIRECTION_POPUP_TEXTS, 1)
