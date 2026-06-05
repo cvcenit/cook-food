@@ -58,11 +58,13 @@ class GameView:
 
     def draw_achievement_popup(self, achievement):
         if achievement:
-            pyxel.rect(400, 10, 500, 70, 1)
-            pyxel.rectb(400, 10, 500, 70, 7)
-            pyxel.text(410, 20, "ACHIEVEMENT UNLOCKED!", 10, font=HEADER_FONT)
-            pyxel.text(410, 50, achievement.title, 7, font=HEADER_FONT)
-
+            title = "ACHIEVEMENT UNLOCKED!"
+            title_x = (SCREEN_WIDTH - HEADER_FONT.text_width(title)) // 2
+            pyxel.text(title_x, 20, title, 10, font=HEADER_FONT)
+            
+            name_x = (SCREEN_WIDTH - HEADER_FONT.text_width(achievement.title)) // 2
+            pyxel.text(name_x, 80, achievement.title, 7, font=HEADER_FONT)
+    
     def draw_register_message(self, message):
         if message:
             pyxel.text(
