@@ -1,3 +1,9 @@
 __pycache__/
-
+game_screen/__pycache__/
+leaderboards_menu/__pycache__/
+main_menu/__pycache__/
+settings_screen/__pycache__/
+entities/__pycache__/
+campaign_menu/__pycache__/
+achievements_menu/__pycache__/
 # have to do each folder
