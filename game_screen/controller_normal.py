@@ -90,9 +90,7 @@ class GameController:
 
         self._view.draw_achievement_popup(self._model.game_logic.current_achievement_display)
 
-mode = "endless"
-
-def make_level_screen(shared_achievements: AchievementManager):
+def make_level_screen(shared_achievements: AchievementManager, mode):
     if mode == "endless":
         level = EndlessMode(DATA)
         game_over = EndlessModeGameOverCondition()

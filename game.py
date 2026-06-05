@@ -51,10 +51,11 @@ class Game:
 SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
     AppState.CAMPAIGN_MENU: CampaignMenuScreen,
-    AppState.GAMEPLAY: make_level_screen(shared_achievements),
+    AppState.GAMEPLAY: make_level_screen(shared_achievements, "normal"),
     AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
     AppState.MAIN_SETTINGS: SettingsScreen,
     AppState.MAIN_ACHIEVEMENTS: make_achievements_screen(shared_achievements),
+    AppState.ENDLESS_MENU: make_level_screen(shared_achievements, "endless"),
     }
 
 ROUTES = {
