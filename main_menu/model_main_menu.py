@@ -3,12 +3,12 @@ from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT
 
 MAIN_MENU_BUTTONS = [
     TextButton(0, 4 * HEADER_FONT_SIZE, "Campaign", 1),
-    TextButton(0, 5 * HEADER_FONT_SIZE, "Endless", 1),
-    TextButton(0, 6 * HEADER_FONT_SIZE, "Leaderboard", 1),
-    TextButton(0, 7 * HEADER_FONT_SIZE, "Achievements", 1),
-    TextButton(0, 8 * HEADER_FONT_SIZE, "Shop", 1),
-    TextButton(0, 9 * HEADER_FONT_SIZE, "Settings", 1),
-    TextButton(0, 10 * HEADER_FONT_SIZE, "Quit", 1)
+    TextButton(0, 5 * HEADER_FONT_SIZE + 16, "Endless", 1),
+    TextButton(0, 6 * HEADER_FONT_SIZE + 32, "Leaderboard", 1),
+    TextButton(0, 7 * HEADER_FONT_SIZE + 48, "Achievements", 1),
+    TextButton(0, 8 * HEADER_FONT_SIZE + 64, "Shop", 1),
+    TextButton(0, 9 * HEADER_FONT_SIZE + 80, "Settings", 1),
+    TextButton(0, 10 * HEADER_FONT_SIZE + 96, "Quit", 1)
 ]
 
 SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2
