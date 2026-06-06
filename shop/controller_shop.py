@@ -19,6 +19,11 @@ class ShopController:
         clicked = self._view.get_clicked_buttons(self._model.item_buttons)
         if clicked is not None:
             self._model.buy(clicked)
+        
+        reset_clicked = self._view.get_clicked_buttons(self._model.reset_buttons)
+        if reset_clicked is not None:
+            self._model.reset_purchases()
+
         self._model.update(clicked)
 
     def draw(self):
@@ -26,6 +31,7 @@ class ShopController:
         self._view.draw_title()
         self._view.draw_points(self._model._achievements.points)
         self._view.draw_buttons(self._model.screen_change_buttons)
+        self._view.draw_buttons(self._model.reset_buttons)
         self._view.draw_items(self._model.item_buttons, self._model.purchased)
         self._view.draw_message(self._model.message)
 
