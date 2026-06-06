@@ -57,13 +57,13 @@ for text in PAUSE_POPUP_TEXTS:
 
 
 TOWER_POPUP_BUTTONS = [
-    TextButton(0, 375, "Set direction (WASD)", 6, size=48),
-    TextButton(0, 425, "Upgrade", 6, size=48),
-    TextButton(0, 475, "Cancel", 6, size=48)
+    TextButton(0, 400, "Set direction  WASD", 6, size=24),
+    TextButton(0, 450, "Upgrade", 6, size=24),
+    TextButton(0, 500, "Cancel", 6, size=24)
 ]
 
 TOWER_POPUP_TEXTS = [
-    TextGraphic(0, 200, "Level 1 Tower at (0, 0)", 6, size=32)
+    TextGraphic(0, 250, "Level 1 Tower at  0, 0", 6, size=16)
 ]
 
 for button in TOWER_POPUP_BUTTONS:
@@ -77,10 +77,10 @@ for text in TOWER_POPUP_TEXTS:
     text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
 
 DIRECTION_POPUP_TEXTS = [
-    TextGraphic(0, 150, "W", 6, size=128),
-    TextGraphic(0, 250, "A", 6, size=128),
-    TextGraphic(0, 400, "S", 6, size=128),
-    TextGraphic(0, 250, "D", 6, size=128)
+    TextGraphic(0, 200, "W", 6, size=100),
+    TextGraphic(0, 300, "A", 6, size=100),
+    TextGraphic(0, 450, "S", 6, size=100),
+    TextGraphic(0, 300, "D", 6, size=100)
 ]
 
 for text in DIRECTION_POPUP_TEXTS:
@@ -622,12 +622,12 @@ class GameModel:
         x, y = tower_selected.grid_position
         screen = self.popup_screens[1]
         text = screen.texts[0]
-        text.change_text(f"Level {tower_selected.tower_level} {str(tower_selected)} Tower at ({x - 1}, {y})")
+        text.change_text(f"Level {tower_selected.tower_level} {str(tower_selected)} Tower at   {x - 1}, {y}")
         x, y = screen.buttons[1].current_position
         if tower_selected.is_max_level:
-            screen.buttons[1].change_text(f"Max Level (LVL{tower_selected.max_level})")
+            screen.buttons[1].change_text(f"Max Level   LVL{tower_selected.max_level}")
         else:
-            screen.buttons[1].change_text(f"Upgrade: {tower_selected.current_upgrade_cost} EXP")
+            screen.buttons[1].change_text(f"Upgrade   {tower_selected.current_upgrade_cost} EXP")
         screen.buttons[1].change_position(((SCREEN_WIDTH - screen.buttons[1].width)/ 2), y)
         x, y = text.current_position
         text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
