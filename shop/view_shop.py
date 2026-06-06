@@ -16,6 +16,8 @@ class ShopView:
         for i, button in enumerate(item_buttons):
             if i in purchased:
                 button.change_color(3)
+            else:
+                button.change_color(1)
             button.draw_button()
 
     def draw_message(self, message):

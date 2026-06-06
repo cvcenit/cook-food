@@ -52,8 +52,12 @@ class AchievementManager:
             self.save()
 
     def spend_points(self, amount):
+        if self._points < amount:
+            return False
         self._points -= amount
-        
+        self.save()
+        return True
+
     def on_game_start(self):
         self._unlock("first_game")
 
@@ -73,6 +77,7 @@ class AchievementManager:
         data = {
             "total_kills": self._total_kills,
             "total_towers": self._total_towers,
+            "points": self._points,
             "unlocked_keys": [k for k, v in self._achievements.items() if v.unlocked]
         }
         with open(self.SAVE_FILE, "w") as f:
@@ -84,6 +89,7 @@ class AchievementManager:
                 data = json.load(f)
             self._total_kills = data.get("total_kills", 0)
             self._total_towers = data.get("total_towers", 0)
+            self._points = data.get("points", 0)
             for key in data.get("unlocked_keys", []):
                 if key in self._achievements:
                     self._achievements[key].unlocked = True
@@ -95,5 +101,6 @@ class AchievementManager:
             achievement.unlocked = False
         self._total_kills = 0
         self._total_towers = 0
+        self._points = 0
         self._unlocked = []
         self.save()
