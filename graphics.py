@@ -161,6 +161,7 @@ class TextInput:
                 self._text = ""
             self.change_text(self._text[:-1])
 
+
     @property
     def current_position(self):
         return self._x, self._y    
@@ -195,6 +196,10 @@ class TextGraphic:
     def width(self):
         return self._width
 
+    @property
+    def is_active(self):
+        return self._is_active
+    
     @property
     def current_position(self):
         return self._x, self._y    
