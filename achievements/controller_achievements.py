@@ -1,7 +1,7 @@
 from __future__ import annotations
 from .model_achievements import AchievementModel
 from .view_achievements import AchievementsView
-from achievements import AchievementManager
+from .achievements_manager import AchievementManager
 from graphics import Screen
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT
 

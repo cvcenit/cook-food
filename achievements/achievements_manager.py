@@ -12,8 +12,8 @@ class Achievement:
         self.unlocked = True
 
 class AchievementManager:
-    SAVE_FILE = "achievements.json"
-    
+    SAVE_FILE = "./data/achievements.json"
+
     def __init__(self):
         self._achievements = {
             "first_game":     Achievement("first_game",     "Welcome!",        "Start the game for the first time"),

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from achievements import AchievementManager
+from .achievements_manager import AchievementManager
 from graphics import TextButton
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT
 

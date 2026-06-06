@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from achievements import AchievementManager
-from achievements_menu.controller_achievements import make_achievements_screen
+from achievements.achievements_manager import AchievementManager
+from achievements.controller_achievements import make_achievements_screen
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
 from game_screen.controller_normal import make_level_screen
 from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
@@ -33,6 +33,8 @@ class Game:
             self._resource_file = "resources/sprites.pyxres"
         else:
             self._resource_file = "resources/bg.pyxres"
+
+        pyxel.load(self._resource_file)
 
         self._current_state = state
         self._current_screen = self._screens[state]

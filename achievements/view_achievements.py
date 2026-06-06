@@ -45,7 +45,7 @@ class AchievementsView:
 
         self.handle_scroll(len(achievements))
 
-        small_font = pyxel.Font("./resources/eater.ttf", font_size=32)
+        small_font = pyxel.Font("./resources/04B_30__.TTF", font_size=32)
 
         y_start = self._list_top - self._scroll_y
         for achievement in achievements.values():

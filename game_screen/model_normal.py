@@ -1,5 +1,5 @@
 from __future__ import annotations
-from achievements import AchievementManager
+from achievements.achievements_manager import AchievementManager
 from entities.enemies import Ube
 from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from leaderboards import register_player
@@ -23,7 +23,7 @@ BUTTON_SPRITES = [
     SpriteInfo(1, (0, 128), (96, 32))
 ]
 SIDEBAR_BUTTONS = [
-    TextButton(90, 20, "Pause", 1, size=24),
+    TextButton(40, 60, "Pause", 1, size=36),
     SpriteButton(140, 435, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 535, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 635, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
@@ -31,17 +31,17 @@ SIDEBAR_BUTTONS = [
     ]
 
 SCREEN_CHANGE_BUTTONS = [
-    TextButton(0, 350, "Back to menu", 6, size=48),
+    TextButton(0, 320, "Back to menu", 6, size=48),
 ]
 
 PAUSE_POPUP_BUTTONS = [
     SCREEN_CHANGE_BUTTONS[0],
-    TextButton(0, 500, "Return to game", 6, size=48),
-    TextButton(0, 400, "Restart level", 6, size=32),
+    TextButton(0, 500, "Return to game", 6, size=42),
+    TextButton(0, 420, "Restart level", 6, size=34),
 ]
 
 PAUSE_POPUP_TEXTS = [
-    TextGraphic(50, 200, "Paused", 6, size=60),
+    TextGraphic(50, 200, "Paused", 7, size=60),
 ]
 
 for button in PAUSE_POPUP_BUTTONS:
