@@ -21,6 +21,7 @@ class MainMenuModel:
         self._screen_change_buttons = MAIN_MENU_BUTTONS
         self._popup_buttons = []
         self._current_tick = 1
+        self._phase = "title"
 
     @property
     def screen_change_buttons(self):
@@ -33,13 +34,20 @@ class MainMenuModel:
     @property
     def current_tick(self):
         return self._current_tick
+    
+    @property
+    def phase(self):
+        return self._phase
+    
+    def advance_to_menu(self):
+        self._phase = "menu"
 
     def update(self, clicked_idx):
         self._current_tick += 1
 
     def start_screen(self):
-        self._is_current_screen = True
         self._current_tick = 1
+        self._phase = "title"
 
     def reset(self):
         self.start_screen()

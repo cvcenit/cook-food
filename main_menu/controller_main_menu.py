@@ -11,19 +11,30 @@ class MainMenuController:
         self._view = view
 
     def get_clicked_screen_change_button(self):
+        if self._model.phase != "menu":
+            return None
         actions = ["campaign_mode", "endless_mode", "main_leaderboards", "main_achievements", "main_shop", "main_settings", "main_quit"]
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         if clicked_btn is not None:
             return actions[clicked_btn]
 
     def update(self):
+        if self._model.phase == "title": 
+            if self._view.has_clicked_anywhere():
+                self._model.advance_to_menu()
+            return
         clicked_idx = self._view.get_clicked_button(self._model.popup_buttons)
         self._model.update(clicked_idx)
 
     def draw(self):
         self._view.reset_screen()
-        self._view.draw_buttons(self._model.screen_change_buttons)
-        self._view.draw_buttons(self._model.popup_buttons)
+        self._view.draw_background()
+
+        if self._model.phase == "title":
+                self._view.draw_title()
+        else:
+            self._view.draw_buttons(self._model.screen_change_buttons)
+            self._view.draw_buttons(self._model.popup_buttons)
 
 model = MainMenuModel()
 view = MainMenuView(SCREEN_WIDTH, SCREEN_HEIGHT)
