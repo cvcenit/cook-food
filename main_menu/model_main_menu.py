@@ -52,7 +52,6 @@ class MainMenuModel:
 
     def start_screen(self):
         self._current_tick = 1
-        self._phase = "title"
 
     def reset(self):
         self.start_screen()
