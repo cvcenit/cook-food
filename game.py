@@ -34,6 +34,8 @@ class Game:
         else:
             self._resource_file = "resources/bg.pyxres"
 
+        pyxel.load(self._resource_file)  # add this
+
         self._current_state = state
         self._current_screen = self._screens[state]
         self._current_screen.reset()
