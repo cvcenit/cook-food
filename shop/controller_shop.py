@@ -36,8 +36,8 @@ class ShopController:
         self._view.draw_items(self._model.item_buttons, self._model.purchased)
         self._view.draw_message(self._model.message)
 
-def make_shop_screen(achievements: AchievementManager):
-    model = ShopModel(achievements)
+def make_shop_screen(achievements: AchievementManager, shop_model: ShopModel = None):
+    model = shop_model or ShopModel(achievements)
     view = ShopView(SCREEN_WIDTH, SCREEN_HEIGHT)
     controller = ShopController(model, view)
     return Screen(model, view, controller)

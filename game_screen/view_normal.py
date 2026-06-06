@@ -50,7 +50,7 @@ class GameView:
             )
 
     # might change this to another popupscreen
-    def draw_sidebar(self, buttons, round: int, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool):
+    def draw_sidebar(self, buttons, round: int, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool, speed_multiplier: int, purchased_items):
         pyxel.rect(0, 0, 280, 800, 13)
         pyxel.text(30, 200, f"RND: {round}", 1, font=CONTENT_FONT)
         pyxel.text(30, 248, f"EXP: {exp}", 1, font=CONTENT_FONT)
@@ -60,7 +60,13 @@ class GameView:
                 pyxel.text(10, 400, "NOT ENOUGH EXP!", 7, font=HEADER_FONT)
             else:
                 pyxel.text(10, 400, "PLACING TOWER...", 7, font=HEADER_FONT)
-        for button in buttons:
+        if speed_multiplier == 2:
+            pyxel.text(500, 700, "2X SPEED", 10, font=HEADER_FONT)
+        for i, button in enumerate(buttons):
+            if i == 1 and 2 not in purchased_items:
+                button.change_color(5)
+            elif i == 1:
+                button.change_color(10) 
             button.draw_button()
     
     def draw_popups(self, popups):

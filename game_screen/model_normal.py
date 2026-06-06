@@ -24,6 +24,7 @@ BUTTON_SPRITES = [
 ]
 SIDEBAR_BUTTONS = [
     TextButton(40, 60, "Pause", 1, size=36),
+    TextButton(40, 120, "Speed Up", 1, size=24),
     SpriteButton(140, 435, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 535, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 635, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
@@ -141,7 +142,7 @@ game_over_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH 
 win_popup = PopupScreen(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, WIN_POPUP_BUTTONS, WIN_POPUP_TEXTS, 1)
 
 class GameLogic:
-    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition, achievements: AchievementManager):
+    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition, achievements: AchievementManager, shared_shop=None):
         self._level = level
         self._round_index = 0
 
@@ -166,6 +167,8 @@ class GameLogic:
         self._game_started = False
         self._achievement_display_timer = 0
         self._current_achievement_display = None
+        self._speed_multiplier = 1
+        self._shared_shop = shared_shop
 
     def _load_round(self, index: int):
         round_config = self._level.get_round(index)
@@ -190,6 +193,10 @@ class GameLogic:
     @property
     def selected_tower(self):
         return self._selected_tower
+    
+    @property
+    def speed_multiplier(self):
+        return self._speed_multiplier
     
     @property
     def player(self):
@@ -257,6 +264,11 @@ class GameLogic:
         for factory, path in self._spawn_queue:
             res.add(factory(path).color)
         return list(res)
+    
+    def toggle_speed(self):
+        if self._shared_shop is None or 2 not in self._shared_shop.purchased:
+            return
+        self._speed_multiplier = 2 if self._speed_multiplier == 1 else 1
 
     def toggle_placement_mode(self, tower_idx):
         self._placing_tower = not self.placing_tower
@@ -327,6 +339,10 @@ class GameLogic:
         return res
 
     def update(self):
+        for _ in range(self._speed_multiplier):
+            self._update_once()
+
+    def _update_once(self):
         if self._is_game_over:
             return
         
@@ -348,7 +364,6 @@ class GameLogic:
             enemy.end_tick()
 
         self._player.end_tick()
-
 
         for tower in self._towers:
             adj = self.get_adjacent_towers(tower)
@@ -450,13 +465,14 @@ class GameLogic:
         return self._current_achievement_display
 
 class GameModel:
-    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition, achievements: AchievementManager):
+    def __init__(self, level: Level, game_over_condition: GameOverCondition, round_over_condition: RoundOverCondition, achievements: AchievementManager, shared_shop=None):
         self._current_tick = 1
         self._level = level
         self._game_over_condition = game_over_condition
         self._round_over_condition = round_over_condition
         self._achievements = achievements
-        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements)
+        self._shared_shop = shared_shop
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements, self._shared_shop)
 
         self._screen_change_buttons = SCREEN_CHANGE_BUTTONS
 
@@ -512,7 +528,7 @@ class GameModel:
 
     def start_screen(self):
         self._current_tick = 1
-        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements)
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements, self._shared_shop)
         for screen in self.popup_screens:
             if screen.is_active:
                 screen.toggle_active()
@@ -521,7 +537,7 @@ class GameModel:
 
     def reset(self):
         self._current_tick = 1
-        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements)
+        self._game_logic = GameLogic(self._level, self._game_over_condition, self._round_over_condition, self._achievements, self._shared_shop)
         if self._is_paused:
             self.toggle_pause()
         for screen in self.popup_screens:
@@ -622,6 +638,8 @@ class GameModel:
         if clicked_idx is not None:
             if clicked_idx == 0:
                 self.toggle_pause()
+            elif clicked_idx == 1:
+                self.game_logic.toggle_speed()
             else:
                 # has to know which tower
                 self.game_logic.toggle_placement_mode(clicked_idx - 1)

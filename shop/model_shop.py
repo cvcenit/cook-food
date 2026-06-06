@@ -7,7 +7,7 @@ import json
 SHOP_ITEMS = [
     {"name": "Extra Life", "cost": 10, "description": "Gain 1 extra life at start"},
     {"name": "Head Start", "cost": 25, "description": "Start with 20 EXP"},
-    {"name": "2x Speed", "cost": 30, "description": "Make the game run 2x faster."}
+    {"name": "2x Speed", "cost": 1, "description": "Make the game run 2x faster."}
 ]
 
 SHOP_SAVE_FILE = "./data/shop_data.json"

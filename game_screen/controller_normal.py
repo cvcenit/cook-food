@@ -111,7 +111,7 @@ class GameController:
         self._view.draw_craters(self._model.game_logic.craters)
 
         # draw ui + buttons
-        self._view.draw_sidebar(self._model.sidebar_buttons, self._model.game_logic.round_index, self._model.game_logic.exp, self._model.game_logic.lives, self._model.game_logic.placing_tower, self._model.game_logic.not_enough_exp)
+        self._view.draw_sidebar(self._model.sidebar_buttons, self._model.game_logic.round_index, self._model.game_logic.exp, self._model.game_logic.lives, self._model.game_logic.placing_tower, self._model.game_logic.not_enough_exp, self._model.game_logic.speed_multiplier, self._model.game_logic._shared_shop.purchased if self._model.game_logic._shared_shop else set())
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_popups(self._model.popup_screens)
 
@@ -125,7 +125,7 @@ LEVEL_FOUR_AVAILABLE_TOWERS = LEVEL_THREE_AVAILABLE_TOWERS + [Pandesal]
 
 
 # todo: make five different levels
-def make_level_screen(shared_achievements: AchievementManager, mode):
+def make_level_screen(shared_achievements: AchievementManager, mode, shared_shop=None):
     if mode == "endless":
         level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
         game_over = EndlessModeGameOverCondition()
@@ -148,7 +148,7 @@ def make_level_screen(shared_achievements: AchievementManager, mode):
         level = Level1(DATA, LEVEL_ONE_AVAILABLE_TOWERS)
         game_over = CampaignModeGameOverCondition()
 
-    model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements)
+    model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements, shared_shop)
     view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
     controller = GameController(model, view, mode)
     return Screen(model, view, controller)

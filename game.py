@@ -8,12 +8,14 @@ from leaderboards.controller_leaderboards_menu import LeaderboardsMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
 from settings_screen.controller_settings import SettingsScreen
 from shop.controller_shop import make_shop_screen
+from shop.model_shop import ShopModel
 
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
 
 import pyxel
 
 shared_achievements = AchievementManager()
+shared_shop = ShopModel(shared_achievements)
 
 class Game:
     def __init__(self, screens: dict[AppState, Screen], routes: dict[AppState, dict[str, AppState]]):
@@ -66,15 +68,15 @@ class Game:
 SCREENS = {
     AppState.MAIN_MENU: MainMenuScreen,
     AppState.CAMPAIGN_MENU: CampaignMenuScreen,
-    AppState.GAMEPLAY: make_level_screen(shared_achievements, "level1"),
-    AppState.GAMEPLAY_2: make_level_screen(shared_achievements, "level2"),
-    AppState.GAMEPLAY_3: make_level_screen(shared_achievements, "level3"),
-    AppState.GAMEPLAY_4: make_level_screen(shared_achievements, "level4"),
-    AppState.GAMEPLAY_5: make_level_screen(shared_achievements, "level5"),
+    AppState.GAMEPLAY: make_level_screen(shared_achievements, "level1", shared_shop),
+    AppState.GAMEPLAY_2: make_level_screen(shared_achievements, "level2", shared_shop),
+    AppState.GAMEPLAY_3: make_level_screen(shared_achievements, "level3", shared_shop),
+    AppState.GAMEPLAY_4: make_level_screen(shared_achievements, "level4", shared_shop),
+    AppState.GAMEPLAY_5: make_level_screen(shared_achievements, "level5", shared_shop),
     AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
     AppState.MAIN_SETTINGS: SettingsScreen,
     AppState.MAIN_ACHIEVEMENTS: make_achievements_screen(shared_achievements),
-    AppState.MAIN_SHOP: make_shop_screen(shared_achievements),
+    AppState.MAIN_SHOP: make_shop_screen(shared_achievements, shared_shop),
     AppState.ENDLESS_GAMEPLAY: make_level_screen(shared_achievements, "endless"),
     }
 

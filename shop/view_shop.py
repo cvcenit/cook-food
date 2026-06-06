@@ -26,7 +26,7 @@ class ShopView:
     def draw_message(self, message):
         if message:
             x = (SCREEN_WIDTH - HEADER_FONT.text_width(message)) // 2
-            pyxel.text(x, 700, message, 10, font=CONTENT_FONT)
+            pyxel.text(500, 700, message, 8, font=CONTENT_FONT)
 
     def draw_title(self):
         title = "SHOP"
