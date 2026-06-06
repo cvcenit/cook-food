@@ -18,10 +18,10 @@ class GameController:
         self._mouse_x, self._mouse_y = 0, 0
 
     def get_clicked_screen_change_button(self):
-        back_action = "endless_mode" if self._mode == "endless" else "campaign_mode"
+        back_action = "endless_mode" if self._mode.startswith("endless") else "campaign_mode"
         actions = [back_action]
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
-        if clicked_btn is not None: 
+        if clicked_btn is not None:
             return actions[clicked_btn]
         
         if self._model.game_logic.is_game_over:
@@ -124,10 +124,21 @@ LEVEL_THREE_AVAILABLE_TOWERS = LEVEL_TWO_AVAILABLE_TOWERS + [Sorbetes]
 LEVEL_FOUR_AVAILABLE_TOWERS = LEVEL_THREE_AVAILABLE_TOWERS + [Pandesal]
 
 
-# todo: make five different levels
 def make_level_screen(shared_achievements: AchievementManager, mode, shared_shop=None):
     if mode == "endless":
-        level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS)
+        level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS, map_id=1)
+        game_over = EndlessModeGameOverCondition()
+    elif mode == "endless2":
+        level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS, map_id=2)
+        game_over = EndlessModeGameOverCondition()
+    elif mode == "endless3":
+        level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS, map_id=3)
+        game_over = EndlessModeGameOverCondition()
+    elif mode == "endless4":
+        level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS, map_id=4)
+        game_over = EndlessModeGameOverCondition()
+    elif mode == "endless5":
+        level = EndlessMode(DATA, LEVEL_FOUR_AVAILABLE_TOWERS, map_id=5)
         game_over = EndlessModeGameOverCondition()
     elif mode == "level1":
         level = Level1(DATA, LEVEL_ONE_AVAILABLE_TOWERS)
