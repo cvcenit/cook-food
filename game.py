@@ -23,9 +23,16 @@ class Game:
         self._current_state = AppState.MAIN_MENU
         self._current_screen = self._screens[self._current_state]
 
+        self._resource_file = "resources/bg.pyxres"
+
     def _switch_screen(self, state: AppState):
         if state == AppState.MAIN_QUIT:
             pyxel.quit()
+
+        if state != AppState.MAIN_MENU:
+            self._resource_file = "resources/sprites.pyxres"
+        else:
+            self._resource_file = "resources/bg.pyxres"
 
         self._current_state = state
         self._current_screen = self._screens[state]
@@ -46,7 +53,7 @@ class Game:
     def run(self):
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, fps=FPS)
         pyxel.mouse(visible=True)
-        pyxel.load("my_resource.pyxres")
+        pyxel.load(self._resource_file)
         pyxel.run(self.update, self.draw)
 
 SCREENS = {

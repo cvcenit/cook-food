@@ -1,3 +1,5 @@
+from utils import SCREEN_WIDTH, SCREEN_HEIGHT
+
 import pyxel
 
 class MainMenuView:
@@ -18,3 +20,11 @@ class MainMenuView:
 
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)
+        pyxel.blt(
+        (SCREEN_WIDTH / 2) - 32, (SCREEN_HEIGHT / 2) - 16,
+        0,
+        0, 0,
+        63, 40,
+        0,
+        scale=SCREEN_WIDTH/63
+        )
