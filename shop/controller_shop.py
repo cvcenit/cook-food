@@ -1,6 +1,6 @@
 from .model_shop import ShopModel
 from .view_shop import ShopView
-from achievements import AchievementManager
+from achievements.achievements_manager import AchievementManager
 from graphics import Screen
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT
 

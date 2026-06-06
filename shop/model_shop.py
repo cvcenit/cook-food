@@ -1,6 +1,6 @@
-from achievements import AchievementManager
+from achievements.achievements_manager import AchievementManager
 from graphics import TextButton, TextGraphic
-from utils import HEADER_FONT_SIZE, SCREEN_WIDTH
+from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, CONTENT_FONT_SIZE, CONTENT_FONT, CONTENT_FONT_PATH
 
 import json
 
@@ -31,10 +31,10 @@ class ShopModel:
         self._achievements = achievements
         self._purchased = set()
         self._screen_change_buttons = [
-            TextButton(48, HEADER_FONT_SIZE, "Back", 1)
+            TextButton(48, HEADER_FONT_SIZE, "Back", 5)
         ]
         self._items_buttons = [
-            TextButton(0, (i + 3) * HEADER_FONT_SIZE, f"{item["name"]} - {item["cost"]} pts", 1)
+            TextButton(0, (i + 6) * (CONTENT_FONT_SIZE + 16), f"{item["name"]} - {item["cost"]} pts", 1, font_path=CONTENT_FONT_PATH, size=48)
             for i, item in enumerate(SHOP_ITEMS)
         ]
         self._reset_buttons = [

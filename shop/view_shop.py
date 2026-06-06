@@ -1,4 +1,4 @@
-from utils import HEADER_FONT, SCREEN_WIDTH
+from utils import HEADER_FONT, SCREEN_WIDTH, CONTENT_FONT, CONTENT_FONT_PATH
 
 import pyxel
 
@@ -23,17 +23,17 @@ class ShopView:
     def draw_message(self, message):
         if message:
             x = (SCREEN_WIDTH - HEADER_FONT.text_width(message)) // 2
-            pyxel.text(x, 700, message, 10, font=HEADER_FONT)
+            pyxel.text(x, 700, message, 10, font=CONTENT_FONT)
 
     def draw_title(self):
         title = "SHOP"
         x = (SCREEN_WIDTH - HEADER_FONT.text_width(title)) // 2
-        pyxel.text(x, 64, title, 1, font=HEADER_FONT)
+        pyxel.text(x, 120, title, 1, font=HEADER_FONT)
 
     def draw_points(self, points):
         text = f"Points: {points}"
         x = (SCREEN_WIDTH - HEADER_FONT.text_width(text)) // 2
-        pyxel.text(x, 128, text, 1, font=HEADER_FONT)
+        pyxel.text(x, 240, text, 1, font=pyxel.Font(CONTENT_FONT_PATH, font_size=48))
 
     def get_clicked_buttons(self, buttons):
         for i, button in enumerate(buttons):

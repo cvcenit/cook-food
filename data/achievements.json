@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"total_kills": 1, "total_towers": 0, "points": 0, "unlocked_keys": ["first_game", "first_kill"]}
+=======
+{"total_kills": 0, "total_towers": 0, "points": 0, "unlocked_keys": ["first_game"]}
+>>>>>>> 06c139618bd414dc2af19e292a5ab16fb1d81376
