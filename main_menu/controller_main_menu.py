@@ -13,6 +13,8 @@ class MainMenuController:
     def get_clicked_screen_change_button(self):
         if self._model.phase != "menu":
             return None
+        if self._model._phase_just_changed:
+            return None
         actions = ["campaign_mode", "endless_mode", "main_leaderboards", "main_achievements", "main_shop", "main_settings", "main_quit"]
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         if clicked_btn is not None:

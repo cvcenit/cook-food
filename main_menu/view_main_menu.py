@@ -1,7 +1,7 @@
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT
 
 import pyxel
-from utils import HEADER_FONT, SCREEN_WIDTH, SCREEN_HEIGHT
+from utils import HEADER_FONT, HEADER_FONT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT
 from graphics import draw_background
 
 class MainMenuView:
@@ -19,7 +19,9 @@ class MainMenuView:
         tw = HEADER_FONT.text_width(title)
         x = (self._width - tw) // 2
         y = self._height // 3
-        pyxel.text(x, y, title, 7, font=HEADER_FONT)
+        padding = 16
+        pyxel.rect(x - padding, y - padding, tw + padding * 2, HEADER_FONT_SIZE + padding * 2, 7)
+        pyxel.text(x, y, title, 1, font=HEADER_FONT)
 
         prompt = "click anywhere to start"
         pw = len(prompt) * 4

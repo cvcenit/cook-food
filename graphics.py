@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import pyxel
 
 def draw_background():
-    pyxel.blt(0, 0, 0, 0, 0, 63, 40, scale=20)
+    pyxel.blt((SCREEN_WIDTH / 2) - 32, (SCREEN_HEIGHT / 2) - 16, 0, 0, 0, 63, 40, 0, scale=SCREEN_WIDTH/63)
 
 class Button(ABC):
     @abstractmethod
@@ -51,7 +51,7 @@ class TextButton(Button):
 
     def draw_button(self):
         if self._is_active:
-            pyxel.text(self._x, self._y, self._text, (8 if self.is_hovered() else self._color), font=self._font)
+            pyxel.text(self._x, self._y, self._text, (0 if self.is_hovered() else self._color), font=self._font)
 
     @property
     def current_position(self):
