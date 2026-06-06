@@ -348,6 +348,11 @@ class GameLogic:
 
         self._player.end_tick()
 
+
+        for tower in self._towers:
+            adj = self.get_adjacent_towers(tower)
+            tower.affect_nearby_towers(adj)
+
         # pls refactor
         active_bullets = [b for b in self.bullets if b.is_active]
         active_enemies_not_in_tunnel = [e for e in self._active_enemies if not (e._path[e._path_index] in self._tunnels)]
@@ -413,10 +418,23 @@ class GameLogic:
         ia, ja = enemy.grid_position
         res = []
         for e in self._active_enemies:
+            if e == enemy:
+                continue
             ib, jb = e.grid_position
             if not (e._path[e._path_index] in self._tunnels):
                 if abs(ia - ib) <= 1 and abs(ja - jb) <= 1:
                     res += [e]
+        return res
+
+    def get_adjacent_towers(self, tower):
+        ia, ja = tower.grid_position
+        res = []
+        for t in self._towers:
+            if t == tower:
+                continue
+            ib, jb = t.grid_position
+            if abs(ia - ib) <= 1 and abs(ja - jb) <= 1:
+                res += [t]
         return res
 
     def decrement_exp(self, de):
