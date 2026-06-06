@@ -321,6 +321,7 @@ class ExplodingBullet(GenericBullet):
             self._craters += [(x, y),]
 
     def end_tick(self):
+        print(self.craters)
         super().end_tick()
 
 class PandesalBullet(HomingBullet, ExplodingBullet):
@@ -336,6 +337,8 @@ class Tower(TowerInfo):
         self._upgrade_costs = [0, 5] # exp
 
         self._bullet_type = Bullet
+        self._bullet_amount = 1
+        self._max_bullet_amount = 3
 
         self._radius = TILE_SIDE_LENGTH / 2.5
         self._craters = []
@@ -350,6 +353,24 @@ class Tower(TowerInfo):
 
         self._tower_level = 1
         self._max_level = 2
+
+    def __str__(self):
+        return "Generic"
+
+    @property
+    def max_bullet_amount(self):
+        return self._max_bullet_amount
+    
+
+    def change_fire_rate(self, fire_rate):
+        self._fire_rate = fire_rate
+
+    @property
+    def bullet_amount(self):
+        return self._bullet_amount
+    
+    def change_bullet_amount(self, amount):
+        self._bullet_amount = amount
 
     @property
     def color(self):
@@ -438,6 +459,7 @@ class Tower(TowerInfo):
         self._next_bullets = []
         temp = min(self._max_level, self.tower_level + 1)
         self._tower_level = temp
+        self._bullet_amount = temp
         return True
 
     def bullet_velocity(self, direction) -> tuple[float, float]:
@@ -467,7 +489,7 @@ class Tower(TowerInfo):
         return current
 
     def next_bullet_position(self, bullet_index):
-        bullets_are_odd = self._tower_level % 2
+        bullets_are_odd = self._bullet_amount % 2
         bx, by = self.screen_position()
         theta = self.current_direction
 
@@ -494,10 +516,10 @@ class Tower(TowerInfo):
         return bx, by
 
     def load_next_bullet(self, bullet_index):
-        if len(self._next_bullets) < self._tower_level:
+        if len(self._next_bullets) < self._bullet_amount:
             bullet_color = self.next_bullet_color()
 
-            bullet = self._bullet_type(bullet_color, BULLET_RADIUS * (1 - 1.9 * self._remaining_seconds_to_shoot), self.next_bullet_position(bullet_index), (0, 0))
+            bullet = self._bullet_type(bullet_color, BULLET_RADIUS * self._radius_scale, self.next_bullet_position(bullet_index), (0, 0))
 
             self._bullets.append(bullet)
             self._next_bullets.append(bullet)
@@ -508,23 +530,23 @@ class Tower(TowerInfo):
                 for bullet in self._next_bullets:
                     bullet.change_velocity(self.bullet_velocity(self.current_direction))
                     bullet.set_state(FlightState())
-                self._remaining_seconds_to_shoot = self._fire_rate
+                self._remaining_seconds_to_shoot = 1 / self._fire_rate
                 self._next_bullets = []
 
     def decrement_reload_time(self):
-        self._remaining_seconds_to_shoot -= self._fire_rate / FPS
+        self._remaining_seconds_to_shoot -= 1 / FPS
 
     def draw_tower(self):
         x, y = self.screen_position()
         pyxel.circ(x, y, self._radius, self.color)
 
     def _load_next_bullet(self):
-        for i in range(self._tower_level):
+        for i in range(self._bullet_amount):
             self.load_next_bullet(i)
     
     @property
     def _radius_scale(self) -> float:
-        return (1 - (self._remaining_seconds_to_shoot / self._fire_rate))
+        return (1 - (self._remaining_seconds_to_shoot * self._fire_rate))
 
     def _update_next_bullet_radius(self):
         for bullet in self._next_bullets:
@@ -554,6 +576,9 @@ class Tower(TowerInfo):
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
 
+    def affect_nearby_towers(self, towers):
+        ...
+
     def get_craters(self):
         res = []
         for bullet in self._bullets:
@@ -566,6 +591,9 @@ class Tower(TowerInfo):
 class Taho(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
+
+    def __str__(self):
+        return "Taho"
 
     def draw_tower(self):
         x, y = self.screen_position()
@@ -583,6 +611,24 @@ class Ihaw(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
         self._bullet_type = PiercingBullet
+        self._bullet_amount = 1
+        self._piercing_amount = 1
+        self._max_bullet_amount = 2
+
+    def __str__(self):
+        return "Ihaw"
+
+    def upgrade_tower(self):
+        if self._tower_level == self._max_level:
+            return False
+        for bullet in self._next_bullets:
+            bullet.deactivate()
+        self._next_bullets = []
+        temp = min(self._max_level, self.tower_level + 1)
+        self._tower_level = temp
+        if self.tower_level == 2:
+            self._piercing_amount = 999
+        return True
 
     def load_next_bullet(self, bullet_index):
         if len(self._next_bullets) < self._tower_level:
@@ -615,6 +661,35 @@ class Sorbetes(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
         self._purchase_cost = 10
+        self._bullet_amount = 0
+        self._upgrade_costs = [0, 10]
+
+    def __str__(self):
+        return "Sorbetes"
+
+    def upgrade_tower(self):
+        if self._tower_level == self._max_level:
+            return False
+        for bullet in self._next_bullets:
+            bullet.deactivate()
+        self._next_bullets = []
+        temp = min(self._max_level, self.tower_level + 1)
+        self._tower_level = temp
+        return True
+
+    def affect_nearby_towers(self, towers):
+        if self.is_max_level:
+            for t in towers:
+                new_amount = min(t.max_bullet_amount, t.bullet_amount + 1)
+                t.change_bullet_amount(new_amount)
+            for t in towers:
+                new_rate = min(4, 2 * t.fire_rate)
+                t.change_fire_rate(new_rate)
+        else:
+            for t in towers:
+                new_rate = min(3, 2 * t.fire_rate)
+                t.change_fire_rate(new_rate)
+
 
     def draw_tower(self):
         x, y = self.screen_position()
@@ -634,11 +709,23 @@ class Pandesal(Tower):
         self._purchase_cost = 10
         self._bullet_type = HomingBullet
         self._fire_rate = 2
+        self._max_bullet_amount = 2
+        self._upgrade_costs = [0, 5]
+
+    def __str__(self):
+        return "Pandesal"
 
     def upgrade_tower(self):
-        super().upgrade_tower()
+        if self._tower_level == self._max_level:
+            return False
+        for bullet in self._next_bullets:
+            bullet.deactivate()
+        self._next_bullets = []
+        temp = min(self._max_level, self.tower_level + 1)
+        self._tower_level = temp
         if self.tower_level == 2:
             self._bullet_type = PandesalBullet
+        return True
 
     def bullet_velocity(self, direction):
         vel = 2 * BULLET_VELOCITY_MAGNITUDE

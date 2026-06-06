@@ -4,6 +4,9 @@ from dataclasses import dataclass
 
 import pyxel
 
+def draw_background():
+    pyxel.blt(0, 0, 0, 0, 0, 63, 40, scale=20)
+
 class Button(ABC):
     @abstractmethod
     def is_left_clicked(self) -> bool: ...
@@ -274,3 +277,4 @@ class Screen:
 
     def draw(self):
         self._controller.draw()
+

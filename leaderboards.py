@@ -1,6 +1,6 @@
 import json
 
-PLAYER_DATA_FILE = "player_data.json"
+PLAYER_DATA_FILE = "./data/player_data.json"
 
 def load_data() -> dict:
     try:

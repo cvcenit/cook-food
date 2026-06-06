@@ -3,10 +3,10 @@ import pyxel
 import json
 from math import pi
 
-with open("settings.json", "r") as f:
+with open("data/settings.json", "r") as f:
     DATA = json.load(f)
 
-with open("player_data.json", "r") as f_1:
+with open("data/player_data.json", "r") as f_1:
     PLAYER_DATA = json.load(f_1)
 
 FPS = 30

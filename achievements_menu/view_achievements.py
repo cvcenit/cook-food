@@ -45,7 +45,11 @@ class AchievementsView:
 
         self.handle_scroll(len(achievements))
 
+<<<<<<< HEAD
         small_font = pyxel.Font("./resources/04B_30__.TTF", font_size=32)
+=======
+        small_font = pyxel.Font("./resources/Daydream DEMO.otf", font_size=32)
+>>>>>>> ddd6ea0798b30d971008bf1f666adf52e3c78115
 
         y_start = self._list_top - self._scroll_y
         for achievement in achievements.values():
