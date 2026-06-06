@@ -4,9 +4,10 @@ from achievements import AchievementManager
 from achievements_menu.controller_achievements import make_achievements_screen
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
 from game_screen.controller_normal import make_level_screen
+from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
 from settings_screen.controller_settings import SettingsScreen
-from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
+from shop.controller_shop import make_shop_screen
 
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, AppState
 
@@ -59,6 +60,7 @@ SCREENS = {
     AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
     AppState.MAIN_SETTINGS: SettingsScreen,
     AppState.MAIN_ACHIEVEMENTS: make_achievements_screen(shared_achievements),
+    AppState.MAIN_SHOP: make_shop_screen(shared_achievements),
     AppState.ENDLESS_MENU: make_level_screen(shared_achievements, "endless"),
     }
 
@@ -68,6 +70,7 @@ ROUTES = {
         "endless_mode": AppState.ENDLESS_MENU,
         "main_settings": AppState.MAIN_SETTINGS,
         "main_achievements": AppState.MAIN_ACHIEVEMENTS,
+        "main_shop": AppState.MAIN_SHOP,
         "main_leaderboards": AppState.MAIN_LEADERBOARDS,
         "main_quit": AppState.MAIN_QUIT
     },
@@ -101,6 +104,10 @@ ROUTES = {
     },
 
     AppState.MAIN_ACHIEVEMENTS: {
+        "main_menu": AppState.MAIN_MENU,
+    },
+
+    AppState.MAIN_SHOP: {
         "main_menu": AppState.MAIN_MENU,
     },
     

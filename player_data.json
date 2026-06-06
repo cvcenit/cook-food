@@ -16,5 +16,11 @@
         "campaign_completed_levels": [],
         "campaign_completed_rounds": 0,
         "endless_highest_rounds": 0
+    },
+    "vannessafaithbaringobot": {
+        "name": "vannessafaithbaringobot",
+        "campaign_completed_levels": [],
+        "campaign_completed_rounds": 6,
+        "endless_highest_rounds": 0
     }
 }

@@ -23,12 +23,17 @@ class AchievementManager:
         }
         self._total_kills = 0
         self._total_towers = 0
+        self._points = 0
         self._unlocked = []
         self.load()
 
     @property
     def achievements(self):
         return self._achievements
+
+    @property
+    def points(self):
+        return self._points
 
     @property
     def unlocked(self):
@@ -46,6 +51,9 @@ class AchievementManager:
             self.unlocked.append(achievement)
             self.save()
 
+    def spend_points(self, amount):
+        self._points -= amount
+        
     def on_game_start(self):
         self._unlock("first_game")
 
@@ -58,6 +66,7 @@ class AchievementManager:
         self._unlock("first_tower")
     
     def on_round_complete(self):
+        self._points += 5
         self._unlock("first_round")
 
     def save(self):
