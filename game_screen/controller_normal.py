@@ -2,7 +2,7 @@ from __future__ import annotations
 from .model_normal import GameModel
 from .view_normal import GameView
 from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
-from achievements import AchievementManager
+from achievements.achievements_manager import AchievementManager
 from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, DATA, PI, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET
 from modes import CampaignMode, EndlessMode, CampaignModeGameOverCondition, EndlessModeGameOverCondition, NoEnemiesRoundOverCondition, Level1, Level2, Level3, Level4, Level5
 from math import atan2

@@ -1,4 +1,4 @@
-from achievements import AchievementManager
+from achievements.achievements_manager import AchievementManager
 from graphics import TextButton, TextGraphic
 from utils import HEADER_FONT_SIZE, SCREEN_WIDTH
 

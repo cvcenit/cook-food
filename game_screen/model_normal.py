@@ -1,5 +1,5 @@
 from __future__ import annotations
-from achievements import AchievementManager
+from achievements.achievements_manager import AchievementManager
 from entities.enemies import Ube
 from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from leaderboards import register_player
