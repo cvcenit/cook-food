@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT_SIZE, HEADER_FONT
+from utils import FPS, SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT_SIZE, HEADER_FONT, HEADER_FONT_PATH, CONTENT_FONT_PATH
 from dataclasses import dataclass
 
 import pyxel
@@ -15,11 +15,11 @@ class Button(ABC):
     def draw_button(self) -> None: ...
 
 class TextButton(Button):
-    def __init__(self, x, y, text, color, size=HEADER_FONT_SIZE):
+    def __init__(self, x, y, text, color, size=HEADER_FONT_SIZE, font_path=HEADER_FONT_PATH):
     	#TODO: make it possible to use different fonts/font sizes by D.I.?? ang arte tlg ng term
         self._x, self._y, self._text, self._color = x, y, text, color
         self._size = size
-        self._font = pyxel.Font("./resources/Daydream DEMO.otf", font_size=self._size)
+        self._font = pyxel.Font(font_path, font_size=size)
         self._width = self._font.text_width(self._text)
         self._is_active = True
 
@@ -177,13 +177,13 @@ class TextInput:
         self._width = self._font.text_width(self._text)
 
 class TextGraphic:
-    def __init__(self, x, y, text, color, size=24):
+    def __init__(self, x, y, text, color, size=24, font_path = HEADER_FONT_PATH):
         self._x = x
         self._y = y
         self._text = text
         self._color = color
         self._size = size
-        self._font = pyxel.Font("./resources/Daydream DEMO.otf", font_size=self._size)
+        self._font = pyxel.Font(font_path, font_size=self._size)
         self._width = self._font.text_width(self._text)
 
         self._is_active = True

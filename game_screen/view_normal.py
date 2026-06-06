@@ -1,5 +1,5 @@
 from __future__ import annotations
-from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, HEADER_FONT, SCREEN_WIDTH
+from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, HEADER_FONT, CONTENT_FONT, SCREEN_WIDTH
 import pyxel
 
 class GameView:
@@ -52,9 +52,9 @@ class GameView:
     # might change this to another popupscreen
     def draw_sidebar(self, buttons, round: int, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool):
         pyxel.rect(0, 0, 280, 800, 13)
-        pyxel.text(10, 136, f"RND: {round}", 7, font=HEADER_FONT)
-        pyxel.text(10, 200, f"EXP: {exp}", 7, font=HEADER_FONT)
-        pyxel.text(10, 264, f"LIVES: {lives}", 7, font=HEADER_FONT)
+        pyxel.text(30, 200, f"RND: {round}", 1, font=CONTENT_FONT)
+        pyxel.text(30, 232, f"EXP: {exp}", 1, font=CONTENT_FONT)
+        pyxel.text(30, 264, f"LIVES: {lives}", 1, font=CONTENT_FONT)
         if placing_tower:
             if not_enough_exp:
                 pyxel.text(10, 400, "NOT ENOUGH EXP!", 7, font=HEADER_FONT)

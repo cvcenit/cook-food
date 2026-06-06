@@ -13,7 +13,11 @@ FPS = 30
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 800
 HEADER_FONT_SIZE = 48
+CONTENT_FONT_SIZE = 36
 HEADER_FONT = pyxel.Font("./resources/Daydream DEMO.otf", font_size=HEADER_FONT_SIZE)
+HEADER_FONT_PATH = "./resources/Daydream DEMO.otf"
+CONTENT_FONT = pyxel.Font("./resources/04B_30__.TTF", font_size=CONTENT_FONT_SIZE)
+CONTENT_FONT_PATH = "./resources/04B_30__.TTF"
 
 ENEMY_COLORS = [2, 9, 11, 7, 10, 4]
 
