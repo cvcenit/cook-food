@@ -1,6 +1,7 @@
 from __future__ import annotations
 import pyxel
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT, HEADER_FONT
+from graphics import draw_background
 
 
 class AchievementsView:
@@ -15,6 +16,9 @@ class AchievementsView:
     
     def reset_screen(self) -> None:
         pyxel.cls(self._bg_color)
+    
+    def draw_background(self) -> None:
+        draw_background()
 
     def draw_buttons(self, buttons) -> None:
         for button in buttons:

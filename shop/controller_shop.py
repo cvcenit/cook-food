@@ -28,6 +28,7 @@ class ShopController:
 
     def draw(self):
         self._view.reset_screen()
+        self._view.draw_background()
         self._view.draw_title()
         self._view.draw_points(self._model._achievements.points)
         self._view.draw_buttons(self._model.screen_change_buttons)

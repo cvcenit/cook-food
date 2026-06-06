@@ -1,5 +1,6 @@
 import pyxel
 from utils import HEADER_FONT, HEADER_FONT_SIZE, CONTENT_FONT, CONTENT_FONT_SIZE
+from graphics import draw_background
 
 class SettingsView:
     def __init__(self, width, height):
@@ -7,6 +8,9 @@ class SettingsView:
         self._height = height
         self._bg_color = 6
         self._smooth_movement_x = 0
+    
+    def draw_background(self) -> None:
+        draw_background()
 
     def draw_buttons(self, buttons):
         for button in buttons:

@@ -22,6 +22,7 @@ class LeaderboardsMenuController:
 
     def draw(self):
         self._view.reset_screen()
+        self._view.draw_background()
         self._view.draw_popup_screens(self._model.popup_screens, self._model.leaderboard_rows)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)

@@ -1,5 +1,5 @@
 from utils import HEADER_FONT, SCREEN_WIDTH, CONTENT_FONT, CONTENT_FONT_PATH
-
+from graphics import draw_background
 import pyxel
 
 class ShopView:
@@ -7,6 +7,9 @@ class ShopView:
         self._width = width
         self._height = height
         self._bg_color = 6
+    
+    def draw_background(self) -> None:
+        draw_background()
     
     def draw_buttons(self, buttons):
         for button in buttons:

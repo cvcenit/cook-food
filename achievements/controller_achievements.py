@@ -26,6 +26,7 @@ class AchievementsController:
     
     def draw(self):
         self._view.reset_screen()
+        self._view.draw_background()
         self._view.draw_achievements(self._model.achievements)
         self._view.draw_buttons(self._model.screen_change_buttons)
 
