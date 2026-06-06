@@ -640,7 +640,7 @@ class GameModel:
             elif clicked_idx == 1:
                 self.game_logic.toggle_speed()
             else:
-                self.game_logic.toggle_placement_mode(clicked_idx - 1)
+                self.game_logic.toggle_placement_mode(clicked_idx - 2)
 
     def update(self, clicked_idx):
         if self._is_paused:
