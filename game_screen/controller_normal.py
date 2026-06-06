@@ -102,7 +102,6 @@ class GameController:
     def draw(self):
         self._view.reset_screen()
         self._view.draw_grid(self._model.game_logic.grid)
-
         # draw entities
         self._view.draw_towers(self._model.game_logic.towers)
         self._view.draw_player(self._model.game_logic.player)
