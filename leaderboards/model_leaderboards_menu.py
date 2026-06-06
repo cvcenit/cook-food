@@ -1,6 +1,6 @@
 from graphics import TextButton, TextGraphic, PopupScreen
 from utils import HEADER_FONT_SIZE, PLAYER_DATA, SCREEN_WIDTH, CONTENT_FONT_PATH
-from leaderboards import load_data
+from .leaderboards_manager import load_data
 from math import ceil
 
 import pyxel
