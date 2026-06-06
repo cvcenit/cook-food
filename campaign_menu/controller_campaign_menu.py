@@ -22,9 +22,12 @@ class CampaignMenuController:
 
     def draw(self):
         self._view.reset_screen()
+        pyxel.load("resources/bg.pyxres")
         self._view.draw_background()
+        pyxel.load("resources/sprites.pyxres")
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
+        self._view.draw_characters()
 
 model = CampaignMenuModel([1, 2, 3, 4, 5])
 view = CampaignMenuView(SCREEN_WIDTH, SCREEN_HEIGHT)

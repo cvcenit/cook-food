@@ -1,22 +1,25 @@
 from graphics import TextButton
-from utils import HEADER_FONT_SIZE
+from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT
 
 LEVEL_BUTTONS = [
-    TextButton(48, (HEADER_FONT_SIZE + 16), "Level 1", 1),
-    TextButton(48, 2 * (HEADER_FONT_SIZE + 16), "Level 2", 1),
-    TextButton(48, 3 * (HEADER_FONT_SIZE + 16), "Level 3", 1),
-    TextButton(48, 4 * (HEADER_FONT_SIZE + 16), "Level 4", 1),
-    TextButton(48, 5 * (HEADER_FONT_SIZE + 16), "Level 5", 1)
+    TextButton(280, 5 * (HEADER_FONT_SIZE + 16), "Level 1", 2),
+    TextButton(280, 10 * (HEADER_FONT_SIZE + 16), "Level 2", 2),
+    TextButton(1000, 5 * (HEADER_FONT_SIZE + 16), "Level 3", 2),
+    TextButton(1000, 10 * (HEADER_FONT_SIZE + 16), "Level 4", 2),
+    TextButton(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) + HEADER_FONT_SIZE + 16, "Level 5", 2)
 ]
+
+for i, btn in enumerate(LEVEL_BUTTONS):
+    x, y = btn.current_position
+    btn.change_position(x - (btn.width / 2), y)
+
 
 class CampaignMenuModel:
     def __init__(self, levels):
         self._levels = levels
         self._screen_change_buttons = []
-        self._screen_change_buttons += [TextButton(48, HEADER_FONT_SIZE, "Back", 10, size=38)]
-        for i, level in enumerate(self._levels):
-            self._screen_change_buttons.append(TextButton(48, (i + 2) * (HEADER_FONT_SIZE + 16), f"Level {i + 1}", 1))
-
+        self._screen_change_buttons += [TextButton(48, HEADER_FONT_SIZE, "Back", 2, size=38)]
+        self._screen_change_buttons += LEVEL_BUTTONS
         self._popup_buttons = []
 
         self._current_tick = 1

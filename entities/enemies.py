@@ -368,7 +368,7 @@ class Regenerator(GenericEnemy):
 class Chameleon(GenericEnemy):
     def __init__(self, *args, speed_multiplier = 1.0, chameleon_interval: int = None, **kwargs):
         super().__init__(*args, **kwargs)
-        self._chameleon_interval = chameleon_interval if chameleon_interval is not None else DATA.get("chameleon_interval", 60)
+        self._chameleon_interval = FPS * (chameleon_interval if chameleon_interval is not None else DATA.get("chameleon_interval", 60))
         self._ticks_since_colors_change = 0
 
     def end_tick(self):
