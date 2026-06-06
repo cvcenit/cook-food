@@ -133,7 +133,7 @@ class CampaignMode(Level):
 	
 	@property
 	def initial_exp(self) -> int:
-		return 30
+		return 0
 
 	@property
 	def available_towers(self):
@@ -224,7 +224,7 @@ class Level2(Level):
 	
 	@property
 	def initial_exp(self):
-		return 10
+		return 0
 	
 	@property
 	def available_towers(self):
@@ -313,7 +313,7 @@ class Level3(Level):
 	
 	@property
 	def initial_exp(self):
-		return 10
+		return 0
 	
 	@property
 	def available_towers(self):
@@ -412,7 +412,7 @@ class Level4(Level):
 	
 	@property
 	def initial_exp(self):
-		return 10
+		return 0
 	
 	@property
 	def available_towers(self):
