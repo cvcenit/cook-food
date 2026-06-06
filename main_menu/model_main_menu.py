@@ -6,8 +6,9 @@ MAIN_MENU_BUTTONS = [
     TextButton(0, 5 * HEADER_FONT_SIZE + 16, "Endless", 1),
     TextButton(0, 6 * HEADER_FONT_SIZE + 32, "Leaderboard", 1),
     TextButton(0, 7 * HEADER_FONT_SIZE + 48, "Achievements", 1),
-    TextButton(0, 8 * HEADER_FONT_SIZE + 64, "Settings", 1),
-    TextButton(0, 9 * HEADER_FONT_SIZE + 80, "Quit", 1)
+    TextButton(0, 8 * HEADER_FONT_SIZE + 64, "Shop", 1),
+    TextButton(0, 9 * HEADER_FONT_SIZE + 80, "Settings", 1),
+    TextButton(0, 10 * HEADER_FONT_SIZE + 96, "Quit", 1)
 ]
 
 SCREEN_WIDTH_HALF = SCREEN_WIDTH / 2

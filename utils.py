@@ -44,3 +44,5 @@ class AppState(StrEnum):
     MAIN_QUIT = "main_quit"
     SETTINGS = "main_settings"
     MAIN_ACHIEVEMENTS = "main_achievements"
+    MAIN_SHOP = "main_shop"
+    
