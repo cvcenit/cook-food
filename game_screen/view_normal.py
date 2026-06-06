@@ -6,7 +6,7 @@ class GameView:
     def __init__(self, width: int, height: int):
         self._width = width
         self._height = height
-        self._bg_color: int = 6
+        self._bg_color: int = 0
         self._left_margin: float = self._width / 10
         self._top_margin: float = self._height / 4
 
