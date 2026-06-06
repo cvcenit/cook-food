@@ -8,13 +8,12 @@ from random import choice, choices
 
 @dataclass
 class RoundConfig:
-	enemies: list # list of callables
+	enemies: list
 	paths: list
 	player_start: tuple
-	grid: Grid # added grid in round config
+	grid: Grid
 	tunnels: list[tuple[int, int]] = None
 
-# WILL PROBABLY NOT BE USED BUT WILL LEAVE HERE
 def make_spiral_path(rows=8, cols=10, row_offset=1):
     path = []
     top, bottom, left, right = 0, rows - 1, 0, cols - 1
@@ -149,13 +148,13 @@ class Level1(CampaignMode):
 class Level2(Level):
 	def __init__(self, data: dict, available_towers: list[Tower]):
 		path1 = [
-			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
-			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
-			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
-			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
-			(3, 5), # goes down
-			(3, 4), (3, 3), # goes left 
-			(2, 3), (1, 3) # goes up
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
+			(5, 9), (4, 9), (3, 9), (2, 9),
+			(2, 8), (2, 7), (2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3)
 			]
 		
 		path2 = []
@@ -206,6 +205,13 @@ class Level2(Level):
 			),
 			RoundConfig(
 				enemies=[(lambda p, cls=Champorado: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -295,6 +301,13 @@ class Level3(Level):
 			),
 			RoundConfig(
 				enemies=[(lambda p, cls=Champorado: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -399,6 +412,20 @@ class Level4(Level):
 				grid=grid,
 				tunnels=tunnels,
 			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
 		]
 		self._initial_lives = data["remaining_lives"]
 
@@ -459,7 +486,21 @@ class Level5(Level):
 				tunnels=tunnels,
 			),
 			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
 				enemies=[(lambda p, cls=Kutsinta: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -473,7 +514,21 @@ class Level5(Level):
 				tunnels=tunnels,
 			),
 			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
 				enemies=[(lambda p, cls=Palitaw: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -488,6 +543,13 @@ class Level5(Level):
 			),
 			RoundConfig(
 				enemies=[(lambda p, cls=Champorado: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
