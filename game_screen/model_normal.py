@@ -539,14 +539,15 @@ class GameModel:
                 pyxel.stop(0)
 
     def update_from_direction_menu(self, d):
-        if d is not None:
-            direction = d.lower()
-            if self.game_logic.selected_tower is not None:
-                yo = {"w": 0, "d": 1, "s": 2, "a": 3}
-                self.game_logic.selected_tower.change_direction(yo.get(direction, 0))
-            self.game_logic.change_selected_tower(None)
-            if self.popup_screens[2].is_active:
-                self.popup_screens[2].toggle_active()
+        if self.popup_screens[2].is_active:
+            if d is not None:
+                direction = d.lower()
+                if self.game_logic.selected_tower is not None:
+                    yo = {"w": 0, "d": 1, "s": 2, "a": 3}
+                    self.game_logic.selected_tower.change_direction(yo.get(direction, 0))
+                self.game_logic.change_selected_tower(None)
+                if self.popup_screens[2].is_active:
+                    self.popup_screens[2].toggle_active()
 
     def update_from_tower_menu(self, clicked_idx):
         if clicked_idx is not None:
