@@ -30,17 +30,17 @@ SIDEBAR_BUTTONS = [
     ]
 
 SCREEN_CHANGE_BUTTONS = [
-    TextButton(0, 325, "Back to menu", 6, size=48),
+    TextButton(0, 350, "Back to menu", 6, size=48),
 ]
 
 PAUSE_POPUP_BUTTONS = [
     SCREEN_CHANGE_BUTTONS[0],
-    TextButton(0, 475, "Return to game", 6, size=60),
-    TextButton(0, 375, "Restart level", 6, size=56)
+    TextButton(0, 500, "Return to game", 6, size=48),
+    TextButton(0, 400, "Restart level", 6, size=32),
 ]
 
 PAUSE_POPUP_TEXTS = [
-    TextGraphic(50, 175, "Paused", 6, size=96),
+    TextGraphic(50, 200, "Paused", 6, size=60),
 ]
 
 for button in PAUSE_POPUP_BUTTONS:

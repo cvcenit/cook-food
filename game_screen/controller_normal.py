@@ -11,12 +11,14 @@ from graphics import Screen
 import pyxel
 
 class GameController:
-    def __init__(self, model, view):
+    def __init__(self, model, view, mode):
         self._model = model
         self._view = view
+        self._mode = mode
 
     def get_clicked_screen_change_button(self):
-        actions = ["campaign_mode",]
+        back_action = "endless_mode" if self._mode == "endless" else "campaign_mode"
+        actions = [back_action]
         clicked_btn = self._view.get_clicked_button(self._model.screen_change_buttons)
         if clicked_btn is not None: 
             return actions[clicked_btn]
@@ -25,7 +27,7 @@ class GameController:
             if self._model.game_logic.is_game_won:
                 clicked = self._view.get_clicked_button(self._model.popup_screens[4].buttons)
                 if clicked == 0:
-                    return "main_menu"
+                    return "main_menu"         
             else:
                 clicked = self._view.get_clicked_button(self._model.popup_screens[3].buttons)
                 if clicked == 0:
@@ -147,5 +149,5 @@ def make_level_screen(shared_achievements: AchievementManager, mode):
 
     model = GameModel(level, game_over, NoEnemiesRoundOverCondition(), shared_achievements)
     view = GameView(SCREEN_WIDTH, SCREEN_HEIGHT)
-    controller = GameController(model, view)
+    controller = GameController(model, view, mode)
     return Screen(model, view, controller)

@@ -19,7 +19,7 @@ class TextButton(Button):
     	#TODO: make it possible to use different fonts/font sizes by D.I.?? ang arte tlg ng term
         self._x, self._y, self._text, self._color = x, y, text, color
         self._size = size
-        self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
+        self._font = pyxel.Font("./resources/Daydream DEMO.otf", font_size=self._size)
         self._width = self._font.text_width(self._text)
         self._is_active = True
 
@@ -137,7 +137,7 @@ class SpriteButton(Button):
 class TextInput:
     def __init__(self, x, y, color, size=24):
         self._x, self._y, self._color, self._size = x, y, color, size
-        self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
+        self._font = pyxel.Font("./resources/Daydream DEMO.otf", font_size=self._size)
         self._text = "Enter your name"
         self._width = self._font.text_width(self._text)
 
@@ -183,7 +183,7 @@ class TextGraphic:
         self._text = text
         self._color = color
         self._size = size
-        self._font = pyxel.Font("./resources/eater.ttf", font_size=self._size)
+        self._font = pyxel.Font("./resources/Daydream DEMO.otf", font_size=self._size)
         self._width = self._font.text_width(self._text)
 
         self._is_active = True

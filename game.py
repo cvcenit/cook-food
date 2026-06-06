@@ -59,13 +59,13 @@ SCREENS = {
     AppState.MAIN_LEADERBOARDS: LeaderboardsMenuScreen,
     AppState.MAIN_SETTINGS: SettingsScreen,
     AppState.MAIN_ACHIEVEMENTS: make_achievements_screen(shared_achievements),
-    AppState.ENDLESS_MENU: make_level_screen(shared_achievements, "endless"),
+    AppState.ENDLESS_GAMEPLAY: make_level_screen(shared_achievements, "endless"),
     }
 
 ROUTES = {
     AppState.MAIN_MENU: {
         "campaign_mode": AppState.CAMPAIGN_MENU,
-        "endless_mode": AppState.ENDLESS_MENU,
+        "endless_mode": AppState.ENDLESS_GAMEPLAY,
         "main_settings": AppState.MAIN_SETTINGS,
         "main_achievements": AppState.MAIN_ACHIEVEMENTS,
         "main_leaderboards": AppState.MAIN_LEADERBOARDS,
@@ -80,18 +80,24 @@ ROUTES = {
         "level_4": AppState.GAMEPLAY_4,
         "level_5": AppState.GAMEPLAY_5,
     },
+
+    AppState.ENDLESS_GAMEPLAY: {
+    "endless_mode": AppState.MAIN_MENU,
+    "main_menu": AppState.MAIN_MENU,
+    },
     
-    AppState.GAMEPLAY: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
+    AppState.GAMEPLAY: {
+        "main_menu": AppState.MAIN_MENU, 
+        "campaign_mode": AppState.CAMPAIGN_MENU,
+        "endless_mode": AppState.MAIN_MENU, 
+    },
+
     AppState.GAMEPLAY_2: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
     AppState.GAMEPLAY_3: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
     AppState.GAMEPLAY_4: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
     AppState.GAMEPLAY_5: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
 
     AppState.MAIN_LEADERBOARDS: {
-        "main_menu": AppState.MAIN_MENU,
-    },
-
-    AppState.ENDLESS_MENU: {
         "main_menu": AppState.MAIN_MENU,
     },
 

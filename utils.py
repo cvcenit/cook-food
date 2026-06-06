@@ -12,8 +12,8 @@ with open("player_data.json", "r") as f_1:
 FPS = 30
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 800
-HEADER_FONT_SIZE = 64
-HEADER_FONT = pyxel.Font("./resources/eater.ttf", font_size=HEADER_FONT_SIZE)
+HEADER_FONT_SIZE = 48
+HEADER_FONT = pyxel.Font("./resources/Daydream DEMO.otf", font_size=HEADER_FONT_SIZE)
 
 ENEMY_COLORS = [2, 9, 11, 7, 10, 4]
 
@@ -35,7 +35,7 @@ class AppState(StrEnum):
     MAIN_SETTINGS = "main_settings"
     MAIN_LEADERBOARDS = "main_leaderboards"
     CAMPAIGN_MENU = "campaign_menu"
-    ENDLESS_MENU = "endless_menu"
+    ENDLESS_GAMEPLAY = "endless_gameplay"
     GAMEPLAY = "gameplay"
     GAMEPLAY_2 = "gameplay_2"
     GAMEPLAY_3 = "gameplay_3"
