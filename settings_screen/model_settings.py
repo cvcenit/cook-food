@@ -165,7 +165,7 @@ class SettingsModel:
         DATA["regenerator_interval"] = self._regenerator_interval
         DATA["chameleon_interval"] = self._chameleon_interval
         DATA["smooth_movement"] = self._smooth_movement
-        with open("settings.json", "w") as f:
+        with open("data/settings.json", "w") as f:
             json.dump(DATA, f) # or not ? dapat ba isave sa settings o hnd
     
     def reset(self):
