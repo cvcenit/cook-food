@@ -32,7 +32,7 @@ class ShopView:
 
     def draw_title(self):
         title = "SHOP"
-        x = (SCREEN_WIDTH - CONTENT_FONT.text_width(title)) // 2
+        x = (SCREEN_WIDTH - HEADER_FONT.text_width(title)) // 2
         pyxel.text(x, 200, title, 1, font=HEADER_FONT)
 
     def draw_points(self, points):

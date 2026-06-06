@@ -5,9 +5,9 @@ from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, CONTENT_FONT_SIZE, CONTENT_FON
 import json
 
 SHOP_ITEMS = [
-    {"name": "Extra Life", "cost": 10, "description": "Gain 1 extra life at start", "repeatable": True},
-    {"name": "Head Start", "cost": 25, "description": "Start with 20 EXP", "repeatable": False},
-    {"name": "2x Speed", "cost": 1, "description": "Make the game run 2x faster.", "repeatable": False}
+    {"name": "Extra Life", "cost": 5, "description": "Gain 1 extra life at start", "repeatable": True},
+    {"name": "Head Start", "cost": 10, "description": "Start with 20 EXP", "repeatable": False},
+    {"name": "2x Speed", "cost": 10, "description": "Make the game run 2x faster.", "repeatable": False}
 ]
 
 SHOP_SAVE_FILE = "./data/shop_data.json"

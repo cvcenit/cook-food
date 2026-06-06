@@ -58,7 +58,8 @@ class AchievementsView:
 
             if y < self._list_top or y + self._row_height - 8 > self._list_bottom:
                 continue
-
+            
+            pyxel.rect(80, y, SCREEN_WIDTH - 200, self._row_height - 8, 1)
             pyxel.rectb(80, y, SCREEN_WIDTH - 200, self._row_height - 8, 7)
             if achievement.unlocked:
                 pyxel.text(100, y + 15, achievement.title, 10, font=small_font)
