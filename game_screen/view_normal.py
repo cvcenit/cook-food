@@ -52,9 +52,18 @@ class GameView:
             scale=TILE_SIDE_LENGTH/32
             )
 
-    # might change this to another popupscreen
     def draw_sidebar(self, buttons, round: int, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool, speed_multiplier: int, purchased_items):
-        pyxel.rect(0, 0, 280, 800, 13)
+        pyxel.load("resources/bg.pyxres")
+        pyxel.blt(
+        132, 392,
+        1,
+        0, 0,
+        14, 38,
+        0,
+        scale=280/14
+        )
+        pyxel.load("resources/sprites.pyxres")
+
         pyxel.text(30, 200, f"RND: {round}", 1, font=CONTENT_FONT)
         pyxel.text(30, 248, f"EXP: {exp}", 1, font=CONTENT_FONT)
         pyxel.text(30, 296, f"LIVES: {lives}", 1, font=CONTENT_FONT)

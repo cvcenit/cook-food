@@ -29,11 +29,11 @@ class Tile:
             sx, sy = 0, 0
 
         pyxel.blt(
-            ix - 16, iy - 16,  # center the sprite
-            2,               # image bank 0
-            sx, sy,            # sprite starts at (0, 0)
-            32, 32,          # 32x32
-            0,                # transparent color (black)
+            ix - 16, iy - 16, 
+            2,               
+            sx, sy,            
+            32, 32,        
+            0,
             scale=TILE_SIDE_LENGTH/32
         )
 
@@ -42,19 +42,19 @@ class Tile:
         ix, iy = x + (TILE_SIDE_LENGTH / 2), y + (TILE_SIDE_LENGTH / 2)
 
         pyxel.blt(
-            ix - 16, iy - 16,  # center the sprite
-            2,               # image bank 0
-            0, 0,            # sprite starts at (0, 0)
-            32, 32,          # 32x32
-            0,                # transparent color (black)
+            ix - 16, iy - 16,
+            2,
+            0, 0,
+            32, 32,
+            0,
             scale=TILE_SIDE_LENGTH/32
         )
         pyxel.blt(
-            ix - 16, iy - 16,  # center the sprite
-            2,               # image bank 0
-            64, 0,            # sprite starts at (0, 0)
-            32, 32,          # 32x32
-            0,                # transparent color (black)
+            ix - 16, iy - 16,
+            2,
+            64, 0,
+            32, 32,
+            0,
             scale=TILE_SIDE_LENGTH/32
         )
         

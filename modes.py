@@ -8,13 +8,12 @@ from random import choice, choices
 
 @dataclass
 class RoundConfig:
-	enemies: list # list of callables
+	enemies: list
 	paths: list
 	player_start: tuple
-	grid: Grid # added grid in round config
+	grid: Grid
 	tunnels: list[tuple[int, int]] = None
 
-# WILL PROBABLY NOT BE USED BUT WILL LEAVE HERE
 def make_spiral_path(rows=8, cols=10, row_offset=1):
     path = []
     top, bottom, left, right = 0, rows - 1, 0, cols - 1
@@ -149,18 +148,22 @@ class Level1(CampaignMode):
 class Level2(Level):
 	def __init__(self, data: dict, available_towers: list[Tower]):
 		path1 = [
-			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
-			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
-			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
-			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
-			(3, 5), # goes down
-			(3, 4), (3, 3), # goes left 
-			(2, 3), (1, 3) # goes up
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
+			(5, 9), (4, 9), (3, 9), (2, 9),
+			(2, 8), (2, 7), (2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3),
 			]
 		
 		path2 = []
 		
-		tunnels = []
+		tunnels = [
+			(4, 1), (5, 1),
+			(6, 6), (6, 7),
+			(4, 9), (3, 9),
+		]
 		
 		tiles = list(set(path1 + path2))
 		grid = Grid(9, 11, tiles, tunnels)
@@ -206,6 +209,13 @@ class Level2(Level):
 			),
 			RoundConfig(
 				enemies=[(lambda p, cls=Champorado: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -249,7 +259,11 @@ class Level3(Level):
 		
 		path2 = []
 		
-		tunnels = []
+		tunnels = [
+			(3, 3), (4, 3),
+			(6, 4), (6, 6),
+			(4, 7), (3, 7)
+		]
 		
 		tiles = list(set(path1 + path2))
 		grid = Grid(9, 11, tiles, tunnels)
@@ -295,6 +309,13 @@ class Level3(Level):
 			),
 			RoundConfig(
 				enemies=[(lambda p, cls=Champorado: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -399,6 +420,20 @@ class Level4(Level):
 				grid=grid,
 				tunnels=tunnels,
 			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
 		]
 		self._initial_lives = data["remaining_lives"]
 
@@ -423,7 +458,6 @@ class Level4(Level):
 
 class Level5(Level):
 	def __init__(self, data: dict, available_towers: list[Tower]):
-		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
 		path1 = [
 			(6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7),
 			(5, 7), (5, 8),
@@ -442,7 +476,9 @@ class Level5(Level):
 			(1, 5),
 		]
 		
-		tunnels = []
+		tunnels = [
+			(2, 5), (1, 5),
+		]
 		
 		tiles = list(set(path1 + path2))
 		grid = Grid(9, 11, tiles, tunnels)
@@ -459,7 +495,21 @@ class Level5(Level):
 				tunnels=tunnels,
 			),
 			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
 				enemies=[(lambda p, cls=Kutsinta: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -473,7 +523,21 @@ class Level5(Level):
 				tunnels=tunnels,
 			),
 			RoundConfig(
+				enemies=[(lambda p, cls=Regenerator: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
 				enemies=[(lambda p, cls=Palitaw: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -488,6 +552,13 @@ class Level5(Level):
 			),
 			RoundConfig(
 				enemies=[(lambda p, cls=Champorado: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
+				paths=valid_paths,
+				player_start=(4, 5),
+				grid=grid,
+				tunnels=tunnels,
+			),
+			RoundConfig(
+				enemies=[(lambda p, cls=Chameleon: cls(p), choice(valid_paths)) for _ in range(enemy_count)],
 				paths=valid_paths,
 				player_start=(4, 5),
 				grid=grid,
@@ -516,28 +587,112 @@ class Level5(Level):
 		return self._rounds[index]
 
 class EndlessMode(Level):
-	def __init__(self, data: dict, available_towers: list[Tower]):
+	def __init__(self, data: dict, available_towers: list[Tower], map_id: int = 1):
 		self._base_count = data["remaining_enemies"]
 		self._initial_lives = data["remaining_lives"]
-		self._path = [
-            (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
-            (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
-            (5, 9), (4, 9), (3, 9), (2, 9),
-            (2, 8), (2, 7), (2, 6), (2, 5),
-            (3, 5), (3, 4), (3, 3),
-            (2, 3), (1, 3)
-			]
-		tunnels = [(3, 1), (4, 1), (6, 4), (6, 5), (6, 6)]
-		self._grid = Grid(9, 11, self._path, tunnels)
-		self._tunnels = tunnels
 		self._available_towers = available_towers
+
+		if map_id == 1:
+			path1 = [
+				(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10),
+				(2, 10), (3, 10), (4, 10), (5, 10), (6, 10), (7, 10),
+				(7, 9), (7, 8), (7, 7), (7, 6), (7, 5), (7, 4), (7, 3), (7, 2), (7, 1),
+				(6, 1), (5, 1), (4, 1), (3, 1),
+				(3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (3, 8),
+				(4, 8), (5, 8),
+				(5, 7), (5, 6), (5, 5),
+			]
+			path2 = []
+			tunnels = []
+
+		elif map_id == 2:
+			path1 = [
+				(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
+				(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
+				(5, 9), (4, 9), (3, 9), (2, 9),
+				(2, 8), (2, 7), (2, 6), (2, 5),
+				(3, 5), (3, 4), (3, 3),
+				(2, 3), (1, 3)
+			]
+			path2 = []
+			tunnels = []
+
+		elif map_id == 3:
+			path1 = [
+				(4, 0), (4, 1),
+				(3, 1), (2, 1),
+				(2, 2), (2, 3),
+				(3, 3), (4, 3), (5, 3), (6, 3),
+				(6, 4), (6, 5), (6, 6), (6, 7),
+				(5, 7), (4, 7), (3, 7), (2, 7),
+				(2, 8), (2, 9),
+				(3, 9), (4, 9),
+				(4, 10)
+			]
+			path2 = []
+			tunnels = []
+
+		elif map_id == 4:
+			path1 = [
+				(6, 10), (6, 9),
+				(5, 9), (4, 9),
+				(4, 8), (4, 7),
+				(3, 7), (2, 7),
+				(2, 6), (2, 5), (2, 4), (2, 3),
+				(3, 3), (4, 3),
+				(4, 2), (4, 1),
+				(3, 1), (2, 1),
+				(2, 0),
+			]
+			path2 = [
+				(6, 0), (6, 1),
+				(5, 1), (4, 1),
+				(4, 2), (4, 3),
+				(5, 3), (6, 3),
+				(6, 4), (6, 5), (6, 6), (6, 7),
+				(5, 7), (4, 7),
+				(4, 8), (4, 9),
+				(3, 9), (2, 9),
+				(2, 10),
+			]
+			tunnels = []
+
+		elif map_id == 5:
+			path1 = [
+				(6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7),
+				(5, 7), (5, 8),
+				(4, 8), (3, 8),
+				(3, 7), (2, 7),
+				(2, 6), (2, 5),
+				(1, 5),
+			]
+			path2 = [
+				(6, 10), (6, 9), (6, 8), (6, 7), (6, 6), (6, 5), (6, 4), (6, 3),
+				(5, 3), (5, 2),
+				(4, 2), (3, 2),
+				(3, 3), (2, 3),
+				(2, 4), (2, 5),
+				(1, 5),
+			]
+			tunnels = []
+
+		else:
+			path1 = []
+			path2 = []
+			tunnels = []
+
+		self._valid_paths = [p for p in [path1, path2] if p]
+		self._path = self._valid_paths[0]
+		tiles = list(set(path1 + path2))
+		self._grid = Grid(9, 11, tiles, tunnels)
+		self._tunnels = tunnels
 		
 	def get_round(self, round_num: int) -> RoundConfig:
 		enemies = self._generate_round_enemies(round_num)
-		
+	
 		return RoundConfig(
 			enemies=enemies,
-			paths=[self._path],
+			paths=self._valid_paths,
 			player_start=(4, 5),
 			grid=self._grid,
 			tunnels=self._tunnels
@@ -547,7 +702,6 @@ class EndlessMode(Level):
 		base_enemy_types = [Ube, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado]
 		special_enemy_types = [Chameleon, Regenerator]
 
-		# higher chances of getting chameleon and regenerator as round increases past 10 
 		if round_num >= 10:
 			rounds_past_10 = round_num - 10
 			special_weight = min(1 + rounds_past_10, 10)
@@ -557,14 +711,13 @@ class EndlessMode(Level):
 			weights = [1] * len(base_enemy_types)
 			enemy_types = base_enemy_types
 
-		count = 3 + round_num // 2  # 3, 3, 4, 4, 5, 5, 6, 6
+		count = 3 + round_num // 2
 		speed_multiplier = 1.0 + (0.25 * round_num)
 
 		enemies = [
-			(lambda p, cls=choices(enemy_types, weights=weights)[0], spd=speed_multiplier: cls(p, speed_multiplier=spd), self._path)
+			(lambda p, cls=choices(enemy_types, weights=weights)[0], spd=speed_multiplier: cls(p, speed_multiplier=spd), choice(self._valid_paths))
 			for _ in range(count)
 		]
-
 		return enemies
 
 	@property

@@ -3,6 +3,7 @@ from __future__ import annotations
 from achievements.achievements_manager import AchievementManager
 from achievements.controller_achievements import make_achievements_screen
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
+from endless_menu.controller_endless_menu import EndlessMenuScreen
 from game_screen.controller_normal import make_level_screen
 from leaderboards.controller_leaderboards_menu import LeaderboardsMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
@@ -33,7 +34,9 @@ class Game:
         
         gameplay_states = [
             AppState.GAMEPLAY, AppState.GAMEPLAY_2, AppState.GAMEPLAY_3,
-            AppState.GAMEPLAY_4, AppState.GAMEPLAY_5, AppState.ENDLESS_GAMEPLAY
+            AppState.GAMEPLAY_4, AppState.GAMEPLAY_5, AppState.ENDLESS_GAMEPLAY,
+            AppState.ENDLESS_GAMEPLAY_2, AppState.ENDLESS_GAMEPLAY_3,
+            AppState.ENDLESS_GAMEPLAY_4, AppState.ENDLESS_GAMEPLAY_5
         ]
 
         if state in gameplay_states:
@@ -77,13 +80,18 @@ SCREENS = {
     AppState.MAIN_SETTINGS: SettingsScreen,
     AppState.MAIN_ACHIEVEMENTS: make_achievements_screen(shared_achievements),
     AppState.MAIN_SHOP: make_shop_screen(shared_achievements, shared_shop),
+    AppState.ENDLESS_MENU: EndlessMenuScreen,
     AppState.ENDLESS_GAMEPLAY: make_level_screen(shared_achievements, "endless", shared_shop),
+    AppState.ENDLESS_GAMEPLAY_2: make_level_screen(shared_achievements, "endless2", shared_shop),
+    AppState.ENDLESS_GAMEPLAY_3: make_level_screen(shared_achievements, "endless3", shared_shop),
+    AppState.ENDLESS_GAMEPLAY_4: make_level_screen(shared_achievements, "endless4", shared_shop),
+    AppState.ENDLESS_GAMEPLAY_5: make_level_screen(shared_achievements, "endless5", shared_shop),
     }
 
 ROUTES = {
     AppState.MAIN_MENU: {
         "campaign_mode": AppState.CAMPAIGN_MENU,
-        "endless_mode": AppState.ENDLESS_GAMEPLAY,
+        "endless_mode": AppState.ENDLESS_MENU,
         "main_settings": AppState.MAIN_SETTINGS,
         "main_achievements": AppState.MAIN_ACHIEVEMENTS,
         "main_shop": AppState.MAIN_SHOP,
@@ -100,15 +108,18 @@ ROUTES = {
         "level_5": AppState.GAMEPLAY_5,
     },
 
-    AppState.ENDLESS_GAMEPLAY: {
-    "endless_mode": AppState.MAIN_MENU,
-    "main_menu": AppState.MAIN_MENU,
+    AppState.ENDLESS_MENU: {
+        "main_menu": AppState.MAIN_MENU,
+        "endless_1": AppState.ENDLESS_GAMEPLAY,
+        "endless_2": AppState.ENDLESS_GAMEPLAY_2,
+        "endless_3": AppState.ENDLESS_GAMEPLAY_3,
+        "endless_4": AppState.ENDLESS_GAMEPLAY_4,
+        "endless_5": AppState.ENDLESS_GAMEPLAY_5,
     },
     
     AppState.GAMEPLAY: {
         "main_menu": AppState.MAIN_MENU, 
         "campaign_mode": AppState.CAMPAIGN_MENU,
-        "endless_mode": AppState.MAIN_MENU, 
     },
 
     AppState.GAMEPLAY_2: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
@@ -116,6 +127,12 @@ ROUTES = {
     AppState.GAMEPLAY_4: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
     AppState.GAMEPLAY_5: {"main_menu": AppState.MAIN_MENU, "campaign_mode": AppState.CAMPAIGN_MENU},
 
+    AppState.ENDLESS_GAMEPLAY: {"main_menu": AppState.MAIN_MENU, "endless_mode": AppState.ENDLESS_MENU},
+    AppState.ENDLESS_GAMEPLAY_2: {"main_menu": AppState.MAIN_MENU, "endless_mode": AppState.ENDLESS_MENU},
+    AppState.ENDLESS_GAMEPLAY_3: {"main_menu": AppState.MAIN_MENU, "endless_mode": AppState.ENDLESS_MENU},
+    AppState.ENDLESS_GAMEPLAY_4: {"main_menu": AppState.MAIN_MENU, "endless_mode": AppState.ENDLESS_MENU},
+    AppState.ENDLESS_GAMEPLAY_5: {"main_menu": AppState.MAIN_MENU, "endless_mode": AppState.ENDLESS_MENU},
+    
     AppState.MAIN_LEADERBOARDS: {
         "main_menu": AppState.MAIN_MENU,
     },
