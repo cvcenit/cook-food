@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from entities.enemies import Ube, Chameleon, Regenerator, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado
 from entities.towers import Tower
 from grid import Grid
-from random import choice
+from random import choice, choices
 
 
 @dataclass
@@ -41,9 +41,9 @@ def make_spiral_path(rows=8, cols=10, row_offset=1):
     return path
 
 class Level(ABC):
-	#@abstractmethod
-	#def get_round(self, index: int) -> RoundConfig:
-	#	...
+	@abstractmethod
+	def get_round(self, index: int) -> RoundConfig:
+		...
 	
 	@property
 	@abstractmethod
@@ -544,14 +544,24 @@ class EndlessMode(Level):
 		)
 	
 	def _generate_round_enemies(self, round_num: int):
-		enemy_types = [Ube, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado, Chameleon, Regenerator]
-		# TODO: more special enemies for higher rounds
+		base_enemy_types = [Ube, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado]
+		special_enemy_types = [Chameleon, Regenerator]
+
+		# higher chances of getting chameleon and regenerator as round increases past 10 
+		if round_num >= 10:
+			rounds_past_10 = round_num - 10
+			special_weight = min(1 + rounds_past_10, 10)
+			weights = [1] * len(base_enemy_types) + [special_weight] * len(special_enemy_types)
+			enemy_types = base_enemy_types + special_enemy_types
+		else:
+			weights = [1] * len(base_enemy_types)
+			enemy_types = base_enemy_types
 
 		count = 3 + round_num // 2  # 3, 3, 4, 4, 5, 5, 6, 6
 		speed_multiplier = 1.0 + (0.25 * round_num)
 
 		enemies = [
-			(lambda p, cls=choice(enemy_types), spd=speed_multiplier: cls(p, speed_multiplier=spd), self._path)
+			(lambda p, cls=choices(enemy_types, weights=weights)[0], spd=speed_multiplier: cls(p, speed_multiplier=spd), self._path)
 			for _ in range(count)
 		]
 
