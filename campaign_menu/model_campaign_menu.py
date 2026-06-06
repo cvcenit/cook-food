@@ -3,10 +3,10 @@ from utils import HEADER_FONT_SIZE
 
 LEVEL_BUTTONS = [
     TextButton(48, (HEADER_FONT_SIZE + 16), "Level 1", 1),
-    TextButton(48, (HEADER_FONT_SIZE + 16), "Level 2", 1),
-    TextButton(48, (HEADER_FONT_SIZE + 16), "Level 3", 1),
-    TextButton(48, (HEADER_FONT_SIZE + 16), "Level 4", 1),
-    TextButton(48, (HEADER_FONT_SIZE + 16), "Level 5", 1)
+    TextButton(48, 2 * (HEADER_FONT_SIZE + 16), "Level 2", 1),
+    TextButton(48, 3 * (HEADER_FONT_SIZE + 16), "Level 3", 1),
+    TextButton(48, 4 * (HEADER_FONT_SIZE + 16), "Level 4", 1),
+    TextButton(48, 5 * (HEADER_FONT_SIZE + 16), "Level 5", 1)
 ]
 
 class CampaignMenuModel:

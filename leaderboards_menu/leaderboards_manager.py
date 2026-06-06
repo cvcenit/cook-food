@@ -1,15 +1,16 @@
-from utils import PLAYER_DATA
 import json
+
+PLAYER_DATA_PATH = "data/player_data.json"
 
 def load_data() -> dict:
     try:
-        with open(PLAYER_DATA, "r") as f:
+        with open(PLAYER_DATA_PATH, "r") as f:
             return json.load(f)
     except FileNotFoundError:
         return {}
     
 def save_data(data: dict):
-    with open(PLAYER_DATA, "w") as f:
+    with open(PLAYER_DATA_PATH, "w") as f:
         json.dump(data, f, indent=4)
 
 def save_player(name: str, rounds: int, mode: str):
