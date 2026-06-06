@@ -543,6 +543,7 @@ class GameModel:
             if screen.is_active:
                 screen.toggle_active()
         self._register_message = None
+        pyxel.play(0, 0, loop=True)
 
     def update_game_over(self):
         pyxel.stop(0)
