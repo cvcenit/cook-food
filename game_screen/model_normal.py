@@ -148,6 +148,12 @@ class GameLogic:
 
         self._exp = level.initial_exp
         self._lives = level.initial_lives
+
+        if shared_shop is not None:
+            purchased = shared_shop.purchased
+            self._lives += purchased.get("0", 0)
+            if "1" in purchased:
+                self._exp += 20
         self._load_round(self._round_index)
         self._placing_tower = False
         self._not_enough_exp = False
@@ -265,7 +271,7 @@ class GameLogic:
         return list(res)
     
     def toggle_speed(self):
-        if self._shared_shop is None or 2 not in self._shared_shop.purchased:
+        if self._shared_shop is None or "2" not in self._shared_shop.purchased:
             return
         self._speed_multiplier = 2 if self._speed_multiplier == 1 else 1
 

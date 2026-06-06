@@ -77,7 +77,7 @@ SCREENS = {
     AppState.MAIN_SETTINGS: SettingsScreen,
     AppState.MAIN_ACHIEVEMENTS: make_achievements_screen(shared_achievements),
     AppState.MAIN_SHOP: make_shop_screen(shared_achievements, shared_shop),
-    AppState.ENDLESS_GAMEPLAY: make_level_screen(shared_achievements, "endless"),
+    AppState.ENDLESS_GAMEPLAY: make_level_screen(shared_achievements, "endless", shared_shop),
     }
 
 ROUTES = {

@@ -75,7 +75,7 @@ class GameView:
             pyxel.text(500, 700, "2X SPEED", 10, font=HEADER_FONT)
 
         for i, button in enumerate(buttons):
-            if i == 1 and 2 not in purchased_items:
+            if i == 1 and "2" not in purchased_items:
                 button.change_color(5)
             elif i == 1:
                 button.change_color(10)

@@ -5,9 +5,9 @@ from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, CONTENT_FONT_SIZE, CONTENT_FON
 import json
 
 SHOP_ITEMS = [
-    {"name": "Extra Life", "cost": 10, "description": "Gain 1 extra life at start"},
-    {"name": "Head Start", "cost": 25, "description": "Start with 20 EXP"},
-    {"name": "2x Speed", "cost": 1, "description": "Make the game run 2x faster."}
+    {"name": "Extra Life", "cost": 10, "description": "Gain 1 extra life at start", "repeatable": True},
+    {"name": "Head Start", "cost": 25, "description": "Start with 20 EXP", "repeatable": False},
+    {"name": "2x Speed", "cost": 1, "description": "Make the game run 2x faster.", "repeatable": False}
 ]
 
 SHOP_SAVE_FILE = "./data/shop_data.json"
@@ -16,21 +16,25 @@ def load_shop_data() -> dict:
     try:
         with open(SHOP_SAVE_FILE, "r") as f:
             return json.load(f)
+        purchased = data.get("purchased", {})
+        if isinstance(purchased, list):
+            purchased = {str(i): 1 for i in purchased}
+        return {"purchased": purchased}
     except FileNotFoundError:
-        return {"purchased": []}
+        return {"purchased": {}}
     
-def save_shop_data(purchased: set):
+def save_shop_data(purchased: dict):
     with open(SHOP_SAVE_FILE, "w") as f:
-        json.dump({"purchased": list(purchased)}, f, indent=4)
-
+        json.dump({"purchased": purchased}, f, indent=4)
+        
 def reset_shop_data():
-    save_shop_data(set())
+    save_shop_data({})
         
 class ShopModel:
     def __init__(self, achievements: AchievementManager):
         self._achievements = achievements
         data = load_shop_data()
-        self._purchased = set(data.get("purchased", []))
+        self._purchased = data.get("purchased", {})
         self._screen_change_buttons = [
             TextButton(48, HEADER_FONT_SIZE, "Back", 10, size=38)
         ]
@@ -69,25 +73,26 @@ class ShopModel:
     
     def buy(self, index: int):
         item = SHOP_ITEMS[index]
-        if index in self._purchased:
+        key = str(index)
+        if not item.get("repeatable", False) and key in self._purchased:
             self._message = f"Already purchased: {item['name']}"
             return
         if self._achievements.spend_points(item["cost"]):
-            self._purchased.add(index)
+            self._purchased[key] = self._purchased.get(key, 0) + 1
             save_shop_data(self._purchased)
             self._message = f"Purchased: {item['name']}"
         else:
             self._message = "Not enough points!"
     
     def reset_purchases(self):
-        self._purchased = set()
+        self._purchased = {}
         reset_shop_data()
         self._message = "Shop reset!"
 
     def start_screen(self):
         self._message = ""
         data = load_shop_data()
-        self._purchased = set(data.get("purchased", []))
+        self._purchased = data.get("purchased", {})
 
     def reset(self):
         self.start_screen()

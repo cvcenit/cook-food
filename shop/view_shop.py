@@ -1,5 +1,7 @@
 from utils import HEADER_FONT, SCREEN_WIDTH, CONTENT_FONT, CONTENT_FONT_PATH
 from graphics import draw_background
+from shop.model_shop import SHOP_ITEMS
+
 import pyxel
 
 class ShopView:
@@ -15,9 +17,9 @@ class ShopView:
         for button in buttons:
             button.draw_button()
 
-    def draw_items(self, item_buttons, purchased: set):
+    def draw_items(self, item_buttons, purchased: dict):
         for i, button in enumerate(item_buttons):
-            if i in purchased:
+            if not SHOP_ITEMS[i].get("repeatable", False) and str(i) in purchased:
                 button.change_color(3)
             else:
                 button.change_color(1)
