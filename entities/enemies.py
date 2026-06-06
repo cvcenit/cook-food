@@ -67,18 +67,6 @@ class ActiveState(EnemyState):
             enemy.set_state(InactiveState())
 
 
-#class HitState(EnemyState):
-#    def start_tick(self, enemy):
-#        enemy.set_state(ActiveState())
-    
-#    def end_tick(self, enemy):
-#        if not enemy.is_alive:
-#            enemy.set_state(InactiveState())
-
-#    def receive_hit(self, enemy, damage):
-#        enemy._hit_points -= damage
-
-
 class EnemyInfo(ABC):
     @property
     @abstractmethod

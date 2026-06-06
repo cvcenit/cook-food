@@ -25,6 +25,7 @@ class CampaignMenuController:
         pyxel.load("resources/bg.pyxres")
         self._view.draw_background()
         pyxel.load("resources/sprites.pyxres")
+        self._view.draw_texts(self._model.texts)
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
         self._view.draw_characters()

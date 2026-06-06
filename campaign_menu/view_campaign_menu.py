@@ -12,6 +12,10 @@ class CampaignMenuView:
     def draw_background(self):
         draw_background()
 
+    def draw_texts(self, texts):
+        for text in texts:
+            text.draw_text()
+
     def draw_characters(self):
         # taho
         pyxel.blt(

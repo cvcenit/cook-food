@@ -29,7 +29,8 @@ def reset_shop_data():
 class ShopModel:
     def __init__(self, achievements: AchievementManager):
         self._achievements = achievements
-        self._purchased = set()
+        data = load_shop_data()
+        self._purchased = set(data.get("purchased", []))
         self._screen_change_buttons = [
             TextButton(48, HEADER_FONT_SIZE, "Back", 10, size=38)
         ]

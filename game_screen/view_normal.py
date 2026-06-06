@@ -1,5 +1,6 @@
 from __future__ import annotations
 from utils import TILE_SIDE_LENGTH, GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, HEADER_FONT, CONTENT_FONT, SCREEN_WIDTH
+from graphics import TextGraphic
 import pyxel
 
 class GameView:
@@ -9,6 +10,8 @@ class GameView:
         self._bg_color: int = 0
         self._left_margin: float = self._width / 10
         self._top_margin: float = self._height / 4
+
+        self._tower_mode = TextGraphic(25, 150, "", 1, size=24)
 
     # OUTPUT METHODS
     def draw_enemies(self, enemies, tunnels: set) -> None:
@@ -57,16 +60,25 @@ class GameView:
         pyxel.text(30, 296, f"LIVES: {lives}", 1, font=CONTENT_FONT)
         if placing_tower:
             if not_enough_exp:
-                pyxel.text(10, 400, "NOT ENOUGH EXP!", 7, font=HEADER_FONT)
+                y = "LOW EXP!"
             else:
-                pyxel.text(10, 400, "PLACING TOWER...", 7, font=HEADER_FONT)
+                y = "PLACING..."
+            self._tower_mode.change_text(y)
+            if not self._tower_mode.is_active:
+                self._tower_mode.toggle_active()
+            self._tower_mode.draw_text()
+        else:
+            if self._tower_mode.is_active:
+                self._tower_mode.toggle_active()
+
         if speed_multiplier == 2:
             pyxel.text(500, 700, "2X SPEED", 10, font=HEADER_FONT)
+
         for i, button in enumerate(buttons):
             if i == 1 and 2 not in purchased_items:
                 button.change_color(5)
             elif i == 1:
-                button.change_color(10) 
+                button.change_color(10)
             button.draw_button()
     
     def draw_popups(self, popups):
