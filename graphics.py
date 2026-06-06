@@ -19,7 +19,6 @@ class Button(ABC):
 
 class TextButton(Button):
     def __init__(self, x, y, text, color, size=HEADER_FONT_SIZE, font_path=HEADER_FONT_PATH):
-    	#TODO: make it possible to use different fonts/font sizes by D.I.?? ang arte tlg ng term
         self._x, self._y, self._text, self._color = x, y, text, color
         self._size = size
         self._font_path = font_path
@@ -81,7 +80,6 @@ class SpriteInfo:
 
 class SpriteButton(Button):
     def __init__(self, x, y, sprite, hover_sprite, scale):
-        # ang x and y ay center ng kalalagyan ng sprite
         self._x, self._y = x, y
         self._is_active = True
         self._sprite = sprite

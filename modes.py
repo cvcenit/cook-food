@@ -8,13 +8,12 @@ from random import choice, choices
 
 @dataclass
 class RoundConfig:
-	enemies: list # list of callables
+	enemies: list
 	paths: list
 	player_start: tuple
-	grid: Grid # added grid in round config
+	grid: Grid
 	tunnels: list[tuple[int, int]] = None
 
-# WILL PROBABLY NOT BE USED BUT WILL LEAVE HERE
 def make_spiral_path(rows=8, cols=10, row_offset=1):
     path = []
     top, bottom, left, right = 0, rows - 1, 0, cols - 1
@@ -149,13 +148,13 @@ class Level1(CampaignMode):
 class Level2(Level):
 	def __init__(self, data: dict, available_towers: list[Tower]):
 		path1 = [
-			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
-			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
-			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
-			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
-			(3, 5), # goes down
-			(3, 4), (3, 3), # goes left 
-			(2, 3), (1, 3) # goes up
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
+			(5, 9), (4, 9), (3, 9), (2, 9),
+			(2, 8), (2, 7), (2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3), 
+			(2, 3), (1, 3)
 			]
 		
 		path2 = []
@@ -423,7 +422,6 @@ class Level4(Level):
 
 class Level5(Level):
 	def __init__(self, data: dict, available_towers: list[Tower]):
-		# HARDCODED PATH FOR THE USAGE OF COLORS IN MAP
 		path1 = [
 			(6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7),
 			(5, 7), (5, 8),
@@ -631,7 +629,6 @@ class EndlessMode(Level):
 		base_enemy_types = [Ube, Kutsinta, Gulaman, Palitaw, Lecheflan, Champorado]
 		special_enemy_types = [Chameleon, Regenerator]
 
-		# higher chances of getting chameleon and regenerator as round increases past 10 
 		if round_num >= 10:
 			rounds_past_10 = round_num - 10
 			special_weight = min(1 + rounds_past_10, 10)
@@ -641,7 +638,7 @@ class EndlessMode(Level):
 			weights = [1] * len(base_enemy_types)
 			enemy_types = base_enemy_types
 
-		count = 3 + round_num // 2  # 3, 3, 4, 4, 5, 5, 6, 6
+		count = 3 + round_num // 2
 		speed_multiplier = 1.0 + (0.25 * round_num)
 
 		enemies = [
