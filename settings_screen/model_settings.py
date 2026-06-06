@@ -4,19 +4,19 @@ import json
 
 SETTINGS_BUTTONS = [
     TextButton(0, 2 * (HEADER_FONT_SIZE + 16), "Back", 5),
-    TextButton(0, 8 * (HEADER_FONT_SIZE + 16), "Save", 5),
+    TextButton(0, 8 * (HEADER_FONT_SIZE + 20), "Save", 5),
 ]
 
 
 # TOO MUCH CODE REPETITION GOING ON HERE SRY WILL FIX TOMO TOLOG N Q -janella
-LIVES_DECREASE_BUTTON = TextButton(0, 4 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH)
-LIVES_INCREASE_BUTTON = TextButton(0, 4 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH)
-ENEMIES_DECREASE_BUTTON = TextButton(0, 6 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH)
-ENEMIES_INCREASE_BUTTON = TextButton(0, 6 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH)
-REGENERATOR_DECREASE_BUTTON = TextButton(0, 8 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH)
-REGENERATOR_INCREASE_BUTTON = TextButton(0, 8 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH)
-CHAMELEON_DECREASE_BUTTON = TextButton(0, 9 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH)
-CHAMELEON_INCREASE_BUTTON = TextButton(0, 9 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH)
+LIVES_DECREASE_BUTTON = TextButton(0, 4 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH, size=96)
+LIVES_INCREASE_BUTTON = TextButton(0, 4 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH, size=96)
+ENEMIES_DECREASE_BUTTON = TextButton(0, 6 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH, size=96)
+ENEMIES_INCREASE_BUTTON = TextButton(0, 6 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH, size=96)
+REGENERATOR_DECREASE_BUTTON = TextButton(0, 8 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH, size=96)
+REGENERATOR_INCREASE_BUTTON = TextButton(0, 8 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH, size=96)
+CHAMELEON_DECREASE_BUTTON = TextButton(0, 9 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH, size=96)
+CHAMELEON_INCREASE_BUTTON = TextButton(0, 9 * (CONTENT_FONT_SIZE + 16), ">", 1, font_path=CONTENT_FONT_PATH, size=96)
 
 ARROW_BUTTONS = [
     LIVES_DECREASE_BUTTON, 
@@ -43,14 +43,14 @@ arrow_width = CONTENT_FONT.text_width("<")
 gap = 8
 
 
-LIVES_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - lives_width // 2 - gap - arrow_width, 7 * CONTENT_FONT_SIZE)
-LIVES_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + lives_width // 2 + gap, 7 * CONTENT_FONT_SIZE)
-ENEMIES_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - enemies_width // 2 - gap - arrow_width, 8 * CONTENT_FONT_SIZE)
-ENEMIES_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + enemies_width // 2 + gap, 8 * CONTENT_FONT_SIZE)
-REGENERATOR_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - regenerator_width // 2 - gap - arrow_width, 9 * CONTENT_FONT_SIZE)
-REGENERATOR_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + regenerator_width // 2 + gap, 9 * CONTENT_FONT_SIZE)
-CHAMELEON_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - chameleon_width // 2 - gap - arrow_width, 10 * CONTENT_FONT_SIZE)
-CHAMELEON_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + chameleon_width // 2 + gap, 10 * CONTENT_FONT_SIZE)
+LIVES_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - lives_width // 2 - gap - arrow_width, 3 * (CONTENT_FONT_SIZE - 30))
+LIVES_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + lives_width // 2 + gap, 3 * (CONTENT_FONT_SIZE - 30))
+ENEMIES_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - enemies_width // 2 - gap - arrow_width, 4 * (CONTENT_FONT_SIZE - 30))
+ENEMIES_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + enemies_width // 2 + gap, 4 * (CONTENT_FONT_SIZE - 30))
+REGENERATOR_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - regenerator_width // 2 - gap - arrow_width, 5 * (CONTENT_FONT_SIZE - 30))
+REGENERATOR_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + regenerator_width // 2 + gap, 5 * (CONTENT_FONT_SIZE - 30))
+CHAMELEON_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - chameleon_width // 2 - gap - arrow_width, 6 * (CONTENT_FONT_SIZE - 30))
+CHAMELEON_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + chameleon_width // 2 + gap, 6 * (CONTENT_FONT_SIZE - 30))
 
 
 class SettingsModel:

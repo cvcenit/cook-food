@@ -28,12 +28,12 @@ class ShopView:
     def draw_title(self):
         title = "SHOP"
         x = (SCREEN_WIDTH - HEADER_FONT.text_width(title)) // 2
-        pyxel.text(x, 120, title, 1, font=HEADER_FONT)
+        pyxel.text(x, 200, title, 1, font=HEADER_FONT)
 
     def draw_points(self, points):
         text = f"Points: {points}"
         x = (SCREEN_WIDTH - HEADER_FONT.text_width(text)) // 2
-        pyxel.text(x, 240, text, 1, font=pyxel.Font(CONTENT_FONT_PATH, font_size=48))
+        pyxel.text(x, 275, text, 1, font=pyxel.Font(CONTENT_FONT_PATH, font_size=84))
 
     def get_clicked_buttons(self, buttons):
         for i, button in enumerate(buttons):
