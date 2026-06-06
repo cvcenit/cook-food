@@ -2,7 +2,7 @@ from __future__ import annotations
 from achievements.achievements_manager import AchievementManager
 from entities.enemies import Ube
 from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
-from leaderboards import register_player
+from leaderboards.leaderboards_manager import register_player
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
 from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT, PI
