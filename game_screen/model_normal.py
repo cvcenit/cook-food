@@ -23,7 +23,7 @@ BUTTON_SPRITES = [
     SpriteInfo(1, (0, 128), (96, 32))
 ]
 SIDEBAR_BUTTONS = [
-    TextButton(40, 60, "Pause", 1, size=36),
+    TextButton(40, 25, "Pause", 1, size=36),
     SpriteButton(140, 435, BUTTON_SPRITES[2], BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 535, BUTTON_SPRITES[3], BUTTON_SPRITES[0], 240/96),
     SpriteButton(140, 635, BUTTON_SPRITES[1], BUTTON_SPRITES[0], 240/96),
@@ -93,11 +93,11 @@ DIRECTION_POPUP_TEXTS[1].change_position(x - 200, y)
 x, y = DIRECTION_POPUP_TEXTS[3].current_position
 DIRECTION_POPUP_TEXTS[3].change_position(x + 200, y)
 
-#
+
 GAME_OVER_POPUP_BUTTONS = [
     SCREEN_CHANGE_BUTTONS[0],
     TextButton(0, 400, "Restart level", 6, size=48),
-    TextButton(0, 510, "Register: ", 6, size=36, font_path = CONTENT_FONT_PATH),
+    TextButton(0, 510, "Register:", 6, size=36, font_path = CONTENT_FONT_PATH),
 ]
 
 GAME_OVER_POPUP_TEXTS = [
@@ -156,7 +156,6 @@ class GameLogic:
 
         self._selected_tower = None        
 
-        # game data
         self._is_game_over = False
         self._is_game_won = False
         self._game_over_condition = game_over_condition
@@ -176,7 +175,7 @@ class GameLogic:
         self._spawn_queue = list(round_config.enemies)
         self._spawn_interval = 2 * FPS
         self._spawn_timer = 0
-        self._enemies = [] # [factory(round_config.path) for factory in round_config.enemies]
+        self._enemies = []
         self._player = Chef(round_config.player_start)
         self._tunnels = set(round_config.tunnels or [])
 
@@ -268,7 +267,6 @@ class GameLogic:
             self._selected_tower_type = None
 
     def place_tower(self, mouse_x: float, mouse_y: float):
-        # should not be instant (maybe add a timer)
         col = int((mouse_x - GAMEPLAY_X_OFFSET) / TILE_SIDE_LENGTH)
         row = int((mouse_y - GAMEPLAY_Y_OFFSET) / TILE_SIDE_LENGTH)
 
@@ -282,12 +280,10 @@ class GameLogic:
                 return
 
         t = self._selected_tower_type((row, col))
-        # should depend on the tower cost
         if self._exp >= t.purchase_cost:
             self._exp -= t.purchase_cost
             self._towers.append(t)
             self._placing_tower = False
-            self._not_enough_exp = False # bug, spending doesnt mean not enough exp
             self._achievements.on_tower_placed()
         else:
             self._not_enough_exp = True
@@ -316,7 +312,7 @@ class GameLogic:
             self._is_game_over = True
         elif rounds:
             self._load_round(self._round_index)
-        else: # this is for endless mode
+        else:
             self._load_round(self._round_index)
 
     @property
@@ -330,7 +326,6 @@ class GameLogic:
         if self._is_game_over:
             return
         
-        # SPAWNING INTERVAL FOR ENEMIES SO THAT THEY DO NOT STACK
         if self._spawn_queue:
             self._spawn_timer += 1
             if self._spawn_timer >= self._spawn_interval:
@@ -354,7 +349,6 @@ class GameLogic:
             adj = self.get_adjacent_towers(tower)
             tower.affect_nearby_towers(adj)
 
-        # pls refactor
         active_bullets = [b for b in self.bullets if b.is_active]
         active_enemies_not_in_tunnel = [e for e in self._active_enemies if not (e._path[e._path_index] in self._tunnels)]
         for bullet in active_bullets:
@@ -394,7 +388,6 @@ class GameLogic:
                 self.lose_life()
                 enemy.receive_hit(999)
         
-        # CHANGED TO NOT SELF._SPAWN_QUEUE TO SEE IF THERE ARE NO MORE ENEMIES IN THE QUEUE
         if not self._spawn_queue and self._round_over_condition.is_round_over(len(self._active_enemies)):
             self.advance_round()
         
@@ -404,7 +397,7 @@ class GameLogic:
         
         if self._achievements.unlocked and self._current_achievement_display is None:
             self._current_achievement_display = self._achievements.pop_unlocked()
-            self._achievement_display_timer = 5 * FPS  # show for 5 seconds
+            self._achievement_display_timer = 5 * FPS
 
         if self._current_achievement_display:
             self._achievement_display_timer -= 1
@@ -579,7 +572,6 @@ class GameModel:
             if t is not None:
                 match clicked_idx:
                     case 0:
-                        # change direction
                         self.popup_screens[2].toggle_active()
                         self.popup_screens[1].toggle_active()
                     case 1:
@@ -623,7 +615,6 @@ class GameModel:
             if clicked_idx == 0:
                 self.toggle_pause()
             else:
-                # has to know which tower
                 self.game_logic.toggle_placement_mode(clicked_idx - 1)
 
     def update(self, clicked_idx):

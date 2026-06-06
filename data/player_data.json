@@ -34,5 +34,17 @@
         "campaign_completed_levels": [],
         "campaign_completed_rounds": 6,
         "endless_highest_rounds": 0
+    },
+    "chiccoluis": {
+        "name": "chiccoluis",
+        "campaign_completed_levels": [],
+        "campaign_completed_rounds": 0,
+        "endless_highest_rounds": 0
+    },
+    "wasdwasdwasd": {
+        "name": "wasdwasdwasd",
+        "campaign_completed_levels": [],
+        "campaign_completed_rounds": 0,
+        "endless_highest_rounds": 0
     }
 }
