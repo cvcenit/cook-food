@@ -27,7 +27,7 @@ POPUP_BUTTONS += [
 ]
 
 for button in POPUP_BUTTONS:
-    button.toggle_active() # deactivates
+    button.toggle_active()
 
 popup_main = PopupScreen(140, 50, 1000, 600, POPUP_BUTTONS, [], 1)
 popup_main.toggle_active()
@@ -156,8 +156,6 @@ class LeaderboardsMenuModel:
                 total = campaign_completed_rounds + endless_highest_rounds
                 column_values = [index, player, campaign_completed_rounds, endless_highest_rounds, total]
 
-                # refactor: wag dito mag instantiate ng leaderboard row para di na kailangan
-                # gumawa ng bagong list for reversed (instantiate sa dulo)
                 row = LeaderboardRow(190, 75 + (40 * (i + 1) + (3 * i)), column_values, i + 1)
                 rows += [row]
             self._row_per_page[(self.current_page, self._sort_by, self._descending)] = rows
