@@ -13,6 +13,16 @@ class ShopView:
     def draw_background(self) -> None:
         draw_background()
     
+    def draw_panel(self):
+        padding = 40
+        pyxel.rect(
+            SCREEN_WIDTH // 4,           
+            200,                         
+            SCREEN_WIDTH // 2,           
+            350,                         
+            7                          
+        )
+    
     def draw_buttons(self, buttons):
         for button in buttons:
             button.draw_button()
@@ -33,7 +43,7 @@ class ShopView:
     def draw_title(self):
         title = "SHOP"
         x = (SCREEN_WIDTH - HEADER_FONT.text_width(title)) // 2
-        pyxel.text(x, 200, title, 1, font=HEADER_FONT)
+        pyxel.text(x, 200, title, 8, font=HEADER_FONT)
 
     def draw_points(self, points):
         text = f"Points: {points}"
