@@ -273,7 +273,7 @@ class GameLogic:
         row = int((mouse_y - GAMEPLAY_Y_OFFSET) / TILE_SIDE_LENGTH)
 
         tiles = self._grid._tiles
-        if not (0 <= row < len(tiles) and 0 <= col < len(tiles[0])):
+        if not (1 <= row < (len(tiles) - 1) and 0 <= col < len(tiles[0])):
             return
         if tiles[row][col]._isPath:
             return
