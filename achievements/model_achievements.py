@@ -3,11 +3,11 @@ from .achievements_manager import AchievementManager
 from graphics import TextButton
 from utils import SCREEN_WIDTH, SCREEN_HEIGHT
 
-BACK_BUTTON = TextButton(0, SCREEN_HEIGHT - 100, "Back to menu", 7, size=48)
+BACK_BUTTON = TextButton(0, SCREEN_HEIGHT - 100, "Back to menu", 9, size=38)
 _, _y = BACK_BUTTON.current_position
 BACK_BUTTON.change_position((SCREEN_WIDTH - BACK_BUTTON.width) / 2, _y)
 
-RESET_BUTTON = TextButton(0, SCREEN_HEIGHT - 100, "Reset", 7, size=48)
+RESET_BUTTON = TextButton(0, SCREEN_HEIGHT - 100, "Reset", 3, size=38)
 _, _y = RESET_BUTTON.current_position
 RESET_BUTTON.change_position((SCREEN_WIDTH // 2 + 400), _y)
 

@@ -3,8 +3,8 @@ from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, HEADER_FONT, CONTENT_FONT, CON
 import json
 
 SETTINGS_BUTTONS = [
-    TextButton(0, 2 * (HEADER_FONT_SIZE + 16), "Back", 5),
-    TextButton(0, 8 * (HEADER_FONT_SIZE + 20), "Save", 5),
+    TextButton(0, 2 * (HEADER_FONT_SIZE + 16), "Back", 7, size=38),
+    TextButton(0, 8 * (HEADER_FONT_SIZE + 20), "Save", 9),
 ]
 
 
