@@ -4,7 +4,7 @@ from achievements.achievements_manager import AchievementManager
 from achievements.controller_achievements import make_achievements_screen
 from campaign_menu.controller_campaign_menu import CampaignMenuScreen
 from game_screen.controller_normal import make_level_screen
-from leaderboards.controller_leaderboards_menu import LeaderboardsMenuScreen
+from leaderboards_menu.controller_leaderboards_menu import LeaderboardsMenuScreen
 from main_menu.controller_main_menu import MainMenuScreen
 from settings_screen.controller_settings import SettingsScreen
 from shop.controller_shop import make_shop_screen
