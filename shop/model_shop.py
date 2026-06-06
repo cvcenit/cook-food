@@ -31,14 +31,14 @@ class ShopModel:
         self._achievements = achievements
         self._purchased = set()
         self._screen_change_buttons = [
-            TextButton(48, HEADER_FONT_SIZE, "Back", 10, size=38)
+            TextButton(48, HEADER_FONT_SIZE, "Back", 5)
         ]
         self._items_buttons = [
-            TextButton(0, (i + 6) * (CONTENT_FONT_SIZE + 16), f"{item["name"]} - {item["cost"]} pts", 1, font_path=CONTENT_FONT_PATH, size=48)
+            TextButton(0, (i + 5) * (CONTENT_FONT_SIZE - 30), f"{item["name"]} - {item["cost"]} pts", 1, font_path=CONTENT_FONT_PATH, size=84)
             for i, item in enumerate(SHOP_ITEMS)
         ]
         self._reset_buttons = [
-            TextButton(48, HEADER_FONT_SIZE * 2, "Reset Shop", 13, size=38)
+            TextButton(48, HEADER_FONT_SIZE * 2, "Reset Shop", 8)
         ]
         for button in self._items_buttons:
             _, y = button.current_position

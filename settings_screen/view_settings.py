@@ -23,32 +23,32 @@ class SettingsView:
 
     def draw_lives_label(self, lives):
         label_x = self._width // 2 - CONTENT_FONT.text_width("Lives:  _") // 2
-        pyxel.text(label_x, 7 * CONTENT_FONT_SIZE, f"Lives: {lives}", 1, font=CONTENT_FONT)
+        pyxel.text(label_x, 3 * (CONTENT_FONT_SIZE - 30), f"Lives: {lives}", 1, font=CONTENT_FONT)
     
     def draw_enemies_label(self, enemies):
         label_x = self._width // 2 - CONTENT_FONT.text_width("Enemies:  _") // 2
-        pyxel.text(label_x, 8 * CONTENT_FONT_SIZE, f"Enemies: {enemies}", 1, font=CONTENT_FONT)
+        pyxel.text(label_x, 4 * (CONTENT_FONT_SIZE - 30), f"Enemies: {enemies}", 1, font=CONTENT_FONT)
 
     def draw_regenerator_label(self, regenerator_interval):
         label_x = self._width // 2 - CONTENT_FONT.text_width("Regenerator Interval:   _") // 2
-        pyxel.text(label_x, 9 * CONTENT_FONT_SIZE, f"Regenerator Interval: {regenerator_interval}", 1, font=CONTENT_FONT)
+        pyxel.text(label_x, 5 * (CONTENT_FONT_SIZE - 30), f"Regenerator Interval: {regenerator_interval}", 1, font=CONTENT_FONT)
 
     def draw_chameleon_label(self, chameleon_interval):
         label_x = self._width // 2 - CONTENT_FONT.text_width("Chameleon Interval:  _") // 2
-        pyxel.text(label_x, 10 * CONTENT_FONT_SIZE, f"Chameleon Interval: {chameleon_interval}", 1, font=CONTENT_FONT)
+        pyxel.text(label_x, 6 * (CONTENT_FONT_SIZE - 30), f"Chameleon Interval: {chameleon_interval}", 1, font=CONTENT_FONT)
 
     def draw_smooth_movement(self, smooth_movement):
-        box_size = CONTENT_FONT_SIZE
+        box_size = CONTENT_FONT_SIZE - 42
         gap = 1
         total_width = box_size + gap + CONTENT_FONT.text_width("Smooth Movement")
         
         self._smooth_movement_x = self._width // 2 - total_width // 2
 
-        pyxel.rectb(self._smooth_movement_x - 6, 11 * CONTENT_FONT_SIZE + 3, box_size, box_size, 1)
-        pyxel.rectb(self._smooth_movement_x - 5, 11 * CONTENT_FONT_SIZE + 4, box_size - 2, box_size - 2, 1)
+        pyxel.rectb(self._smooth_movement_x - 10, 7 * (CONTENT_FONT_SIZE - 30) + 15, box_size, box_size, 1)
+        pyxel.rectb(self._smooth_movement_x - 9, 7 * (CONTENT_FONT_SIZE - 30) + 16, box_size - 2, box_size - 2, 1)
         if smooth_movement:
-            pyxel.text(self._smooth_movement_x  + 1, 11 * CONTENT_FONT_SIZE + 1, "x", 1, font=CONTENT_FONT)
-        pyxel.text(self._smooth_movement_x  + box_size + gap, 11 * CONTENT_FONT_SIZE, "Smooth Movement", 1, font=CONTENT_FONT)
+            pyxel.text(self._smooth_movement_x  + 1, 7 * (CONTENT_FONT_SIZE - 30) + 1, "x", 1, font=CONTENT_FONT)
+        pyxel.text(self._smooth_movement_x  + box_size + gap, 7 * (CONTENT_FONT_SIZE - 30), "Smooth Movement", 1, font=CONTENT_FONT)
 
     def is_decrease_clicked(self):
         label_x = self._width // 2 - 30
@@ -67,7 +67,7 @@ class SettingsView:
     def is_smooth_movement_clicked(self):
         box_size = CONTENT_FONT_SIZE
         x = self._smooth_movement_x - 8
-        y = 11 * CONTENT_FONT_SIZE + 3
+        y = 7 * (CONTENT_FONT_SIZE - 30) + 3
         return (pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT) and 
                 x <= pyxel.mouse_x <= x + box_size and
                 y <= pyxel.mouse_y <= y + box_size)

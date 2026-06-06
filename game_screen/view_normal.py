@@ -53,8 +53,8 @@ class GameView:
     def draw_sidebar(self, buttons, round: int, exp: int, lives: int, placing_tower: bool, not_enough_exp: bool):
         pyxel.rect(0, 0, 280, 800, 13)
         pyxel.text(30, 200, f"RND: {round}", 1, font=CONTENT_FONT)
-        pyxel.text(30, 232, f"EXP: {exp}", 1, font=CONTENT_FONT)
-        pyxel.text(30, 264, f"LIVES: {lives}", 1, font=CONTENT_FONT)
+        pyxel.text(30, 248, f"EXP: {exp}", 1, font=CONTENT_FONT)
+        pyxel.text(30, 296, f"LIVES: {lives}", 1, font=CONTENT_FONT)
         if placing_tower:
             if not_enough_exp:
                 pyxel.text(10, 400, "NOT ENOUGH EXP!", 7, font=HEADER_FONT)

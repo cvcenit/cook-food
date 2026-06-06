@@ -19,7 +19,7 @@ next_button.change_position(n_x, n_y)
 POPUP_BUTTONS = []
 
 for i, text in enumerate(HEAD_COLUMN):
-    POPUP_BUTTONS += [TextButton(190 + X_OFFSETS[i + 1] + 10, 80, text, 1 if i != 3 else 8, font_path=CONTENT_FONT_PATH, size=24)]
+    POPUP_BUTTONS += [TextButton(190 + X_OFFSETS[i + 1] + 10, 80, text, 1 if i != 3 else 8, font_path=CONTENT_FONT_PATH, size=36)]
 
 POPUP_BUTTONS += [
     TextButton(175, 550, "Previous", 6, size=48),
@@ -57,7 +57,7 @@ class LeaderboardRow:
         self._texts = []
         for i, val in enumerate(self._column_values):
             text = str(val)
-            c = TextGraphic(self._x + self._x_offsets[i] + 10, self._y + 5, text, 0, size=24, font_path=CONTENT_FONT_PATH)
+            c = TextGraphic(self._x + self._x_offsets[i] + 10, self._y + 5, text, 0, size=36, font_path=CONTENT_FONT_PATH)
             self._texts += [c]
 
     def draw_row(self):

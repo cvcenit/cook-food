@@ -5,7 +5,7 @@ from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from leaderboards.leaderboards_manager import register_player
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
-from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT, PI
+from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT, PI, CONTENT_FONT_PATH
 from math import cos, sin
 
 import pyxel
@@ -96,13 +96,13 @@ DIRECTION_POPUP_TEXTS[3].change_position(x + 200, y)
 #
 GAME_OVER_POPUP_BUTTONS = [
     SCREEN_CHANGE_BUTTONS[0],
-    TextButton(0, 375, "Restart level", 6, size=56),
-    TextButton(0, 475, "Register: ", 6, size=24),
+    TextButton(0, 400, "Restart level", 6, size=48),
+    TextButton(0, 510, "Register: ", 6, size=36, font_path = CONTENT_FONT_PATH),
 ]
 
 GAME_OVER_POPUP_TEXTS = [
-    TextGraphic(50, 175, "Game over!", 6, size=96),
-    TextInput(0, 500, 6, size=24)
+    TextGraphic(50, 200, "Game over!", 7, size=60),
+    TextInput(0, 535, 6, size=36)
 ]
 
 for button in GAME_OVER_POPUP_BUTTONS[1:]:
@@ -157,7 +157,7 @@ class GameLogic:
         self._selected_tower = None        
 
         # game data
-        self._is_game_over = False
+        self._is_game_over = True
         self._is_game_won = False
         self._game_over_condition = game_over_condition
         self._round_over_condition = round_over_condition
