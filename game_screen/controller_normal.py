@@ -15,6 +15,7 @@ class GameController:
         self._model = model
         self._view = view
         self._mode = mode
+        self._mouse_x, self._mouse_y = 0, 0
 
     def get_clicked_screen_change_button(self):
         back_action = "endless_mode" if self._mode == "endless" else "campaign_mode"
@@ -54,10 +55,11 @@ class GameController:
             right_clicked = self._view.has_right_clicked()
             
             mouse_x, mouse_y = self._view.get_mouse_position()
-
             direction = self.get_player_direction((mouse_x, mouse_y))
 
-            self._model.game_logic.player_change_direction(direction)
+            if mouse_x != self._mouse_x or mouse_y != self._mouse_y:
+                self._mouse_x, self._mouse_y = mouse_x, mouse_y
+                self._model.game_logic.player_change_direction(direction)
                 
             sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
             self._model.update_from_sidebar(sidebar_clicked)
