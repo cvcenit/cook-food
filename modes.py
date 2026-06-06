@@ -148,18 +148,22 @@ class Level1(CampaignMode):
 class Level2(Level):
 	def __init__(self, data: dict, available_towers: list[Tower]):
 		path1 = [
-			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), # goes down
-			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), # goes right
-			(5, 9), (4, 9), (3, 9), (2, 9), # goes up
-			(2, 8), (2, 7), (2, 6), (2, 5), # goes left
-			(3, 5), # goes down
-			(3, 4), (3, 3), # goes left 
-			(2, 3), (1, 3) # goes up
+			(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1),
+			(6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9),
+			(5, 9), (4, 9), (3, 9), (2, 9),
+			(2, 8), (2, 7), (2, 6), (2, 5),
+			(3, 5),
+			(3, 4), (3, 3),
+			(2, 3), (1, 3),
 			]
 		
 		path2 = []
 		
-		tunnels = []
+		tunnels = [
+			(4, 1), (5, 1),
+			(6, 6), (6, 7),
+			(4, 9), (3, 9),
+		]
 		
 		tiles = list(set(path1 + path2))
 		grid = Grid(9, 11, tiles, tunnels)
@@ -255,7 +259,11 @@ class Level3(Level):
 		
 		path2 = []
 		
-		tunnels = []
+		tunnels = [
+			(3, 3), (4, 3),
+			(6, 4), (6, 6),
+			(4, 7), (3, 7)
+		]
 		
 		tiles = list(set(path1 + path2))
 		grid = Grid(9, 11, tiles, tunnels)
@@ -468,7 +476,9 @@ class Level5(Level):
 			(1, 5),
 		]
 		
-		tunnels = []
+		tunnels = [
+			(2, 5), (1, 5),
+		]
 		
 		tiles = list(set(path1 + path2))
 		grid = Grid(9, 11, tiles, tunnels)
