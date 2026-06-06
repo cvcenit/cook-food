@@ -309,11 +309,21 @@ class GameLogic:
     def advance_round(self) -> None:
         self._achievements.on_round_complete()
         self._round_index += 1
-        if self._round_index < len(self._level.rounds):
-            self._load_round(self._round_index)
-        else:
+        rounds = self._level.rounds
+        if rounds and self._round_index >= len(rounds):
             self._is_game_won = True
             self._is_game_over = True
+        elif rounds:
+            self._load_round(self._round_index)
+        else: # this is for endless mode
+            self._load_round(self._round_index)
+
+    @property
+    def craters(self):
+        res = []
+        for t in self.towers:
+            res += t.craters
+        return res
 
     def update(self):
         if self._is_game_over:

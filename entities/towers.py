@@ -115,6 +115,7 @@ class GenericBullet(BulletInfo):
         self._radius = r
         self._damage = 1 # HP
         self._is_active = False
+        self._craters = []
 
         # Current values
         self._current_position = self.base_position
@@ -213,6 +214,11 @@ class GenericBullet(BulletInfo):
     def set_state(self, state: BulletState) -> None:
         self._state = state
 
+    @property
+    def craters(self):
+        return self._craters
+    
+
 class Bullet(GenericBullet):
     def __init__(self, col, r, initial_pos, initial_vel):
         super().__init__(col, r, initial_pos, initial_vel)
@@ -255,8 +261,6 @@ class HomingBullet(GenericBullet):
 
     def process_enemies(self, enemies):
         nearest_e = None
-        if not enemies:
-            return None
 
         half_tile = TILE_SIDE_LENGTH / 2
         bx, by = self.current_position
@@ -300,10 +304,24 @@ class HomingBullet(GenericBullet):
 class ExplodingBullet(GenericBullet):
     def __init__(self, col, r, initial_pos, initial_vel):
         super().__init__(col, r, initial_pos, initial_vel)
+        self._craters = []
+
+    def collide_with(self, enemy):
+        if super().collide_with(enemy):
+            x, y = enemy.position
+
+            enemy.receive_hit(1)
+            self._craters += [(x, y),]
 
     def affect_nearby_enemies(self, enemies):
         for e in enemies:
+            x, y = e.position
+
             e.receive_hit(1)
+            self._craters += [(x, y),]
+
+    def end_tick(self):
+        super().end_tick()
 
 class PandesalBullet(HomingBullet, ExplodingBullet):
     def __init__(self, col, r, initial_pos, initial_vel):
@@ -320,6 +338,8 @@ class Tower(TowerInfo):
         self._bullet_type = Bullet
 
         self._radius = TILE_SIDE_LENGTH / 2.5
+        self._craters = []
+        self._crater_timer = 1
 
         self._bullets = []
         self._current_direction = self.base_direction
@@ -348,6 +368,10 @@ class Tower(TowerInfo):
         if len(self._upgrade_costs) > self._tower_level:
             return self._upgrade_costs[self._tower_level]
         return 0
+
+    @property
+    def craters(self):
+        return self._craters
 
     @property
     def tower_level(self):
@@ -507,18 +531,37 @@ class Tower(TowerInfo):
             bullet.set_radius_scale(self._radius_scale)
             
     def end_tick(self):
+        if self._craters:
+            if self._crater_timer <= 0:
+                self._craters = []
+            else:
+                self._crater_timer -= 1 / FPS
+        else:
+            self._crater_timer = 1
+            self.get_craters()
+
         self._load_next_bullet()
 
         if self.can_shoot and self._remaining_seconds_to_shoot != 0:
             self._remaining_seconds_to_shoot = 0
             self.shoot()
 
+        self.decrement_crater()
         self.decrement_reload_time()
         self.remove_inactive_bullets()
         self._update_next_bullet_radius()
 
     def remove_inactive_bullets(self):
         self._bullets = [bullet for bullet in self.bullets if bullet.is_active]
+
+    def get_craters(self):
+        res = []
+        for bullet in self._bullets:
+            res += bullet.craters
+        self._craters = res
+
+    def decrement_crater(self):
+        self._crater_timer -= 1 / FPS
 
 class Taho(Tower):
     def __init__(self, grid_position):
