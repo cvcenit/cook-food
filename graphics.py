@@ -22,6 +22,7 @@ class TextButton(Button):
     	#TODO: make it possible to use different fonts/font sizes by D.I.?? ang arte tlg ng term
         self._x, self._y, self._text, self._color = x, y, text, color
         self._size = size
+        self._font_path = font_path
         self._font = pyxel.Font(font_path, font_size=size)
         self._width = self._font.text_width(self._text)
         self._is_active = True
@@ -46,8 +47,12 @@ class TextButton(Button):
 
     def is_hovered(self):
         if self._is_active:
-            return self._x <= pyxel.mouse_x <= self._x + self._width and \
-            self._y + 0.5 * self._size <= pyxel.mouse_y <= self._y + 1.4 * self._size
+            if self._font_path == HEADER_FONT_PATH:
+                return self._x <= pyxel.mouse_x <= self._x + self._width and \
+                self._y + 0.5 * self._size <= pyxel.mouse_y <= self._y + 1.4 * self._size
+            else:
+                return self._x <= pyxel.mouse_x <= self._x + self._width and \
+                self._y + 0.2 * self._size <= pyxel.mouse_y <= self._y + 0.67 * self._size
 
     def draw_button(self):
         if self._is_active:
