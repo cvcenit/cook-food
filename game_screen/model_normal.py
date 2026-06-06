@@ -547,6 +547,7 @@ class GameModel:
                 self.toggle_pause()
             elif clicked_idx == 2:
                 self.reset()
+                pyxel.play(0, 0)
             else:
                 pyxel.stop(0)
 
