@@ -351,6 +351,9 @@ class Tower(TowerInfo):
         self._tower_level = 1
         self._max_level = 2
 
+    def __str__(self):
+        return "Generic"
+
     @property
     def color(self):
         return self._color
@@ -567,6 +570,9 @@ class Taho(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
 
+    def __str__(self):
+        return "Taho"
+
     def draw_tower(self):
         x, y = self.screen_position()
         pyxel.blt(
@@ -583,6 +589,9 @@ class Ihaw(Tower):
     def __init__(self, grid_position):
         super().__init__(grid_position)
         self._bullet_type = PiercingBullet
+
+    def __str__(self):
+        return "Ihaw"
 
     def load_next_bullet(self, bullet_index):
         if len(self._next_bullets) < self._tower_level:
@@ -616,6 +625,9 @@ class Sorbetes(Tower):
         super().__init__(grid_position)
         self._purchase_cost = 10
 
+    def __str__(self):
+        return "Sorbetes"
+
     def draw_tower(self):
         x, y = self.screen_position()
         pyxel.blt(
@@ -634,6 +646,9 @@ class Pandesal(Tower):
         self._purchase_cost = 10
         self._bullet_type = HomingBullet
         self._fire_rate = 2
+
+    def __str__(self):
+        return "Pandesal"
 
     def upgrade_tower(self):
         super().upgrade_tower()

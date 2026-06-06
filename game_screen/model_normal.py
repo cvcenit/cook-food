@@ -567,7 +567,8 @@ class GameModel:
                     case 2:
                         if self.popup_screens[2].is_active:
                             self.popup_screens[2].toggle_active()
-                        self.popup_screens[1].toggle_active()
+                        if self.popup_screens[1].is_active:
+                            self.popup_screens[1].toggle_active()
                     case _:
                         ...
 
@@ -581,7 +582,7 @@ class GameModel:
         x, y = tower_selected.grid_position
         screen = self.popup_screens[1]
         text = screen.texts[0]
-        text.change_text(f"Level {tower_selected.tower_level} Type Tower at ({x - 1}, {y})")
+        text.change_text(f"Level {tower_selected.tower_level} {str(tower_selected)} Tower at ({x - 1}, {y})")
         x, y = screen.buttons[1].current_position
         if tower_selected.is_max_level:
             screen.buttons[1].change_text(f"Max Level (LVL{tower_selected.max_level})")
