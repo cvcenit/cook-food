@@ -58,8 +58,6 @@ class GameController:
             direction = self.get_player_direction((mouse_x, mouse_y))
 
             self._model.game_logic.player_change_direction(direction)
-            for i in range(self._model.game_logic.player.tower_level):
-                self._model.game_logic.player.load_next_bullet(i)
                 
             sidebar_clicked = self._view.get_clicked_button(self._model.sidebar_buttons)
             self._model.update_from_sidebar(sidebar_clicked)

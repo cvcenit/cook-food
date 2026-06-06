@@ -5,7 +5,8 @@ from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from leaderboards import register_player
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
-from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
+from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT, PI
+from math import cos, sin
 
 import pyxel
 
@@ -566,6 +567,11 @@ class GameModel:
                 self.game_logic.change_selected_tower(None)
                 if self.popup_screens[2].is_active:
                     self.popup_screens[2].toggle_active()
+        if not self.popup_screens[1].is_active:
+            if d is not None:
+                direction = d.lower()
+                yo = {"w": PI / 2, "d": 0, "s": 3 * PI / 2, "a": PI}
+                self.game_logic.player.change_direction(yo.get(direction, 0))
 
     def update_from_tower_menu(self, clicked_idx):
         if clicked_idx is not None:
