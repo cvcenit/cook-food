@@ -14,7 +14,8 @@ class CampaignMenuModel:
         self._levels = levels
         self._screen_change_buttons = []
         self._screen_change_buttons += [TextButton(48, HEADER_FONT_SIZE, "Back", 5)]
-        self._screen_change_buttons += LEVEL_BUTTONS
+        for i, level in enumerate(self._levels):
+            self._screen_change_buttons.append(TextButton(48, (i + 2) * (HEADER_FONT_SIZE + 16), f"Level {i + 1}", 1))
 
         self._popup_buttons = []
 

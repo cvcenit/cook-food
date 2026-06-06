@@ -28,8 +28,13 @@ class Game:
     def _switch_screen(self, state: AppState):
         if state == AppState.MAIN_QUIT:
             pyxel.quit()
+        
+        gameplay_states = [
+            AppState.GAMEPLAY, AppState.GAMEPLAY_2, AppState.GAMEPLAY_3,
+            AppState.GAMEPLAY_4, AppState.GAMEPLAY_5, AppState.ENDLESS_GAMEPLAY
+        ]
 
-        if state != AppState.MAIN_MENU:
+        if state in gameplay_states:
             self._resource_file = "resources/sprites.pyxres"
         else:
             self._resource_file = "resources/bg.pyxres"

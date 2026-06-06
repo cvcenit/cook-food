@@ -1,4 +1,5 @@
 import pyxel
+from graphics import draw_background
 
 class CampaignMenuView:
     def __init__(self, width, height):
@@ -6,6 +7,9 @@ class CampaignMenuView:
         self._bg_color: int = 6
         self._left_margin: float = self._width / 10
         self._top_margin: float = self._height / 4
+    
+    def draw_background(self) -> None:
+        draw_background()
 
     def draw_buttons(self, buttons) -> None:
         for button in buttons:

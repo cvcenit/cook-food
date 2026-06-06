@@ -22,6 +22,7 @@ class CampaignMenuController:
 
     def draw(self):
         self._view.reset_screen()
+        self._view.draw_background()
         self._view.draw_buttons(self._model.screen_change_buttons)
         self._view.draw_buttons(self._model.popup_buttons)
 
