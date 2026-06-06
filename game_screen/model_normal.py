@@ -5,7 +5,8 @@ from entities.towers import Chef, Taho, Pandesal, Sorbetes, Ihaw
 from leaderboards import register_player
 from modes import Level, CampaignMode, GameOverCondition, RoundOverCondition
 from graphics import TextButton, SpriteButton, SpriteInfo, TextGraphic, PopupScreen, TextInput
-from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT
+from utils import GAMEPLAY_X_OFFSET, GAMEPLAY_Y_OFFSET, TILE_SIDE_LENGTH, FPS, SCREEN_WIDTH, SCREEN_HEIGHT, PI
+from math import cos, sin
 
 import pyxel
 
@@ -348,6 +349,11 @@ class GameLogic:
 
         self._player.end_tick()
 
+
+        for tower in self._towers:
+            adj = self.get_adjacent_towers(tower)
+            tower.affect_nearby_towers(adj)
+
         # pls refactor
         active_bullets = [b for b in self.bullets if b.is_active]
         active_enemies_not_in_tunnel = [e for e in self._active_enemies if not (e._path[e._path_index] in self._tunnels)]
@@ -413,10 +419,23 @@ class GameLogic:
         ia, ja = enemy.grid_position
         res = []
         for e in self._active_enemies:
+            if e == enemy:
+                continue
             ib, jb = e.grid_position
             if not (e._path[e._path_index] in self._tunnels):
                 if abs(ia - ib) <= 1 and abs(ja - jb) <= 1:
                     res += [e]
+        return res
+
+    def get_adjacent_towers(self, tower):
+        ia, ja = tower.grid_position
+        res = []
+        for t in self._towers:
+            if t == tower:
+                continue
+            ib, jb = t.grid_position
+            if abs(ia - ib) <= 1 and abs(ja - jb) <= 1:
+                res += [t]
         return res
 
     def decrement_exp(self, de):
@@ -548,6 +567,11 @@ class GameModel:
                 self.game_logic.change_selected_tower(None)
                 if self.popup_screens[2].is_active:
                     self.popup_screens[2].toggle_active()
+        if not self.popup_screens[1].is_active:
+            if d is not None:
+                direction = d.lower()
+                yo = {"w": PI / 2, "d": 0, "s": 3 * PI / 2, "a": PI}
+                self.game_logic.player.change_direction(yo.get(direction, 0))
 
     def update_from_tower_menu(self, clicked_idx):
         if clicked_idx is not None:
