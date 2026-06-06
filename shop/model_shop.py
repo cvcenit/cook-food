@@ -10,7 +10,7 @@ SHOP_ITEMS = [
     {"name": "2x Speed", "cost": 30, "description": "Make the game run 2x faster."}
 ]
 
-SHOP_SAVE_FILE = "shop_data.json"
+SHOP_SAVE_FILE = "./data/shop_data.json"
 
 def load_shop_data() -> dict:
     try:
