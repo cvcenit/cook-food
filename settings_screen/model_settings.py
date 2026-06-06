@@ -1,12 +1,23 @@
-from graphics import TextButton
+from graphics import TextButton, PopupScreen, TextGraphic
 from utils import HEADER_FONT_SIZE, SCREEN_WIDTH, HEADER_FONT, CONTENT_FONT, CONTENT_FONT_SIZE, CONTENT_FONT_PATH, DATA
 import json
 
+
 SETTINGS_BUTTONS = [
     TextButton(0, 2 * (HEADER_FONT_SIZE + 16), "Back", 7, size=38),
-    TextButton(0, 8 * (HEADER_FONT_SIZE + 20), "Save", 9),
+    TextButton(0, 9 * (HEADER_FONT_SIZE + 20), "Save", 9),
 ]
 
+POPUP_BUTTONS = [TextButton(SCREEN_WIDTH // 2 - HEADER_FONT.text_width("Guide") // 2, 8 * (HEADER_FONT_SIZE + 20), "Guide", 9),]
+
+GUIDE_BUTTONS = [TextButton(0, 5.5 * (HEADER_FONT_SIZE + 20), "Close", 9),]
+GUIDE_POPUP_TEXTS = [
+    TextGraphic(50, 220, "Right click towers to upgrade or set direction", 7, size=36, font_path=CONTENT_FONT_PATH),
+    TextGraphic(50, 260, "Left click to shoot enemies", 7, size=36, font_path=CONTENT_FONT_PATH),
+    TextGraphic(50, 300, "Select a tower for support!", 7, size=36, font_path=CONTENT_FONT_PATH),
+    TextGraphic(50, 340, "More towers are available at higher levels", 7, size=36, font_path=CONTENT_FONT_PATH)
+]
+GUIDE_POPUP = PopupScreen(320, 3 * (HEADER_FONT_SIZE + 16), 640, 280, GUIDE_BUTTONS, GUIDE_POPUP_TEXTS, 1)
 
 # TOO MUCH CODE REPETITION GOING ON HERE SRY WILL FIX TOMO TOLOG N Q -janella
 LIVES_DECREASE_BUTTON = TextButton(0, 4 * (CONTENT_FONT_SIZE + 16), "<", 1, font_path=CONTENT_FONT_PATH, size=96)
@@ -53,9 +64,21 @@ CHAMELEON_DECREASE_BUTTON.change_position(SCREEN_WIDTH_HALF - chameleon_width //
 CHAMELEON_INCREASE_BUTTON.change_position(SCREEN_WIDTH_HALF + chameleon_width // 2 + gap, 6 * (CONTENT_FONT_SIZE - 30))
 
 
+for button in GUIDE_BUTTONS:
+    button.toggle_active()
+    x, y = button.current_position
+    button.change_position(((SCREEN_WIDTH - button.width)/ 2), y)
+
+for text in GUIDE_POPUP_TEXTS:
+    text.toggle_active()
+    x, y = text.current_position
+    text.change_position(((SCREEN_WIDTH - text.width)/ 2), y)
+
+
 class SettingsModel:
     def __init__(self):
         self._screen_change_buttons = SETTINGS_BUTTONS
+        self._popup_buttons = POPUP_BUTTONS
         self._current_tick = 1
         self._lives = DATA["remaining_lives"]
         self._enemies = DATA["remaining_enemies"]
@@ -70,6 +93,8 @@ class SettingsModel:
         self._regenerator_increase_button = REGENERATOR_INCREASE_BUTTON
         self._chameleon_decrease_button = CHAMELEON_DECREASE_BUTTON
         self._chameleon_increase_button = CHAMELEON_INCREASE_BUTTON
+        self.guide_buttons = GUIDE_BUTTONS
+        self.guide_popup = GUIDE_POPUP
 
     @property
     def screen_change_buttons(self):
@@ -156,6 +181,10 @@ class SettingsModel:
     def smooth_movement(self):
         return self._smooth_movement
     
+    @property
+    def popup_buttons(self):
+        return self._popup_buttons
+    
     def toggle_smooth_movement(self):
         self._smooth_movement = not self._smooth_movement
 
@@ -166,7 +195,7 @@ class SettingsModel:
         DATA["chameleon_interval"] = self._chameleon_interval
         DATA["smooth_movement"] = self._smooth_movement
         with open("data/settings.json", "w") as f:
-            json.dump(DATA, f) # or not ? dapat ba isave sa settings o hnd
+            json.dump(DATA, f)
     
     def reset(self):
         self._current_tick = 1
@@ -176,4 +205,18 @@ class SettingsModel:
     
     def update(self, clicked_idx):
         self._current_tick = 1
+        if clicked_idx is not None:
+            if self.guide_popup.is_active:
+                self.guide_popup.toggle_active()
     
+    def update_from_popup_buttons(self, clicked_idx):
+        if clicked_idx == 0:
+            self.guide_popup.toggle_active()
+        
+    def update_from_guide(self, clicked_idx):
+        if clicked_idx is not None:
+            match clicked_idx:
+                case 0:
+                    if self.guide_popup.is_active:
+                        self.guide_popup.toggle_active()
+            

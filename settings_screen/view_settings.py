@@ -50,6 +50,10 @@ class SettingsView:
             pyxel.text(self._smooth_movement_x  + 1, 7 * (CONTENT_FONT_SIZE - 30) + 1, "x", 1, font=CONTENT_FONT)
         pyxel.text(self._smooth_movement_x  + box_size + gap, 7 * (CONTENT_FONT_SIZE - 30), "Smooth Movement", 1, font=CONTENT_FONT)
 
+    def draw_guide_popup(self, popup):
+        popup.draw_background()
+        popup.draw_popup()
+
     def is_decrease_clicked(self):
         label_x = self._width // 2 - 30
         label_y = self._height // 2

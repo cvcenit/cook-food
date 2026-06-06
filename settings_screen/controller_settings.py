@@ -19,12 +19,16 @@ class SettingsController:
 
     def update(self):
         clicked_idx = self._view.get_clicked_button(self._model.screen_change_buttons)
+        popup_clicked = self._view.get_clicked_button(self._model.popup_buttons)
+        guide_clicked = self._view.get_clicked_button(self._model.guide_buttons)
         self._update_lives()
         self._update_enemies()
         self._update_regenerator()
         self._update_chameleon()
         self._update_smooth_movement()
         self._model.update(clicked_idx)
+        self._model.update_from_popup_buttons(popup_clicked)
+        self._model.update_from_guide(guide_clicked)
 
     def _update_lives(self):
         if self._model.lives_decrease_button.is_left_clicked():
@@ -63,6 +67,8 @@ class SettingsController:
         self._draw_regenerator_buttons()
         self._draw_chameleon_buttons()
         self._view.draw_smooth_movement(self._model.smooth_movement)
+        self._view.draw_buttons(self._model.popup_buttons)
+        self._view.draw_guide_popup(self._model.guide_popup)
     
     def _draw_lives_buttons(self):
         self._view.draw_buttons([self._model.lives_decrease_button, self._model.lives_increase_button])  

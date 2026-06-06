@@ -224,7 +224,6 @@ class PopupScreen:
         self._buttons = buttons
         self._texts = texts
         self._bg = bg
-
         self._is_active = False
 
     @property
