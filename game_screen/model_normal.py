@@ -157,7 +157,7 @@ class GameLogic:
         self._selected_tower = None        
 
         # game data
-        self._is_game_over = True
+        self._is_game_over = False
         self._is_game_won = False
         self._game_over_condition = game_over_condition
         self._round_over_condition = round_over_condition
